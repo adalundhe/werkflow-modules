@@ -1,0 +1,7 @@
+from .aws_s3_delete_bucket_options import AWSs3DeleteBucketOptions
+from .aws_s3_get_object_options import AWSs3GetObjectOptions
+from .aws_s3_list_bucket_options import AWSs3ListBucketOptions
+from .aws_s3_list_parts_options import AWSs3ListPartsOptions
+from .aws_s3_list_multipart_uploads_options import AWSs3ListMultipartUploadOptions
+from .aws_s3_put_object_options import AWSs3PutObjectOptions
+from .aws_s3_delete_object_options import AWSs3DeleteObjectOptions
