@@ -38,6 +38,5 @@ jobs:
         pip install setuptools wheel twine
     - name: Publish distribution 📦 to PyPI
       run: |
-        export TWINE_USERNAME=${{ secrets.PYPI_API_TOKEN }}
         cd werkflow-aws && python setup.py sdist bdist_wheel && \
-        twine upload dist/* -p ""
+        twine upload dist/* -u __token__ -p ${{ secrets.PYPI_API_TOKEN }}
