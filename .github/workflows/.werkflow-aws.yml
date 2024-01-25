@@ -35,7 +35,7 @@ jobs:
     - name: Install pypa/setuptools
       run: >-
         python -m
-        pip install wheel
+        pip install setuptools wheel twine
     - name: Publish distribution 📦 to PyPI
       run: |
         export TWINE_USERNAME=sc_codeum
