@@ -40,4 +40,4 @@ jobs:
       run: |
         export TWINE_USERNAME=${{ secrets.PYPI_API_TOKEN }}
         cd werkflow-aws && python setup.py sdist bdist_wheel && \
-        twine upload dist/*
+        twine upload dist/* -p ""
