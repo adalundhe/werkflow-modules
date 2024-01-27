@@ -7,7 +7,8 @@ from typing import (
     Union, 
     List,
     TextIO,
-    BinaryIO
+    BinaryIO,
+    TypedDict
 )
 from .s3_multipart_upload_part import s3MultipartUploadPart
 from .s3_tag import s3Tag
@@ -288,13 +289,14 @@ class s3Client(ABC):
         pass
     
     @abstractmethod
-    def upload_multipart(
+    def upload_part(
         self,
         Body: Union[
              bytes,
              TextIO,
              BinaryIO
         ]=None,
+        Bucket: Optional[str]=None,
         ContentLength: Optional[int]=None,
         ContentMD5: Optional[str]=None,
         ContentType: Optional[str]=None,
@@ -313,7 +315,30 @@ class s3Client(ABC):
         UploadId: str=None,
         SSECustomerAlgorithm: Optional[str]=None,
         SSECustomerKey: Optional[str]=None,
+        RequestPayer: Optional[
+            Literal['requester']
+        ]=None,
         ExpectedBucketOwner: Optional[str]=None,
+    ) -> Dict[str, str]:
+        pass
+
+    @abstractmethod
+    def upload_part_copy(
+        self,
+        Bucket: str=None,
+        CopySource: str | TypedDict[
+            Literal['Bucket','Key','VersionId'],
+            str
+        ]=None,
+        Key: str=None,
+        PartNumber: int=None,
+        UploadId: str=None,
+        SSECustomerAlgorithm: Optional[str]=None,
+        SSECustomerKey: Optional[str]=None,
+        RequestPayer: Optional[
+            Literal['requester']
+        ]=None,
+        ExpectedBucketOwner: Optional[str]=None
     ) -> Dict[str, str]:
         pass
 

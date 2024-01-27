@@ -12,10 +12,10 @@ from typing import Optional
 
 
 class AWSs3DeleteObjectOptions(AWSBoto3Options):
-    mfa: Optional[StrictStr]
-    version_id: Optional[StrictStr]
-    bypass_governance_retention: Optional[StrictBool]
-    expected_bucket_owner: Optional[StrictStr]
+    mfa: Optional[StrictStr]=None
+    version_id: Optional[StrictStr]=None
+    bypass_governance_retention: Optional[StrictBool]=None
+    expected_bucket_owner: Optional[StrictStr]=None
 
     def to_options(self):
 
@@ -39,4 +39,4 @@ class AWSs3DeleteObjectOptions(AWSBoto3Options):
 
         parsed_options.update(uppercased_options)
 
-        return uppercased_options
+        return parsed_options

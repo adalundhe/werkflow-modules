@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from ..parsing import convert_key_to_boto3_arg
+from werkflow_aws.models.parsing import convert_key_to_boto3_arg
 
 
 

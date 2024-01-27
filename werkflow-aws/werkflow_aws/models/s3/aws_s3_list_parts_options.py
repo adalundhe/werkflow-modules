@@ -1,10 +1,9 @@
 from pydantic import (
-    StrictBool,
     StrictStr,
     StrictInt
 )
 
-from typing import Optional, List
+from typing import Optional
 from werkflow_aws.models.base import AWSBoto3Options
 from werkflow_aws.models.parsing import (
     convert_key_to_boto3_arg, 
@@ -13,12 +12,12 @@ from werkflow_aws.models.parsing import (
 
 
 class AWSs3ListPartsOptions(AWSBoto3Options):
-    max_parts: Optional[StrictInt]
-    part_number_marker: Optional[StrictInt]
-    upload_id: Optional[StrictStr]
-    expected_bucket_owner: Optional[StrictStr]
-    sse_customer_algorithm: Optional[StrictStr]
-    sse_customer_key: Optional[StrictStr]
+    max_parts: Optional[StrictInt]=None
+    part_number_marker: Optional[StrictInt]=None
+    upload_id: Optional[StrictStr]=None
+    expected_bucket_owner: Optional[StrictStr]=None
+    sse_customer_algorithm: Optional[StrictStr]=None
+    sse_customer_key: Optional[StrictStr]=None
 
     def to_options(self):
 

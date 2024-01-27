@@ -1,8 +1,7 @@
 import datetime
 from pydantic import (
-    StrictBool,
     StrictStr,
-    StrictInt,
+    StrictInt
 )
 
 from typing import Optional, Literal, Union
@@ -15,26 +14,25 @@ from werkflow_aws.models.parsing import (
 
 
 class AWSs3GetObjectOptions(AWSBoto3Options):
-    if_match: Optional[StrictStr]
-    if_modified_since: Optional[datetime.datetime]
-    if_none_match: Optional[StrictStr]
-    if_unmodified_since: Optional[datetime.datetime]
-    range: Optional[StrictStr]
-    response_cache_control: Optional[StrictStr]
-    response_content_disposition: Optional[StrictStr]
-    response_content_encoding: Optional[StrictStr]
-    response_content_language: Optional[StrictStr]
-    response_content_type: Optional[StrictStr]
-    response_expires: Optional[datetime.datetime]
-    version_id: Optional[StrictStr]
-    sse_customer_algorithm: Optional[StrictStr]
-    sse_customer_key: Optional[StrictStr]
-    part_number: Optional[StrictInt]
-    expected_bucket_owner: Optional[StrictStr]
-    checksum_mode: Union[
-        Optional[Literal['ENABLED']],
-        Optional[Literal['DISABLED']]
-    ]
+    if_match: Optional[StrictStr]=None
+    if_modified_since: Optional[datetime.datetime]=None
+    if_none_match: Optional[StrictStr]=None
+    if_unmodified_since: Optional[datetime.datetime]=None
+    range: Optional[StrictStr]=None
+    response_cache_control: Optional[StrictStr]=None
+    response_content_disposition: Optional[StrictStr]=None
+    response_content_encoding: Optional[StrictStr]=None
+    response_content_language: Optional[StrictStr]=None
+    response_content_type: Optional[StrictStr]=None
+    response_expires: Optional[datetime.datetime]=None
+    version_id: Optional[StrictStr]=None
+    sse_customer_algorithm: Optional[StrictStr]=None
+    sse_customer_key: Optional[StrictStr]=None
+    part_number: Optional[StrictInt]=None
+    expected_bucket_owner: Optional[StrictStr]=None
+    checksum_mode: Optional[
+        Literal['ENABLED', 'DISABLED']
+    ]=None
 
     def to_options(self):
 

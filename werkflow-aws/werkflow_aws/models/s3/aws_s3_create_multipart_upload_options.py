@@ -1,16 +1,17 @@
 import datetime
 from pydantic import StrictStr
-from typing import Optional, Dict, Literal
+from typing import Optional
 from werkflow_aws.models.base import AWSBoto3Options
 from werkflow_aws.models.parsing import (
-    convert_key_to_boto3_arg,
+    convert_key_to_boto3_arg, 
     convert_key_to_boto3_arg_upper_matching,
     key_contains_patterns
 )
+from typing import Optional, Literal, Dict
 
 
-class AWSs3PutObjectOptions(AWSBoto3Options):
-    acl: Optional[
+class AWSs3CreateMultipartUploadOptions(AWSBoto3Options):
+    acl=Optional[
         Literal[
             'private',
             'public-read',
@@ -25,27 +26,13 @@ class AWSs3PutObjectOptions(AWSBoto3Options):
     content_disposition: Optional[StrictStr]=None
     content_encoding: Optional[StrictStr]=None
     content_language: Optional[StrictStr]=None
-    content_length: Optional[int]=None
-    content_md5: Optional[StrictStr]=None
     content_type: Optional[StrictStr]=None
-    checksum_algorithm: Optional[
-        Literal[
-            'CRC32',
-            'CRC32C',
-            'SHA1',
-            'SHA256'
-        ]
-    ]=None
-    checksum_crc32: Optional[StrictStr]=None
-    checksum_crc32c: Optional[StrictStr]=None
-    checksum_sha1: Optional[StrictStr]=None
-    checksum_sha256: Optional[StrictStr]=None
     expires: Optional[datetime.datetime]=None
     grant_full_control: Optional[StrictStr]=None
     grant_read: Optional[StrictStr]=None
     grant_read_acp: Optional[StrictStr]=None
     grant_write_acp: Optional[StrictStr]=None
-    metadata: Optional[Dict[str, str]]=None
+    metadata: Optional[Dict[StrictStr, StrictStr]]=None
     server_side_encryption: Optional[
         Literal[
             'AES256',
@@ -61,12 +48,14 @@ class AWSs3PutObjectOptions(AWSBoto3Options):
             'ONEZONE_IA',
             'INTELLIGENT_TIERING',
             'GLACIER',
+            'DEEP_ARCHIVE',
             'OUTPOSTS',
             'GLACIER_IR',
-            'SNOW'
+            'SNOW',
+            'EXPRESS_ONEZONE'
         ]
     ]=None
-    website_redirection_location: Optional[StrictStr]=None
+    website_redirect_location: Optional[StrictStr]=None
     sse_customer_algorithm: Optional[StrictStr]=None
     sse_customer_key: Optional[StrictStr]=None
     sse_kms_id: Optional[StrictStr]=None
@@ -87,15 +76,23 @@ class AWSs3PutObjectOptions(AWSBoto3Options):
         ]
     ]=None
     expected_bucket_owner: Optional[StrictStr]=None
+    checksum_algorithm: Optional[
+        Literal[
+            'CRC32',
+            'CRC32C',
+            'SHA1',
+            'SHA256'
+        ]
+    ]=None
 
     def to_options(self):
-
         options = self._filtered_options_to_dict()
 
         uppercased_options = {
             convert_key_to_boto3_arg_upper_matching(
                 key,
                 [
+                    'acl',
                     'md5', 
                     'crc32',
                     'crc32c',
@@ -108,6 +105,7 @@ class AWSs3PutObjectOptions(AWSBoto3Options):
             ): value  for key, value in options.items() if key_contains_patterns(
                 key,
                 [
+                    'acl',
                     'content_md5',
                     'checksum_crc32',
                     'checksum_crc32c',
@@ -132,3 +130,5 @@ class AWSs3PutObjectOptions(AWSBoto3Options):
         parsed_options.update(uppercased_options)
 
         return parsed_options
+
+
