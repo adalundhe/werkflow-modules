@@ -1,5 +1,6 @@
 import datetime
 from abc import ABC, abstractmethod
+from io import FileIO
 from typing import (
     Dict, 
     Optional, 
@@ -8,7 +9,9 @@ from typing import (
     List,
     TextIO,
     BinaryIO,
-    TypedDict
+    TypedDict,
+    Callable,
+    Any
 )
 from .s3_multipart_upload_part import s3MultipartUploadPart
 from .s3_tag import s3Tag
@@ -415,6 +418,30 @@ class s3Client(ABC):
         VersionId: Optional[str]=None,
         ExpectedBucketOwner: Optional[str]=None
     ) -> Dict[str, str]:
+        pass
+
+    @abstractmethod
+    def upload_fileobj(
+        self,
+        Fileobj: FileIO,
+        Bucket: str,
+        Key: str,
+        ExtraArgs: Dict[str, str],
+        Callback: Callable[..., Any],
+        Config: Dict[str, str]
+    ):
+        pass
+
+    @abstractmethod
+    def upload_file(
+        self,
+        Fileobj: FileIO,
+        Bucket: str,
+        Key: str,
+        ExtraArgs: Dict[str, str],
+        Callback: Callable[..., Any],
+        Config: Dict[str, str]
+    ):
         pass
 
     @abstractmethod

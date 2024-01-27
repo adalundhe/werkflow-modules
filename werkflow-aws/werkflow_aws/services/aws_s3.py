@@ -36,6 +36,8 @@ from werkflow_aws.models.s3 import (
     AWSs3PutObjectOptions,
     AWSs3PutObjectResponse,
     AWSs3StreamingBody,
+    AWSs3TransferConfigOptions,
+    AWSs3TransferAllowedUploadArgs,
     AWSs3UploadPartCopyOptions,
     AWSs3UploadPartCopyResponse,
     AWSs3UploadPartOptions,
@@ -399,6 +401,71 @@ class AWSs3:
         )
 
         return AWSs3UploadPartCopyResponse(**copied_upload_part)
+    
+    async def upload_file_object(
+        self,
+        file_object: FileIO,
+        bucket: str,
+        key: str,
+        options: Optional[AWSs3TransferAllowedUploadArgs]=None,
+        config: Optional[AWSs3TransferConfigOptions]=None
+    ):
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if options is None:
+            options = AWSs3TransferAllowedUploadArgs()
+
+        if config is None:
+            config = AWSs3TransferConfigOptions()
+
+        await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.upload_fileobj,
+                file_object,
+                bucket,
+                key,
+                options,
+                None,
+                config
+            )
+        )
+
+        await self._loop.run_in_executor(
+            self._executor,
+            file_object.close
+        )
+
+    async def upload_file(
+        self,
+        path: str,
+        bucket: str,
+        key: str,
+        options: Optional[AWSs3TransferAllowedUploadArgs]=None,
+        config: Optional[AWSs3TransferConfigOptions]=None
+    ):
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if options is None:
+            options = AWSs3TransferAllowedUploadArgs()
+
+        if config is None:
+            config = AWSs3TransferConfigOptions()
+
+        await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.upload_file,
+                path,
+                bucket,
+                key,
+                options,
+                None,
+                config
+            )
+        )
     
     async def close(self):
         await self._loop.run_in_executor(

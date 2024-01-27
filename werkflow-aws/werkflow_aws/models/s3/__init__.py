@@ -21,6 +21,8 @@ from .aws_s3_multipart_upload import AWSs3MultipartUpload
 from .aws_s3_put_object_options import AWSs3PutObjectOptions
 from .aws_s3_put_object_response import AWSs3PutObjectResponse
 from .aws_s3_streaming_body import AWSs3StreamingBody
+from .aws_s3_transfer_allowed_upload_args import AWSs3TransferAllowedUploadArgs
+from .aws_s3_transfer_config_options import AWSs3TransferConfigOptions
 from .aws_s3_upload_part_copy_options import AWSs3UploadPartCopyOptions
 from .aws_s3_upload_part_copy_response import AWSs3UploadPartCopyResponse
 from .aws_s3_upload_part_options import AWSs3UploadPartOptions
