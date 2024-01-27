@@ -1,9 +1,9 @@
 from pydantic import StrictStr
-from werkflow_aws.models.base import AWSBoto3Options
+from werkflow_aws.models.base import AWSBoto3Base
 from typing import Optional, Literal
 
 
-class AWSs3AbortMultipartUploadOptions(AWSBoto3Options):
+class AWSs3AbortMultipartUploadOptions(AWSBoto3Base):
     request_payer: Optional[
         Literal['requester']
     ]=None

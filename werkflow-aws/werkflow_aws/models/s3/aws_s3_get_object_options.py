@@ -4,8 +4,8 @@ from pydantic import (
     StrictInt
 )
 
-from typing import Optional, Literal, Union
-from werkflow_aws.models.base import AWSBoto3Options
+from typing import Optional, Literal
+from werkflow_aws.models.base import AWSBoto3Base
 from werkflow_aws.models.parsing import (
     convert_key_to_boto3_arg, 
     convert_key_to_boto3_arg_upper_matching
@@ -13,7 +13,7 @@ from werkflow_aws.models.parsing import (
 
 
 
-class AWSs3GetObjectOptions(AWSBoto3Options):
+class AWSs3GetObjectOptions(AWSBoto3Base):
     if_match: Optional[StrictStr]=None
     if_modified_since: Optional[datetime.datetime]=None
     if_none_match: Optional[StrictStr]=None

@@ -19,23 +19,52 @@ from werkflow_aws.models.s3 import (
     AWSs3CreateMultipartUploadResponse,
     AWSs3CompleteMultipartUploadOptions,
     AWSs3CompleteMultipartUploadResponse,
+    AWSs3CopySource,
+    AWSs3CopyObjectOptions,
+    AWSs3CopyObjectResponse,
     AWSs3DeleteBucketOptions,
     AWSs3DeleteBucketReponse,
+    AWSs3DeleteBucketTaggingOptions,
+    AWSs3DeleteObjectTaggingResponse,
     AWSs3DeleteObjectOptions,
     AWSs3DeleteObjectResponse,
+    AWSs3DeleteObjectTaggingOptions,
+    AWSs3DeleteBucketTaggingResponse,
+    AWSs3DeleteObjectsOptions,
+    AWSs3DeleteObjectsResponse,
+    AWSs3GeneratePresignedURLOptions,
+    AWSs3GeneratePresignedURLResponse,
+    AWSs3GetBucketTaggingOptions,
+    AWSs3GetBucketTaggingResponse,
     AWSs3GetObjectOptions,
     AWSs3GetObjectResponse,
+    AWSs3GetObjectTaggingOptions,
+    AWSs3GetObjectTaggingResponse,
     AWSs3ListBucketsResponse,
+    AWSs3GeneratePresignedPostOptions,
+    AWSs3GeneratePresignedPostResponse,
+    AWSs3ListDirectoryBucketsOptions,
+    AWSs3ListDirectoryBucketsResponse,
     AWSs3ListObjectsOptions,
     AWSs3ListObjectsResponse,
+    AWSs3ListObjectVersionsOptions,
+    AWSs3ListObjectVersionsResponse,
     AWSs3ListMultipartUploadsOptions,
     AWSs3ListMultipartUploadsResponse,
     AWSs3ListPartsOptions,
     AWSs3ListPartsResponse,
     AWSs3MultipartUpload,
+    AWSs3Object,
+    AWSs3PutBucketTaggingOptions,
+    AWSs3PutBucketTaggingResponse,
+    AWSs3PutBucketVersioningOptions,
+    AWSs3PutBucketVersioningResponse,
     AWSs3PutObjectOptions,
     AWSs3PutObjectResponse,
+    AWSs3PutObjectTaggingOptions,
+    AWSs3PutObjectTaggingResponse,
     AWSs3StreamingBody,
+    AWSs3Tag,
     AWSs3TransferConfigOptions,
     AWSs3TransferAllowedUploadArgs,
     AWSs3UploadPartCopyOptions,
@@ -43,6 +72,7 @@ from werkflow_aws.models.s3 import (
     AWSs3UploadPartOptions,
     AWSs3UploadPartResponse
 )
+from typing import List
 
 
 from werkflow_aws.types import (
@@ -124,7 +154,7 @@ class AWSs3:
             functools.partial(
                 self._client.list_objects_v2,
                 Bucket=bucket,
-                **options.to_options()
+                **options.to_data()
             )
         )
 
@@ -148,7 +178,7 @@ class AWSs3:
                 self._client.get_object,
                 Bucket=bucket,
                 Key=key,
-                **options.to_options()
+                **options.to_data()
             )
         )
 
@@ -179,7 +209,7 @@ class AWSs3:
                 Bucket=bucket,
                 Key=key,
                 Body=body,
-                **options.to_options()
+                **options.to_data()
             )
         )
 
@@ -201,7 +231,7 @@ class AWSs3:
             functools.partial(
                 self._client.delete_bucket,
                 Bucket=bucket,
-                **options.to_options()
+                **options.to_data()
             )
         )
 
@@ -225,7 +255,7 @@ class AWSs3:
                 self._client.delete_bucket,
                 Bucket=bucket,
                 Key=key,
-                **options.to_options()
+                **options.to_data()
             )
         )
         
@@ -247,7 +277,7 @@ class AWSs3:
             functools.partial(
                 self._client.list_multipart_uploads,
                 Bucket=bucket,
-                **options.to_options()
+                **options.to_data()
             )
         )
 
@@ -270,7 +300,7 @@ class AWSs3:
             functools.partial(
                 self._client.list_parts,
                 Bucket=bucket,
-                **options.to_options()
+                **options.to_data()
             )
         )
 
@@ -295,8 +325,8 @@ class AWSs3:
                 self._client.complete_multipart_upload,
                 Bucket=bucket,
                 Key=key,
-                MultipartUpload=upload_parts.to_options(),
-                **options.to_options()
+                MultipartUpload=upload_parts.to_data(),
+                **options.to_data()
             )
         )
 
@@ -322,7 +352,7 @@ class AWSs3:
                 Bucket=bucket,
                 Key=key,
                 UploadId=upload_id,
-                **options.to_options()
+                **options.to_data()
             )
         )
 
@@ -346,7 +376,7 @@ class AWSs3:
                 self._client.create_multipart_upload,
                 Bucket=bucket,
                 Key=key,
-                **options.to_options()
+                **options.to_data()
             )
         )
 
@@ -371,7 +401,9 @@ class AWSs3:
                 self._client.upload_part,
                 Bucket=bucket,
                 Key=key,
-                **options.to_options()
+                PartNumber=part_number,
+                UploadId=upload_id,
+                **options.to_data()
             )
         )
 
@@ -396,7 +428,9 @@ class AWSs3:
                 self._client.upload_part_copy,
                 Bucket=bucket,
                 Key=key,
-                **options.to_options()
+                PartNumber=part_number,
+                UploadId=upload_id,
+                **options.to_data()
             )
         )
 
@@ -466,7 +500,427 @@ class AWSs3:
                 config
             )
         )
+
+    async def list_directory_buckets(
+        self,
+        options: Optional[AWSs3ListDirectoryBucketsOptions]=None
+    ):
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if options is None:
+            options = AWSs3ListDirectoryBucketsOptions()
+
+        directory_buckets = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.list_directory_buckets,
+                **options.to_data()
+            )
+        )
+
+        return AWSs3ListDirectoryBucketsResponse(**directory_buckets)
     
+    async def list_object_versions(
+        self,
+        bucket: str=None,
+        options: Optional[AWSs3ListObjectVersionsOptions]=None
+    ):
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if options is None:
+            options = AWSs3ListObjectVersionsOptions()
+
+        directory_buckets = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.list_object_versions,
+                Bucket=bucket,
+                **options.to_data()
+            )
+        )
+
+        return AWSs3ListObjectVersionsResponse(**directory_buckets)
+    
+    async def delete_objects(
+        self,
+        bucket: str,
+        objects: List[AWSs3Object],
+        quiet: bool=False,
+        options: Optional[AWSs3DeleteObjectsOptions]=None
+    ):
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if options is None:
+            options = AWSs3DeleteObjectsOptions()
+
+        delete_request = {
+            'Delete': [
+                s3_object.model_dump() for s3_object in objects
+            ],
+            'Quiet': quiet
+        }
+
+        deleted_objects = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.list_object_versions,
+                Bucket=bucket,
+                Delete=delete_request,
+                **options.to_data()
+            )
+        )
+
+        return AWSs3DeleteObjectsResponse(**deleted_objects)
+    
+    async def download_file_object(
+        self,
+        file_object: FileIO,
+        bucket: str,
+        key: str,
+        options: Optional[AWSs3TransferAllowedUploadArgs]=None,
+        config: Optional[AWSs3TransferConfigOptions]=None
+    ):
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if options is None:
+            options = AWSs3TransferAllowedUploadArgs()
+
+        if config is None:
+            config = AWSs3TransferConfigOptions()
+
+        await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.download_fileobj,
+                file_object,
+                bucket,
+                key,
+                options,
+                None,
+                config
+            )
+        )
+
+        await self._loop.run_in_executor(
+            self._executor,
+            file_object.close
+        )
+
+    async def download_file(
+        self,
+        path: str,
+        bucket: str,
+        key: str,
+        options: Optional[AWSs3TransferAllowedUploadArgs]=None,
+        config: Optional[AWSs3TransferConfigOptions]=None
+    ):
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if options is None:
+            options = AWSs3TransferAllowedUploadArgs()
+
+        if config is None:
+            config = AWSs3TransferConfigOptions()
+
+        await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.download_file,
+                path,
+                bucket,
+                key,
+                options,
+                None,
+                config
+            )
+        )
+    
+    async def generate_presigned_url(
+        self,
+        client_method: str,
+        options: Optional[AWSs3GeneratePresignedURLOptions]=None
+    ) -> str:
+        
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if options is None:
+            options = AWSs3GeneratePresignedURLOptions()
+
+        presigned_url = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.generate_presigned_url,
+                client_method,
+                **options.to_data()
+            )
+        )
+
+        return AWSs3GeneratePresignedURLResponse(
+            URL=presigned_url
+        )
+    
+    async def geneate_presigned_post(
+        self,
+        bucket: str,
+        key: str,
+        options: Optional[AWSs3GeneratePresignedPostOptions]=None
+    ):
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if options is None:
+            options = AWSs3GeneratePresignedPostOptions()
+
+        presigned_post = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.generate_presigned_post,
+                Bucket=bucket,
+                Key=key,
+                **options.to_data()
+            )
+        )
+
+        return AWSs3GeneratePresignedPostResponse(**presigned_post)
+    
+    async def copy_object(
+        self,
+        bucket: str,
+        copy_source: str | AWSs3CopySource,
+        key: str,
+        options: Optional[AWSs3CopyObjectOptions]=None
+    ):
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if options is None:
+            options = AWSs3CopyObjectOptions()
+
+        if isinstance(copy_source, AWSs3CopySource):
+            copy_source = copy_source.to_data()
+
+        copied_object = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.copy_object,
+                Bucket=bucket,
+                CopySource=copy_source,
+                Key=key,
+                **options.to_data()
+            )
+        )
+
+        return AWSs3CopyObjectResponse(**copied_object)
+    
+    async def copy(
+        self,
+        copy_source: AWSs3CopySource,
+        bucket: str,
+        key: str,
+        extra_args: Optional[AWSs3TransferAllowedUploadArgs]=None,
+        config: Optional[AWSs3TransferConfigOptions]=None
+    ):
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if options is None:
+            options = AWSs3TransferAllowedUploadArgs()
+
+        if config is None:
+            config = AWSs3TransferConfigOptions()
+
+        await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.copy,
+                copy_source.to_data(),
+                bucket,
+                key,
+                ExtraArgs=options,
+                Callback=None,
+                SourceClient=None,
+                Config=config
+            )
+        )
+
+    async def put_bucket_versioning(
+        self,
+        bucket: str,
+        options: Optional[AWSs3PutBucketVersioningOptions]=None
+    ):
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if options is None:
+            options = AWSs3PutBucketVersioningOptions()
+
+        bucket_versioning = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.put_bucket_versioning,
+                Bucket=bucket,
+                **options.to_data()
+            )
+        )
+
+        return AWSs3PutBucketVersioningResponse(**bucket_versioning)
+    
+    async def get_bucket_tagging(
+        self,
+        bucket: str,
+        options: Optional[AWSs3GetBucketTaggingOptions]=None
+    ):
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if options is None:
+            options = AWSs3GetBucketTaggingOptions()
+
+        bucket_tagging = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.put_bucket_tagging,
+                Bucket=bucket,
+                **options.to_data()
+            )
+        )
+
+        return AWSs3GetBucketTaggingOptions(**bucket_tagging)
+    
+    async def get_object_tagging(
+        self,
+        bucket: str,
+        key: str,
+        options: Optional[AWSs3GetObjectTaggingOptions]=None
+    ):
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if options is None:
+            options = AWSs3GetObjectTaggingOptions()
+
+        bucket_tagging = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.put_bucket_tagging,
+                Bucket=bucket,
+                Key=key,
+                **options.to_data()
+            )
+        )
+
+        return AWSs3GetObjectTaggingResponse(**bucket_tagging)
+    
+    async def put_bucket_tagging(
+        self,
+        bucket: str,
+        tags: List[AWSs3Tag],
+        options: Optional[AWSs3PutBucketTaggingOptions]=None
+    ):
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if options is None:
+            options = AWSs3PutBucketTaggingOptions()
+
+        bucket_tagging = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.put_bucket_tagging,
+                Bucket=bucket,
+                Tagging={
+                    'TagSet': [
+                        tag.to_data() for tag in tags
+                    ]
+                },
+                **options.to_data()
+            )
+        )
+
+        return AWSs3PutBucketTaggingResponse(**bucket_tagging)
+    
+    async def put_bucket_tagging(
+        self,
+        bucket: str,
+        key: str,
+        tags: List[AWSs3Tag],
+        options: Optional[AWSs3PutObjectTaggingOptions]=None
+    ):
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if options is None:
+            options = AWSs3PutObjectTaggingOptions()
+
+        object_tagging = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.put_object_tagging,
+                Bucket=bucket,
+                Key=key,
+                Tagging={
+                    'TagSet': [
+                        tag.to_data() for tag in tags
+                    ]
+                },
+                **options.to_data()
+            )
+        )
+
+        return AWSs3PutObjectTaggingResponse(**object_tagging)
+    
+    async def delete_bucket_tagging(
+        self,
+        bucket: str,
+        options: Optional[AWSs3DeleteBucketTaggingOptions]=None
+    ):
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if options is None:
+            options = AWSs3PutObjectTaggingOptions()
+
+        deleted_bucket_tagging = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.delete_bucket_tagging,
+                Bucket=bucket,
+                **options.to_data()
+            )
+        )
+
+        return AWSs3DeleteBucketTaggingResponse(**deleted_bucket_tagging)
+    
+    async def delete_object_tagging(
+        self,
+        bucket: str,
+        key: str,
+        options: Optional[AWSs3DeleteObjectTaggingOptions]=None
+    ):
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if options is None:
+            options = AWSs3DeleteObjectTaggingOptions()
+
+        deleted_object_tagging = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.delete_object_tagging,
+                Bucket=bucket,
+                Key=key,
+                **options.to_data()
+            )
+        )
+
+        return AWSs3DeleteObjectTaggingResponse(**deleted_object_tagging)
+
     async def close(self):
         await self._loop.run_in_executor(
             None,

@@ -1,21 +1,30 @@
 from pydantic import (
-    StrictStr,
-    StrictBool
+    StrictStr
 )
+from typing import Optional, Literal
 from werkflow_aws.models.base import AWSBoto3Base
 from werkflow_aws.models.parsing import (
-    convert_key_to_boto3_arg,
+    convert_key_to_boto3_arg, 
     convert_key_to_boto3_arg_upper_matching,
     key_contains_patterns
 )
-from typing import Optional
 
 
-class AWSs3DeleteObjectOptions(AWSBoto3Base):
-    mfa: Optional[StrictStr]=None
+class AWSs3PutObjectTaggingOptions(AWSBoto3Base):
     version_id: Optional[StrictStr]=None
-    bypass_governance_retention: Optional[StrictBool]=None
+    content_md5: Optional[StrictStr]=None
+    checksum_algorithm: Optional[
+        Literal[
+            'CRC32',
+            'CRC32C',
+            'SHA1',
+            'SHA256'
+        ]
+    ]=None
     expected_bucket_owner: Optional[StrictStr]=None
+    request_payer: Optional[
+        Literal['requester']
+    ]=None
 
     def to_options(self):
 
@@ -24,10 +33,14 @@ class AWSs3DeleteObjectOptions(AWSBoto3Base):
         uppercased_options = {
             convert_key_to_boto3_arg_upper_matching(
                 key,
-                ['mfa']
+                [
+                    'md5'
+                ]
             ): value  for key, value in options.items() if key_contains_patterns(
                 key,
-                ['mfa']
+                [
+                    'content_md5'
+                ]
             )
         }
 

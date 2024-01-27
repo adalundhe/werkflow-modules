@@ -1,6 +1,6 @@
 from pydantic import StrictStr, StrictInt
 from typing import Optional
-from werkflow_aws.models.base import AWSBoto3Options
+from werkflow_aws.models.base import AWSBoto3Base
 from werkflow_aws.models.parsing import (
     convert_key_to_boto3_arg, 
     convert_key_to_boto3_arg_upper_matching,
@@ -9,7 +9,7 @@ from werkflow_aws.models.parsing import (
 from typing import Optional, Literal
 
 
-class AWSs3UploadPartOptions(AWSBoto3Options):
+class AWSs3UploadPartOptions(AWSBoto3Base):
     content_length: Optional[StrictInt]=None
     content_md5: Optional[StrictStr]=None
     checksum_algorithm: Optional[
@@ -55,9 +55,7 @@ class AWSs3UploadPartOptions(AWSBoto3Options):
                     'checksum_sha1',
                     'checksum_sha256',
                     'sse_customer_algorithm',
-                    'sse_customer_key',
-                    'sse_kms_id',
-                    'sse_kms_encryption_context'
+                    'sse_customer_key'
                 ]
             )
         }

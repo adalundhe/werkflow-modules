@@ -4,10 +4,10 @@ from pydantic import (
 )
 
 from typing import Optional
-from werkflow_aws.models.base import AWSBoto3Options
+from werkflow_aws.models.base import AWSBoto3Base
 
 
-class AWSs3ListMultipartUploadsOptions(AWSBoto3Options):
+class AWSs3ListMultipartUploadsOptions(AWSBoto3Base):
     delimiter: Optional[StrictStr]=None
     encoding_type: Optional[StrictStr]=None
     key_marker: Optional[StrictStr]=None

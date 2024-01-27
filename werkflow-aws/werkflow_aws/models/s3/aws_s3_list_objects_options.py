@@ -5,10 +5,10 @@ from pydantic import (
 )
 
 from typing import Optional, List
-from werkflow_aws.models.base import AWSBoto3Options
+from werkflow_aws.models.base import AWSBoto3Base
 
 
-class AWSs3ListObjectsOptions(AWSBoto3Options):
+class AWSs3ListObjectsOptions(AWSBoto3Base):
     delimiter: Optional[StrictStr]=None
     encoding_type: Optional[StrictStr]=None
     max_keys: Optional[StrictInt]=None

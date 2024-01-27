@@ -1,7 +1,7 @@
 import datetime
 from pydantic import StrictStr
 from typing import Optional
-from werkflow_aws.models.base import AWSBoto3Options
+from werkflow_aws.models.base import AWSBoto3Base
 from werkflow_aws.models.parsing import (
     convert_key_to_boto3_arg, 
     convert_key_to_boto3_arg_upper_matching,
@@ -10,7 +10,7 @@ from werkflow_aws.models.parsing import (
 from typing import Optional, Literal, Dict
 
 
-class AWSs3CreateMultipartUploadOptions(AWSBoto3Options):
+class AWSs3CreateMultipartUploadOptions(AWSBoto3Base):
     acl=Optional[
         Literal[
             'private',
@@ -58,7 +58,7 @@ class AWSs3CreateMultipartUploadOptions(AWSBoto3Options):
     website_redirect_location: Optional[StrictStr]=None
     sse_customer_algorithm: Optional[StrictStr]=None
     sse_customer_key: Optional[StrictStr]=None
-    sse_kms_id: Optional[StrictStr]=None
+    sse_kms_key_id: Optional[StrictStr]=None
     sse_kms_encryption_context: Optional[StrictStr]=None
     bucket_key_enabled: Optional[bool]=None
     tagging: Optional[StrictStr]=None
@@ -115,7 +115,7 @@ class AWSs3CreateMultipartUploadOptions(AWSBoto3Options):
                     'grant_write_acp',
                     'sse_customer_algorithm',
                     'sse_customer_key',
-                    'sse_kms_id',
+                    'sse_kms_key_id',
                     'sse_kms_encryption_context'
                 ]
             )

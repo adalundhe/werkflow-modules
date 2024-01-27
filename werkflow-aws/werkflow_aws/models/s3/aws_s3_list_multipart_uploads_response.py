@@ -17,9 +17,9 @@ class AWSs3ListMultipartUploadsResponse(BaseModel):
     IsTruncated: StrictBool
     Uploads: List[AWSs3MultipartUploadResponse]=[]
     CommonPrefixes: List[AWSs3CommonPrefix]=[]
-    EncodingType: Literal[
-        'url'
-    ]
+    EncodingType: Optional[
+        Literal['url']
+    ]=None
     RequestCharged: Optional[
         Literal['requester']
     ]=None

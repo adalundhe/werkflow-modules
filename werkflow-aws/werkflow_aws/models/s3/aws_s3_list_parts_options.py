@@ -4,14 +4,14 @@ from pydantic import (
 )
 
 from typing import Optional
-from werkflow_aws.models.base import AWSBoto3Options
+from werkflow_aws.models.base import AWSBoto3Base
 from werkflow_aws.models.parsing import (
     convert_key_to_boto3_arg, 
     convert_key_to_boto3_arg_upper_matching
 )
 
 
-class AWSs3ListPartsOptions(AWSBoto3Options):
+class AWSs3ListPartsOptions(AWSBoto3Base):
     max_parts: Optional[StrictInt]=None
     part_number_marker: Optional[StrictInt]=None
     upload_id: Optional[StrictStr]=None

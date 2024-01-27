@@ -1,7 +1,7 @@
 import datetime
 from pydantic import StrictStr
 from typing import Optional
-from werkflow_aws.models.base import AWSBoto3Options
+from werkflow_aws.models.base import AWSBoto3Base
 from werkflow_aws.models.parsing import (
     convert_key_to_boto3_arg, 
     convert_key_to_boto3_arg_upper_matching,
@@ -10,7 +10,7 @@ from werkflow_aws.models.parsing import (
 from typing import Optional, Literal, Dict
 
 
-class AWSs3UploadPartCopyOptions(AWSBoto3Options):
+class AWSs3UploadPartCopyOptions(AWSBoto3Base):
     copy_source:  str | Dict[
         Literal['bucket','key','version_id'],
         str
@@ -59,7 +59,6 @@ class AWSs3UploadPartCopyOptions(AWSBoto3Options):
                     'checksum_sha256',
                     'sse_customer_algorithm',
                     'sse_customer_key',
-                    'sse_kms_id',
                     'sse_kms_encryption_context',
                     'copy_source_sse_customer_algorithm',
                     'copy_source_sse_customer_key'

@@ -2,7 +2,6 @@ import datetime
 from pydantic import (
     BaseModel,
     StrictStr,
-    StrictBytes,
     StrictBool,
     StrictInt
 )

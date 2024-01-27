@@ -1,6 +1,6 @@
 from pydantic import BaseModel, StrictStr, StrictBool
 from typing import Optional, Literal
-from werkflow_aws.models.base import AWSBoto3Options
+from werkflow_aws.models.base import AWSBoto3Base
 from werkflow_aws.models.parsing import (
     convert_key_to_boto3_arg, 
     convert_key_to_boto3_arg_upper_matching,

@@ -12,6 +12,6 @@ class AWSs3MultipartUpload(BaseModel):
         parts: List[AWSs3MultipartUploadPart] = self.parts
         return {
             'parts': [
-                part.to_options() for part in parts
+                partto_data() for part in parts
             ]
         }

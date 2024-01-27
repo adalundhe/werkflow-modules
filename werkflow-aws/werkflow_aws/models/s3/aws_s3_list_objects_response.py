@@ -18,7 +18,9 @@ class AWSs3ListObjectsResponse(BaseModel):
     Delimiter: StrictStr
     MaxKeys: StrictInt
     CommonPrefixes: List[AWSs3CommonPrefix]=[]
-    EncodingType: Literal['url']
+    EncodingType: Optional[
+        Literal['url']
+    ]=None
     KeyCount: StrictInt
     ContinuationToken: StrictStr
     NextContinuationToken: StrictStr

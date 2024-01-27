@@ -1,3 +1,4 @@
+from __future__ import annotations
 import datetime
 from abc import ABC, abstractmethod
 from io import FileIO
@@ -388,11 +389,13 @@ class s3Client(ABC):
         Key: str=None,
         VersionId: Optional[str]=None,
         ContentMD5: Optional[str]=None,
-        ChecksumAlgorithm: Union[
-            Optional[Literal['CRC32']],
-            Optional[Literal['CRC32C']],
-            Optional[Literal['SHA1']],
-            Optional[Literal['SHA256']]
+        ChecksumAlgorithm: Optional[
+            Literal[
+                'CRC32',
+                'CRC32C',
+                'SHA1',
+                'SHA256'
+            ]
         ]=None,
         Tagging: Dict[
             Literal['TagSet'],
@@ -429,7 +432,7 @@ class s3Client(ABC):
         ExtraArgs: Dict[str, str],
         Callback: Callable[..., Any],
         Config: Dict[str, str]
-    ):
+    ) -> Dict[str, str]:
         pass
 
     @abstractmethod
@@ -441,7 +444,218 @@ class s3Client(ABC):
         ExtraArgs: Dict[str, str],
         Callback: Callable[..., Any],
         Config: Dict[str, str]
-    ):
+    ) -> Dict[str, str]:
+        pass
+
+    @abstractmethod
+    def list_directory_buckets(
+        self,
+        ContinuationToken: str=None,
+        MaxDirectoryBuckets: int=None
+    ) -> Dict[str, str]:
+        pass
+
+    @abstractmethod
+    def list_object_versions(
+        Bucket: str=None,
+        Delimiter: str=None,
+        EncodingType: Literal['url']=None,
+        KeyMarker: str=None,
+        MaxKeys: int=None,
+        Prefix: str=None,
+        VersionIdMarker: str=None,
+        ExpectedBucketOwner: str=None,
+        RequestPayer: Literal['requester']=None,
+        OptionalObjectAttributes: List[str]=None
+    ) -> Dict[str, str]:
+        pass
+
+    @abstractmethod
+    def delete_objects(
+        self,
+        Bucket: str=None,
+        Delete: Dict[
+            Literal['Objects', 'Quiet'],
+            List[
+                Dict[
+                    Literal['Key', 'VersionId'],
+                    str
+                ]
+            ] | bool
+        ]=None,
+        MFA: str=None,
+        RequestPayer: Literal['requester']=None,
+        BypassGovernanceRetention: bool=None,
+        ExpectedBucketOwner: str=None,
+        ChecksumAlgorithm: Literal[
+            'CRC32',
+            'CRC32C',
+            'SHA1',
+            'SHA256'
+        ]=None
+    ) -> Dict[str, str]:
+        pass
+
+    @abstractmethod
+    def download_file(
+        self,
+        Bucket: str,
+        Key: str,
+        Filename: str,
+        ExtraArgs: Dict[str, str],
+        Callback: Callable[..., Any],
+        Config: str
+    ) -> None:
+        pass
+
+    @abstractmethod
+    def download_fileobj(
+        self,
+        Bucket: str,
+        Key: str,
+        Fileobj: FileIO,
+        ExtraArgs: Dict[str, str],
+        Callback: Callable[..., Any],
+        Config: str
+    ) -> None:
+        pass
+
+    @abstractmethod
+    def generate_presigned_url(
+        self,
+        ClientMethod: str,
+        Params: Dict[str, str]=None,
+        ExpiresIn: int=None,
+        HttpMethod: str=None
+    )-> str:
+        pass
+
+    @abstractmethod
+    def generate_presigned_post(
+        self,
+        Bucket: str,
+        Key: str,
+        Fields: Dict[str, str]=None,
+        Conditions: List[Dict[str, str] | List[str]]=None,
+        ExpiresIn: int=None
+    ) -> Dict[str, str]:
+        pass
+    
+    @abstractmethod
+    def copy_object(
+        self,
+        ACL: Literal[
+            'private',
+            'public-read',
+            'public-read-write',
+            'authenticated-read',
+            'aws-exec-read',
+            'bucket-owner-read',
+            'bucket-owner-full-control'
+        ]=None,
+        Bucket: str=None,
+        CacheControl: str=None,
+        ChecksumAlgorithm: Literal[
+            'CRC32',
+            'CRC32C',
+            'SHA1',
+            'SHA256'
+        ]=None,
+        ContentDisposition: str=None,
+        ContentEncoding: str=None,
+        ContentLanguage: str=None,
+        ContentType: str=None,
+        CopySource: str | Dict[
+            Literal['Bucket', 'Key', 'VersionId'],
+            str
+        ]=None,
+        CopySourceIfMatch: str=None,
+        CopySourceIfModifiedSince: datetime.datetime=None,
+        CopySourceIfNoneMatch: str=None,
+        CopySourceIfUnmodifiedSince: datetime.datetime=None,
+        Expires: datetime.datetime=None,
+        GrantFullControl: str=None,
+        GrantRead: str=None,
+        GrantReadACP: str=None,
+        GrantWriteACP: str=None,
+        Key: str=None,
+        Metadata: Dict[str, str]=None,
+        MetadataDirective: Literal['COPY', 'REPLACE']=None,
+        TaggingDirective: Literal['COPY', 'REPLACE']=None,
+        ServerSideEncryption: Literal[
+            'AES256',
+            'aws:kms',
+            'aws:kms:dsse'
+        ]=None,
+        StorageClass: Literal[
+            'STANDARD',
+            'REDUCED_REDUNDANCY',
+            'STANDARD_IA',
+            'ONEZONE_IA',
+            'INTELLIGENT_TIERING',
+            'GLACIER',
+            'DEEP_ARCHIVE',
+            'OUTPOSTS',
+            'GLACIER_IR',
+            'SNOW',
+            'EXPRESS_ONEZONE'
+        ]=None,
+        WebsiteRedirectLocation: str=None,
+        SSECustomerAlgorithm: str=None,
+        SSECustomerKey: str=None,
+        SSEKMSKeyId: str=None,
+        SSEKMSEncryptionContext: str=None,
+        BucketKeyEnabled: bool=None,
+        CopySourceSSECustomerAlgorithm: str=None,
+        CopySourceSSECustomerKey: str=None,
+        RequestPayer: Literal['requester']=None,
+        Tagging: str= None,
+        ObjectLockMode: Literal['GOVERNANCE', 'COMPLIANCE']=None,
+        ObjectLockRetainUntilDate: datetime.datetime=None,
+        ObjectLockLegalHoldStatus: Literal['ON', 'OFF']=None,
+        ExpectedBucketOwner: str=None,
+        ExpectedSourceBucketOwner: str=None
+    ) -> Dict[str, str]:
+        pass
+
+    @abstractmethod
+    def copy(
+        self,
+        copy_source: Dict[
+            Literal[
+                'Bucket',
+                'Key',
+                'VersionId'
+            ],
+            str
+        ],
+        Bucket: str,
+        Key: str,
+        ExtraArgs: Dict[str, str]=None,
+        Callback: Callable[..., Any]=None,
+        SourceClient: s3Client=None,
+        Config: Dict[str, str]=None
+    ) -> None:
+        pass
+
+    @abstractmethod
+    def put_bucket_versioning(
+        self,
+        Bucket: str=None,
+        ChecksumAlgorithm: Literal[
+            'CRC32',
+            'CRC32C',
+            'SHA1',
+            'SHA256'
+        ]=None,
+        MFA: str=None,
+        VersioningConfiguration: Dict[
+            Literal['MFADelete', 'Status'],
+            Literal['Enabled', 'Disabled'] |
+            Literal['Enabled', 'Suspended']
+        ]=None,
+        ExpectedBucketOwner: str=None
+    ) -> Dict[str, str]:
         pass
 
     @abstractmethod

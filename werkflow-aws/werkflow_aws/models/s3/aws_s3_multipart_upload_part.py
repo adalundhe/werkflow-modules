@@ -3,7 +3,7 @@ from pydantic import (
     StrictStr,
     StrictInt
 )
-from werkflow_aws.models.base import AWSBoto3Options
+from werkflow_aws.models.base import AWSBoto3Base
 from werkflow_aws.models.parsing import (
     convert_key_to_boto3_arg, 
     convert_key_to_boto3_arg_upper_matching,
@@ -12,7 +12,7 @@ from werkflow_aws.models.parsing import (
 from typing import Optional
 
 
-class AWSs3MultipartUploadPart(AWSBoto3Options):
+class AWSs3MultipartUploadPart(AWSBoto3Base):
     checksum_crc32: Optional[StrictStr]=None
     checksum_crc32c: Optional[StrictStr]=None
     checksum_sha1: Optional[StrictStr]=None
@@ -45,7 +45,6 @@ class AWSs3MultipartUploadPart(AWSBoto3Options):
                     'grant_write_acp',
                     'sse_customer_algorithm',
                     'sse_customer_key',
-                    'sse_kms_id',
                     'sse_kms_encryption_context'
                 ]
             )
