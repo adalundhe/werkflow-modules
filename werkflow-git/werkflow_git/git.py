@@ -1,10 +1,11 @@
 import asyncio
-import os
 import functools
+import os
 import traceback
-from urllib.parse import urlparse
-from typing import List, Optional
 from concurrent.futures import ThreadPoolExecutor
+from typing import List, Optional
+from urllib.parse import urlparse
+
 from werkflow.modules.base import Module
 from werkflow.modules.shell import Shell
 from werkflow.modules.system import System
@@ -12,8 +13,8 @@ from werkflow.modules.system import System
 try:
     module_enabled = True
     from git import RemoteReference
-    from git.repo import Repo
     from git.remote import Remote
+    from git.repo import Repo
 
 except ImportError:
     module_enabled = False
@@ -44,15 +45,16 @@ class Git(Module):
 
     async def reinitialize(
         self,
+        path: str | None = None,
         remote: str=None,
         branch: Optional[str]=None
     ) -> None:
         if self._loop is None:
             self._loop = asyncio.get_running_loop()
 
-
-        current_directory = await self._shell.get_current_directory()
-        self.repo = Repo(current_directory)
+        if path is None:
+            path = await self._shell.get_current_directory()
+        self.repo = Repo(path)
      
         self.git = self.repo.git
 
@@ -79,14 +81,18 @@ class Git(Module):
                 )
             )
 
-    async def check_if_repo_exists(self) -> bool:
+    async def check_if_repo_exists(
+        self,
+        path: str | None = None
+    ) -> bool:
 
         if self._loop is None:
             self._loop = asyncio.get_running_loop()
 
-        current_directory = await self._shell.get_current_directory()
+        if path is None:
+            path = await self._shell.get_current_directory()
         git_path = os.path.join(
-            current_directory,
+            path,
             '.git'
         )
 
@@ -171,7 +177,7 @@ class Git(Module):
             )
             
 
-        except Exception as e:
+        except Exception:
             self.branch = await self._loop.run_in_executor(
                 self._executor,
                 functools.partial(
