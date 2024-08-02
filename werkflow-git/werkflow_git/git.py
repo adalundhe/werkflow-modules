@@ -117,7 +117,7 @@ class Git(Module):
         if self._loop is None:
             self._loop = asyncio.get_running_loop()
 
-        git_repo_exists = await self.check_if_repo_exists()
+        git_repo_exists = await self.check_if_repo_exists(path=path)
 
         if git_repo_exists is False:
        
@@ -150,7 +150,7 @@ class Git(Module):
             self.git = self.repo.git
 
         else:
-            await self.reinitialize()
+            await self.reinitialize(path=path)
 
     async def checkout(
         self,
