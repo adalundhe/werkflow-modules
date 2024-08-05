@@ -1,27 +1,30 @@
 from __future__ import annotations
+
 import asyncio
 import ssl
-from urllib.parse import urlparse
 from collections import defaultdict
-from pydantic import BaseModel
 from typing import (
-    Tuple, 
-    Union, 
-    Optional, 
-    Dict, 
-    List, 
+    Dict,
+    List,
+    Optional,
+    Tuple,
+    Union,
+)
+from urllib.parse import urlparse
+
+from pydantic import BaseModel
+
+from .models.http import (
+    URL,
+    Cookies,
+    HTTPCookie,
+    HTTPEncodableValue,
+    HTTPRequest,
+    HTTPResponse,
+    Metadata,
+    URLMetadata,
 )
 from .protocols import HTTPConnection
-from .models.http import (
-    Cookies,
-    HTTPResponse,
-    HTTPRequest,
-    Metadata,
-    URL,
-    URLMetadata,
-    HTTPCookie,
-    HTTPEncodableValue
-)
 from .timeouts import Timeouts
 
 
@@ -558,7 +561,7 @@ class MercurySyncHTTPConnection:
                         path=url.path
                     ),
                     method=request.method,
-                    status=status,
+                    status=400,
                     headers=headers
                 ), False
 

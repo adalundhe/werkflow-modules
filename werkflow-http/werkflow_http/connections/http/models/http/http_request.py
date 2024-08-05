@@ -1,22 +1,12 @@
-import orjson
-from pydantic import (
-    BaseModel,
-    StrictStr,
-    StrictBytes,
-    StrictInt
-)
-from typing import (
-    Dict, 
-    List,
-    Optional, 
-    Tuple, 
-    Union,
-    Literal
-)
+import base64
+from typing import Dict, List, Literal, Optional, Tuple, Union
 from urllib.parse import urlencode
-from .url import URL
-from .types import HTTPCookie, HTTPEncodableValue
 
+import orjson
+from pydantic import BaseModel, StrictBytes, StrictInt, StrictStr
+
+from .types import HTTPCookie, HTTPEncodableValue
+from .url import URL
 
 NEW_LINE = '\r\n'
 
@@ -94,6 +84,18 @@ class HTTPRequest(BaseModel):
         ]
 
         header_items.extend(self.headers.items())
+
+        if self.auth and len(self.auth) > 1:
+            encoded_auth_header = base64.encode(f'{self.auth[0]}:{self.auth[1]}')
+            header_items.append(
+                ('Authorization', f'Basic {encoded_auth_header}')
+            )
+
+        elif self.auth and len(self.auth) > 0:
+            encoded_auth_header = base64.encode(f'{self.auth[0]}:')
+            header_items.append(
+                ('Authorization', f'Basic {encoded_auth_header}')
+            )
 
         for key, value in header_items:
             get_base += f"{key}: {value}{NEW_LINE}"

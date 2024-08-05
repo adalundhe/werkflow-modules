@@ -1,14 +1,11 @@
 import asyncio
+
 import orjson
-from werkflow_http.connections.http import MercurySyncHTTPConnection
 from werkflow.modules.base import Module
-from .request import (
-    Headers,
-    Data,
-    Params,
-    Request,
-    RequestWithData
-)
+
+from werkflow_http.connections.http import MercurySyncHTTPConnection
+
+from .request import Data, Headers, Params, Request, RequestWithData
 
 
 class HTTP(Module):
