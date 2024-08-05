@@ -1,11 +1,17 @@
 import asyncio
+from typing import Dict
 
 import orjson
 from werkflow.modules.base import Module
 
-from werkflow_http.connections.http import MercurySyncHTTPConnection
-
-from .request import Data, Headers, Params, Request, RequestWithData
+from .connections.http import MercurySyncHTTPConnection
+from .request import (
+    Data,
+    Headers,
+    Params,
+    Request,
+    RequestWithData,
+)
 
 
 class HTTP(Module):
@@ -62,11 +68,13 @@ class HTTP(Module):
             data=data
         )
 
-        lowered_headers = {
-            header_key.lower(): header_value for header_key, header_value in headers.items()
-        }
+        lowered_headers: Dict[str, str] | None = None
+        if headers:
+            lowered_headers = {
+                header_key.lower(): header_value for header_key, header_value in headers.items()
+            }
 
-        if lowered_headers.get('content-type') == 'application/json':
+        if lowered_headers and lowered_headers.get('content-type') == 'application/json':
             data = orjson.dumps(data)
 
         return await self._client.post(
@@ -96,11 +104,13 @@ class HTTP(Module):
             data=data
         )
 
-        lowered_headers = {
-            header_key.lower(): header_value for header_key, header_value in headers.items()
-        }
+        lowered_headers: Dict[str, str] | None = None
+        if headers:
+            lowered_headers = {
+                header_key.lower(): header_value for header_key, header_value in headers.items()
+            }
 
-        if lowered_headers.get('content-type') == 'application/json':
+        if lowered_headers and lowered_headers.get('content-type') == 'application/json':
             data = orjson.dumps(data).decode()
 
         return await self._client.put(
@@ -130,11 +140,13 @@ class HTTP(Module):
             data=data
         )
 
-        lowered_headers = {
-            header_key.lower(): header_value for header_key, header_value in headers.items()
-        }
+        lowered_headers: Dict[str, str] | None = None
+        if headers:
+            lowered_headers = {
+                header_key.lower(): header_value for header_key, header_value in headers.items()
+            }
 
-        if lowered_headers.get('content-type') == 'application/json':
+        if lowered_headers and lowered_headers.get('content-type') == 'application/json':
             data = orjson.dumps(data).decode()
 
         return await self._client.patch(
