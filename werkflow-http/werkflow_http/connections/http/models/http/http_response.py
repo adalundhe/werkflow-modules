@@ -1,22 +1,11 @@
 import gzip
-import orjson
 import re
-from pydantic import (
-    StrictStr,
-    StrictInt,
-    BaseModel,
-    StrictBytes
-)
-from typing import (
-    Dict, 
-    Optional, 
-    TypeVar, 
-    Literal,
-    Type,
-    Union
-)
+from typing import Dict, Literal, Optional, Type, TypeVar, Union
+
+import orjson
+from pydantic import BaseModel, StrictBytes, StrictInt, StrictStr
+
 from .cookies import Cookies
-from .url import URL
 from .url_metadata import URLMetadata
 
 space_pattern = re.compile(r"\s+")
@@ -45,7 +34,7 @@ class HTTPResponse(BaseModel):
     status: Optional[StrictInt]=None
     status_message: Optional[StrictStr]=None
     headers: Dict[StrictBytes, StrictBytes]={}
-    content: StrictBytes=b''
+    content: StrictBytes | bytearray=b''
 
     class Config:
         arbitrary_types_allowed=True
