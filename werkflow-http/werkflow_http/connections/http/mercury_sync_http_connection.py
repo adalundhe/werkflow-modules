@@ -764,3 +764,8 @@ class MercurySyncHTTPConnection:
                 raise connection_error
 
         return connection, parsed_url, False
+    
+    async def close(self):
+        await asyncio.gather(*[
+            transport.close() for transport in self._connections
+        ])

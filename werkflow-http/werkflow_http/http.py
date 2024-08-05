@@ -22,6 +22,7 @@ class HTTP(Module):
     async def get(
         self,
         url: str,
+        auth: tuple[str, str] | None = None,
         headers: Headers=None,
         params: Params=None
     ):
@@ -30,12 +31,14 @@ class HTTP(Module):
 
         Request(
             url=url,
+            auth=auth,
             headers=headers,
             params=params
         )
 
         return await self._client.get(
             url,
+            auth=auth,
             headers=headers,
             params=params
         )
@@ -43,6 +46,7 @@ class HTTP(Module):
     async def post(
         self,
         url: str,
+        auth: tuple[str, str] | None = None,
         headers: Headers=None,
         params: Params=None,
         data: Data=None
@@ -52,6 +56,7 @@ class HTTP(Module):
 
         RequestWithData(
             url=url,
+            auth=auth,
             headers=headers,
             params=params,
             data=data
@@ -66,6 +71,7 @@ class HTTP(Module):
 
         return await self._client.post(
             url,
+            auth=auth,
             headers=headers,
             params=params,
             data=data
@@ -74,6 +80,7 @@ class HTTP(Module):
     async def put(
         self,
         url: str,
+        auth: tuple[str, str] | None = None,
         headers: Headers=None,
         params: Params=None,
         data: Data=None
@@ -83,6 +90,7 @@ class HTTP(Module):
 
         RequestWithData(
             url=url,
+            auth=auth,
             headers=headers,
             params=params,
             data=data
@@ -97,6 +105,7 @@ class HTTP(Module):
 
         return await self._client.put(
             url,
+            auth=auth,
             headers=headers,
             params=params,
             data=data
@@ -105,6 +114,7 @@ class HTTP(Module):
     async def patch(
         self,
         url: str,
+        auth: tuple[str, str] | None = None,
         headers: Headers=None,
         params: Params=None,
         data: Data=None
@@ -114,6 +124,7 @@ class HTTP(Module):
 
         RequestWithData(
             url,
+            auth=auth,
             headers=headers,
             params=params,
             data=data
@@ -128,6 +139,7 @@ class HTTP(Module):
 
         return await self._client.patch(
             url,
+            auth=auth,
             headers=headers,
             params=params,
             data=data
@@ -136,6 +148,7 @@ class HTTP(Module):
     async def delete(
         self,
         url: str,
+        auth: tuple[str, str] | None = None,
         headers: Headers=None,
         params: Params=None
     ):
@@ -144,12 +157,14 @@ class HTTP(Module):
 
         Request(
             url=url,
+            auth=auth,
             headers=headers,
             params=params
         )
 
         return await self._client.delete(
             url=url,
+            auth=auth,
             headers=headers,
             params=params
         )
@@ -157,6 +172,7 @@ class HTTP(Module):
     async def options(
         self,
         url: str,
+        auth: tuple[str, str] | None = None,
         headers: Headers=None,
         params: Params=None
     ):
@@ -165,12 +181,14 @@ class HTTP(Module):
 
         Request(
             url=url,
+            auth=auth,
             headers=headers,
             params=params
         )
 
         return await self._client.options(
             url,
+            auth=auth,
             headers=headers,
             params=params
         )
@@ -178,6 +196,7 @@ class HTTP(Module):
     async def head(
         self,
         url: str,
+        auth: tuple[str, str] | None = None,
         headers: Headers=None,
         params: Params=None
     ):
@@ -186,12 +205,14 @@ class HTTP(Module):
 
         Request(
             url,
+            auth=auth,
             headers=headers,
             params=params
         )
 
         return await self._client.head(
             url,
+            auth=auth,
             headers=headers,
             params=params
         )
