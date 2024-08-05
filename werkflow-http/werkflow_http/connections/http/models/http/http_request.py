@@ -25,7 +25,7 @@ class HTTPRequest(BaseModel):
     cookies: Optional[List[HTTPCookie]]=None
     auth: Optional[Tuple[str, str]]=None
     params: Optional[Dict[str, HTTPEncodableValue]]=None
-    headers: Dict[str, str]={}
+    headers: Dict[str, str] | None=None
     data: Union[
         Optional[StrictStr],
         Optional[StrictBytes],
@@ -53,6 +53,10 @@ class HTTPRequest(BaseModel):
 
         hostname = url.hostname.encode("idna").decode()
 
+        headers: dict[str, str] = {}
+        if self.headers:
+            headers.update(self.headers)
+
         if port not in [80, 443]:
             hostname = f'{hostname}:{port}'
 
@@ -60,7 +64,7 @@ class HTTPRequest(BaseModel):
             data = orjson.dumps({
                 name: value for name, value in self.data.__dict__.items() if value is not None
             })
-            self.headers['content-type'] = 'application/json'
+            headers['content-type'] = 'application/json'
 
             size = len(data)
 
@@ -83,7 +87,7 @@ class HTTPRequest(BaseModel):
             ("Content-Length", size)
         ]
 
-        header_items.extend(self.headers.items())
+        header_items.extend(headers.items())
 
         if self.auth:
             encoded_auth_header = base64.b64decode(f'{self.auth[0]}:{self.auth[1]}'.encode()).decode()
