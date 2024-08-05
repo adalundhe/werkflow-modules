@@ -85,14 +85,8 @@ class HTTPRequest(BaseModel):
 
         header_items.extend(self.headers.items())
 
-        if self.auth and len(self.auth) > 1:
-            encoded_auth_header = base64.encode(f'{self.auth[0]}:{self.auth[1]}')
-            header_items.append(
-                ('Authorization', f'Basic {encoded_auth_header}')
-            )
-
-        elif self.auth and len(self.auth) > 0:
-            encoded_auth_header = base64.b64encode(f'{self.auth[0]}:').decode(encoding='latin1')
+        if self.auth:
+            encoded_auth_header = base64.b64decode(f'{self.auth[0]}:{self.auth[1]}'.encode()).decode()
             header_items.append(
                 ('Authorization', f'Basic {encoded_auth_header}')
             )
