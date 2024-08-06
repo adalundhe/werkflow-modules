@@ -43,8 +43,8 @@ setup(
         "Operating System :: OS Independent"
     ],
     install_requires=[
-        'werkflow-http'
-        'werkflow-encryption'
+        'werkflow-http',
+        'werkflow-encryption',
         'pydantic[email]',
         'werkflow'
     ],
