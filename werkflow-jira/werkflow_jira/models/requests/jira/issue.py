@@ -9,7 +9,7 @@ from .content import JiraTopLevelBlock
 class Issue(BaseModel):
     summary: StrictStr
     issue_type: StrictStr
-    description: JiraTopLevelBlock
+    description: List[JiraTopLevelBlock]
     priority: StrictStr
     reporter: StrictStr
     project: StrictStr
