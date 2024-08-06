@@ -1,7 +1,7 @@
+from .issue import Issue as Issue
 from .jira_issue import JiraIssue as JiraIssue
 from .jira_issue import JiraIssueAssignee as JiraIssueAssignee
 from .jira_issue import JiraIssueDescription as JiraIssueDescription
-from .jira_issue import JiraIssueDict as JiraIssueDict
 from .jira_issue import JiraIssueFields as JiraIssueFields
 from .jira_issue import JiraIssueParent as JiraIssueParent
 from .jira_issue import JiraIssuePriority as JiraIssuePriority

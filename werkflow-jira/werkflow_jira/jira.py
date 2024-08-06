@@ -16,11 +16,11 @@ from .models.requests.errors import (
     UnprocessableContentError,
 )
 from .models.requests.jira import (
+    Issue,
     JiraIssue,
     JiraIssueAssignee,
     JiraIssueBatch,
     JiraIssueDescription,
-    JiraIssueDict,
     JiraIssueFields,
     JiraIssueLink,
     JiraIssueLinkComment,
@@ -204,21 +204,21 @@ class Jira(Module):
 
     async def create_issue_batch(
         self,
-        jira_issues_dicts: list[JiraIssueDict],
+        jira_issues: list[Issue],
         jira_email: str,
         jira_api_token: str,
         organization: str = "datavant",
     ):
-        jira_issues = await asyncio.gather(
+        created_jira_issues = await asyncio.gather(
             *[
                 self._convert_jira_issue_dict_to_request(
                     issue_dict, jira_email, jira_api_token, organization=organization
                 )
-                for issue_dict in jira_issues_dicts
+                for issue_dict in jira_issues
             ]
         )
 
-        data = JiraIssueBatch(issueUpdates=jira_issues)
+        data = JiraIssueBatch(issueUpdates=created_jira_issues)
 
         response = await self.client.post(
             f"https://{organization}.atlassian.net/rest/api/3/issue/bulk",
@@ -238,45 +238,35 @@ class Jira(Module):
 
     async def _convert_jira_issue_dict_to_request(
         self,
-        jira_issue_dict: JiraIssueDict,
+        jira_issue: Issue,
         jira_email: str,
         jira_api_token: str,
         organization: str = "datavant",
     ):
-        jira_issue_summary = jira_issue_dict.get("summary")
-        jira_issue_description = jira_issue_dict.get("description")
-        jira_issue_priority = jira_issue_dict.get("priority")
-        jira_issue_reporter = jira_issue_dict.get("reporter")
-        jira_issue_project = jira_issue_dict.get("project")
-        jira_issue_assignee = jira_issue_dict.get("assignee")
-        jira_issue_due_date = jira_issue_dict.get("due_date")
-        jira_issue_labels = jira_issue_dict.get("labels")
-        jira_parent_issue = jira_issue_dict.get("parent_issue")
-        jira_issue_type = jira_issue_dict.get("issue_type")
 
         issue_priority = await self.get_matching_priority(
-            jira_issue_priority,
+            jira_issue.priority,
             jira_email,
             jira_api_token,
             organization=organization,
         )
 
         issue_reporter = await self.get_matching_user_by_email(
-            jira_issue_reporter,
+            jira_issue.reporter,
             jira_email,
             jira_api_token,
             organization=organization,
         )
 
         issue_project = await self.get_jira_project(
-            jira_issue_project,
+            jira_issue.project,
             jira_email,
             jira_api_token,
             organization=organization,
         )
 
         issue_type = await self.get_matching_project_issue_type(
-            jira_issue_type,
+            jira_issue.issue_type,
             issue_project.id,
             jira_email,
             jira_api_token,
@@ -284,9 +274,9 @@ class Jira(Module):
         )
 
         issue_assignee: JiraIssueAssignee | None = None
-        if jira_issue_assignee:
+        if jira_issue.assignee:
             issue_assignee_user = await self.get_matching_user_by_email(
-                jira_issue_assignee,
+                jira_issue.assignee,
                 jira_email,
                 jira_api_token,
                 organization=organization,
@@ -296,17 +286,17 @@ class Jira(Module):
         issue = JiraIssue(
             fields=JiraIssueFields(
                 assignee=issue_assignee,
-                description=JiraIssueDescription(content=jira_issue_description),
-                duedate=jira_issue_due_date,
-                labels=jira_issue_labels,
-                parent=JiraIssueParent(key=jira_parent_issue)
-                if jira_parent_issue
+                description=JiraIssueDescription(content=jira_issue.description),
+                duedate=jira_issue.due_date,
+                labels=jira_issue.labels,
+                parent=JiraIssueParent(key=jira_issue.parent_issue)
+                if jira_issue.parent_issue
                 else None,
                 issuetype=JiraIssueType(id=issue_type.id),
                 priority=JiraIssuePriority(id=issue_priority.id),
                 reporter=JiraIssueReporter(id=issue_reporter.accountId),
                 project=JiraIssueProject(id=issue_project.id),
-                summary=jira_issue_summary,
+                summary=jira_issue.summary,
             )
         )
 

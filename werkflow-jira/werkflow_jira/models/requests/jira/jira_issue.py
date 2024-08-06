@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import datetime
 from typing import Any, Dict, List, Literal
 
 from pydantic import (
@@ -62,20 +61,3 @@ class JiraIssueFields(BaseModel):
 class JiraIssue(BaseModel):
     fields: JiraIssueFields
     update: Dict[StrictStr, Any] = {}
-
-
-JiraIssueDict = Dict[
-    Literal[
-        "summary",
-        "issue_type",
-        "description",
-        "priority",
-        "reporter",
-        "project",
-        "assignee",
-        "labels",
-        "due_date",
-        "parent_issue",
-    ],
-    str | list[str] | datetime.datetime | list[JiraTopLevelBlock],
-]
