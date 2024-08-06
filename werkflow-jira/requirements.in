@@ -1,0 +1,4 @@
+werkflow-http
+werkflow-encryption
+pydantic[email]
+werkflow
