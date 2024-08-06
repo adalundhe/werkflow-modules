@@ -12,14 +12,14 @@ with open (os.path.join(current_directory, ".version"), 'r') as version_file:
     version_string = version_file.read()
 
 setup(
-    name="werkflow-http",
+    name="werkflow-jira",
     version=version_string,
     description="An HTTP client for Werkflow.",
     long_description=package_description,
     long_description_content_type="text/markdown",
     author="Ada Lundhe",
     author_email="corpheus91@gmail.com.com",
-    url="https://github.com/scorbettUM/werkflow-modules/werkflow-http",
+    url="https://github.com/scorbettUM/werkflow-modules/werkflow-jira",
     packages=find_packages(),
     keywords=[
         'pypi', 
