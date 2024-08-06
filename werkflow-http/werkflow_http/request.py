@@ -1,10 +1,12 @@
-from typing import Dict, Tuple, Union
+from typing import Dict, List, Tuple, Union
 
 from pydantic import BaseModel, StrictStr
 
 Headers = Dict[str, Union[int, float, str, bytes, None]]
 Params = Dict[str, str]
-Data = Union[str, bytes, BaseModel, None]
+
+JSONEncodable = str | bool | int | float | None
+Data = JSONEncodable | List[JSONEncodable] | Dict[JSONEncodable, JSONEncodable] | BaseModel | List[BaseModel] | Dict[JSONEncodable, JSONEncodable] | None
 
 
 class Request(BaseModel):
