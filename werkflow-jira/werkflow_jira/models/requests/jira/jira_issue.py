@@ -54,7 +54,7 @@ class JiraIssueFields(BaseModel):
     parent: JiraIssueParent | None = None
     priority: JiraIssuePriority | None = None
     project: JiraIssueProject
-    reporter: JiraIssueReporter
+    reporter: JiraIssueReporter | None = None
     summary: StrictStr
 
 

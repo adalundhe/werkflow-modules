@@ -106,11 +106,11 @@ class Jira(Module):
         jira_issue_description: list[JiraTopLevelBlock],
         jira_issue_type: str,
         jira_issue_priority: str,
-        jira_issue_reporter: str,
         jira_issue_project: str,
         jira_issue_assignee: str | None = None,
-        jira_issue_labels: list[str] | None = None,
         jira_issue_due_date: datetime.datetime | None = None,
+        jira_issue_labels: list[str] | None = None,
+        jira_issue_reporter: str | None = None,
         jira_parent_issue: str | None = None,
         organization: str = "datavant",
     ):
@@ -119,10 +119,6 @@ class Jira(Module):
             jira_email,
             jira_api_token,
             organization=organization,
-        )
-
-        issue_reporter = await self.get_matching_user_by_email(
-            jira_issue_reporter, jira_email, jira_api_token, organization=organization
         )
 
         issue_project = await self.get_jira_project(
@@ -139,6 +135,15 @@ class Jira(Module):
             jira_api_token,
             organization=organization,
         )
+
+        issue_reporter: JiraIssueReporter | None = None
+        if jira_issue_reporter:
+            matching_user = await self.get_matching_user_by_email(
+                jira_issue_reporter, jira_email, jira_api_token, organization=organization
+            )
+
+            issue_reporter = JiraIssueReporter(id=matching_user.accountId)
+
 
         issue_assignee: JiraIssueAssignee | None = None
         if jira_issue_assignee:
@@ -161,7 +166,7 @@ class Jira(Module):
                 if jira_parent_issue
                 else None,
                 priority=JiraIssuePriority(id=issue_priority.id),
-                reporter=JiraIssueReporter(id=issue_reporter.accountId),
+                reporter=issue_reporter,
                 project=JiraIssueProject(id=issue_project.id),
                 summary=jira_issue_summary,
             )
@@ -251,13 +256,6 @@ class Jira(Module):
             organization=organization,
         )
 
-        issue_reporter = await self.get_matching_user_by_email(
-            jira_issue.reporter,
-            jira_email,
-            jira_api_token,
-            organization=organization,
-        )
-
         issue_project = await self.get_jira_project(
             jira_issue.project,
             jira_email,
@@ -272,6 +270,17 @@ class Jira(Module):
             jira_api_token,
             organization=organization,
         )
+
+        issue_reporter: JiraIssueReporter | None = None
+        if jira_issue.reporter:
+            matching_user = await self.get_matching_user_by_email(
+                jira_issue.reporter,
+                jira_email,
+                jira_api_token,
+                organization=organization,
+            )
+
+            issue_reporter = JiraIssueReporter(id=matching_user.accountId)
 
         issue_assignee: JiraIssueAssignee | None = None
         if jira_issue.assignee:
@@ -294,7 +303,7 @@ class Jira(Module):
                 else None,
                 issuetype=JiraIssueType(id=issue_type.id),
                 priority=JiraIssuePriority(id=issue_priority.id),
-                reporter=JiraIssueReporter(id=issue_reporter.accountId),
+                reporter=issue_reporter,
                 project=JiraIssueProject(id=issue_project.id),
                 summary=jira_issue.summary,
             )

@@ -11,7 +11,7 @@ class Issue(BaseModel):
     issue_type: StrictStr
     description: List[JiraTopLevelBlock]
     priority: StrictStr
-    reporter: StrictStr
+    reporter: StrictStr | None = None
     project: StrictStr
     assignee: StrictStr | None = None
     labels: List[StrictStr] | None = None
