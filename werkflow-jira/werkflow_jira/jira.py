@@ -103,6 +103,7 @@ class Jira(Module):
         jira_email: str,
         jira_api_token: str,
         jira_issue_summary: str,
+        jira_organization: str,
         jira_issue_description: list[JiraTopLevelBlock],
         jira_issue_type: str,
         jira_issue_priority: str,
@@ -112,20 +113,19 @@ class Jira(Module):
         jira_issue_labels: list[str] | None = None,
         jira_issue_reporter: str | None = None,
         jira_parent_issue: str | None = None,
-        organization: str = "datavant",
     ):
         issue_priority = await self.get_matching_priority(
             jira_issue_priority,
             jira_email,
             jira_api_token,
-            organization=organization,
+            organization=jira_organization,
         )
 
         issue_project = await self.get_jira_project(
             jira_issue_project,
             jira_email,
             jira_api_token,
-            organization=organization,
+            organization=jira_organization,
         )
 
         issue_type = await self.get_matching_project_issue_type(
@@ -133,13 +133,16 @@ class Jira(Module):
             issue_project.id,
             jira_email,
             jira_api_token,
-            organization=organization,
+            organization=jira_organization,
         )
 
         issue_reporter: JiraIssueReporter | None = None
         if jira_issue_reporter:
             matching_user = await self.get_matching_user_by_email(
-                jira_issue_reporter, jira_email, jira_api_token, organization=organization
+                jira_issue_reporter,
+                jira_email,
+                jira_api_token,
+                organization=jira_organization,
             )
 
             issue_reporter = JiraIssueReporter(id=matching_user.accountId)
@@ -151,7 +154,7 @@ class Jira(Module):
                 jira_issue_assignee,
                 jira_email,
                 jira_api_token,
-                organization=organization,
+                organization=jira_organization,
             )
             issue_assignee = JiraIssueAssignee(id=issue_assignee_user.accountId)
 
@@ -173,7 +176,7 @@ class Jira(Module):
         )
 
         response = await self.client.post(
-            f"https://{organization}.atlassian.net/rest/api/3/issue",
+            f"https://{jira_organization}.atlassian.net/rest/api/3/issue",
             headers={
                 "Content-Type": "application/json",
             },
@@ -195,10 +198,10 @@ class Jira(Module):
         issue_id: str,
         jira_email: str,
         jira_api_token: str,
-        organization: str = "datavant",
+        jira_organization: str,
     ):
         response = await self.client.get(
-            f"https://{organization}.atlassian.net/rest/api/3/issue/{issue_id}",
+            f"https://{jira_organization}.atlassian.net/rest/api/3/issue/{issue_id}",
             auth=(
                 jira_email,
                 jira_api_token,
@@ -212,12 +215,15 @@ class Jira(Module):
         jira_issues: list[Issue],
         jira_email: str,
         jira_api_token: str,
-        organization: str = "datavant",
+        jira_organization: str,
     ):
         created_jira_issues = await asyncio.gather(
             *[
                 self._convert_jira_issue_dict_to_request(
-                    issue_dict, jira_email, jira_api_token, organization=organization
+                    issue_dict, 
+                    jira_email,
+                    jira_api_token,
+                    organization=jira_organization,
                 )
                 for issue_dict in jira_issues
             ]
@@ -226,7 +232,7 @@ class Jira(Module):
         data = JiraIssueBatch(issueUpdates=created_jira_issues)
 
         response = await self.client.post(
-            f"https://{organization}.atlassian.net/rest/api/3/issue/bulk",
+            f"https://{jira_organization}.atlassian.net/rest/api/3/issue/bulk",
             auth=(
                 jira_email,
                 jira_api_token,
@@ -246,21 +252,21 @@ class Jira(Module):
         jira_issue: Issue,
         jira_email: str,
         jira_api_token: str,
-        organization: str = "datavant",
+        jira_organization: str,
     ):
 
         issue_priority = await self.get_matching_priority(
             jira_issue.priority,
             jira_email,
             jira_api_token,
-            organization=organization,
+            organization=jira_organization,
         )
 
         issue_project = await self.get_jira_project(
             jira_issue.project,
             jira_email,
             jira_api_token,
-            organization=organization,
+            organization=jira_organization,
         )
 
         issue_type = await self.get_matching_project_issue_type(
@@ -268,7 +274,7 @@ class Jira(Module):
             issue_project.id,
             jira_email,
             jira_api_token,
-            organization=organization,
+            organization=jira_organization,
         )
 
         issue_reporter: JiraIssueReporter | None = None
@@ -277,7 +283,7 @@ class Jira(Module):
                 jira_issue.reporter,
                 jira_email,
                 jira_api_token,
-                organization=organization,
+                organization=jira_organization,
             )
 
             issue_reporter = JiraIssueReporter(id=matching_user.accountId)
@@ -288,7 +294,7 @@ class Jira(Module):
                 jira_issue.assignee,
                 jira_email,
                 jira_api_token,
-                organization=organization,
+                organization=jira_organization,
             )
             issue_assignee = JiraIssueAssignee(id=issue_assignee_user.accountId)
 
@@ -316,10 +322,10 @@ class Jira(Module):
         jira_user_email: str,
         jira_email: str,
         jira_api_token: str,
-        organization: str = "datavant",
+        jira_organization: str,
     ):
         response = await self.client.get(
-            f"https://{organization}.atlassian.net/rest/api/3/user/search?query={jira_user_email}",
+            f"https://{jira_organization}.atlassian.net/rest/api/3/user/search?query={jira_user_email}",
             auth=(
                 jira_email,
                 jira_api_token,
@@ -344,10 +350,10 @@ class Jira(Module):
         self,
         jira_email: str,
         jira_api_token: str,
-        organization: str = "datavant",
+        jira_organization: str,
     ):
         response = await self.client.get(
-            f"https://{organization}.atlassian.net/rest/api/3/priority",
+            f"https://{jira_organization}.atlassian.net/rest/api/3/priority",
             auth=(
                 jira_email,
                 jira_api_token,
@@ -366,12 +372,12 @@ class Jira(Module):
         jira_priority: str,
         jira_email: str,
         jira_api_token: str,
-        organization: str = "datavant",
+        jira_organization: str,
     ):
         priorities = await self.list_priorities(
             jira_email,
             jira_api_token,
-            organization=organization,
+            organization=jira_organization,
         )
 
         matching_priorities = [
@@ -393,10 +399,10 @@ class Jira(Module):
         jira_project_name_or_id: str,
         jira_email: str,
         jira_api_token: str,
-        organization: str = "datavant",
+        jira_organization: str,
     ):
         response = await self.client.get(
-            f"https://{organization}.atlassian.net/rest/api/3/project/{jira_project_name_or_id}",
+            f"https://{jira_organization}.atlassian.net/rest/api/3/project/{jira_project_name_or_id}",
             auth=(
                 jira_email,
                 jira_api_token,
@@ -412,10 +418,10 @@ class Jira(Module):
         project_id: str,
         jira_email: str,
         jira_api_token: str,
-        organization: str = "datavant",
+        jira_organization: str,
     ):
         response = await self.client.get(
-            f"https://{organization}.atlassian.net/rest/api/3/issuetype/project?projectId={project_id}",
+            f"https://{jira_organization}.atlassian.net/rest/api/3/issuetype/project?projectId={project_id}",
             auth=(
                 jira_email,
                 jira_api_token,
@@ -435,13 +441,13 @@ class Jira(Module):
         project_id: str,
         jira_email: str,
         jira_api_token: str,
-        organization: str = "datavant",
+        jira_organization: str,
     ):
         jira_issue_types = await self.get_project_issue_types(
             project_id,
             jira_email,
             jira_api_token,
-            organization=organization,
+            organization=jira_organization,
         )
 
         matching_issue_types = [
@@ -460,11 +466,11 @@ class Jira(Module):
         self,
         jira_email: str,
         jira_api_token: str,
-        organization: str = "datavant",
+        jira_organization: str,
     ):
         # issueLinkType
         response = await self.client.get(
-            f"https://{organization}.atlassian.net/rest/api/3/issueLinkType",
+            f"https://{jira_organization}.atlassian.net/rest/api/3/issueLinkType",
             auth=(
                 jira_email,
                 jira_api_token,
@@ -480,10 +486,12 @@ class Jira(Module):
         jira_issue_link_type: str,
         jira_email: str,
         jira_api_token: str,
-        organization: str = "datavant",
+        jira_organization: str,
     ) -> JiraIssueLinkType:
         link_types = await self.get_issue_link_types(
-            jira_email, jira_api_token, organization=organization
+            jira_email, 
+            jira_api_token, 
+            organization=jira_organization,
         )
 
         issue_link_types: list[JiraIssueLinkType] = link_types.issueLinkTypes
@@ -509,13 +517,13 @@ class Jira(Module):
         jira_issue_link_type: str,
         jira_email: str,
         jira_api_token: str,
-        organization: str = "datavant",
+        jira_organization: str,
     ):
         jira_link_type = await self.get_matching_issue_link_type(
             jira_issue_link_type,
             jira_email,
             jira_api_token,
-            organization=organization,
+            organization=jira_organization,
         )
 
         data = JiraIssueLink(
@@ -534,7 +542,7 @@ class Jira(Module):
         )
 
         return await self.client.post(
-            f"https://{organization}.atlassian.net/rest/api/3/issueLink",
+            f"https://{jira_organization}.atlassian.net/rest/api/3/issueLink",
             auth=(
                 jira_email,
                 jira_api_token,
