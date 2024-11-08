@@ -28,11 +28,9 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: '3.12'
-    - name: Install pypa/setuptools
-      run: >-
-        python -m
-        pip install wheel build setuptools twine
     - name: Publish distribution 📦 to PyPI
       run: >-
+        python -m pip install wheel build setuptools twine
+        
         cd werkflow-metrikflow && python -m build && \
         python -m twine upload dist/* -u __token__ -p ${{ secrets.PYPI_API_TOKEN }}
