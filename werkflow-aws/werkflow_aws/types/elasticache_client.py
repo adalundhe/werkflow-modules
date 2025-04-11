@@ -14,3 +14,6 @@ class ElastiCacheClient(ABC):
     ) -> dict[str, str]:
         pass
         
+    @abstractmethod
+    def close(self):
+        pass
