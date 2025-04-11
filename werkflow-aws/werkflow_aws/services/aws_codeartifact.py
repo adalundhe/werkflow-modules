@@ -47,7 +47,7 @@ class AWSCodeArtifact:
             self._executor,
             functools.partial(
                 boto3.client,
-                'codeartifact',
+                'ce',
                 aws_access_key_id=credentials.aws_access_key_id,
                 aws_secret_access_key=credentials.aws_secret_access_key,
                 aws_session_token=credentials.aws_session_token,

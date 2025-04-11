@@ -1,0 +1,38 @@
+[project]
+name = "werkflow-aws"
+version = "0.1.2"
+description = "An AWS module for Werkflow powered by Boto3."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+    {name = "Ada Lundhe", email = "adalundhe@lundhe.audio"}
+]
+classifiers = [
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+]
+keywords = [
+    'pypi', 
+    'cicd', 
+    'python',
+    'setup',
+    'repo',
+    'project',
+    'migrate',
+    'monorepo',
+    'aws',
+    'boto3',
+    'aws-cli'
+]
+license = { file = "LICENSE" }
+dependencies = [
+    'werkflow',
+    'boto3',
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
