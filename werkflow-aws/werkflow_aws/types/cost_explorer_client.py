@@ -60,3 +60,7 @@ class CostExplorerClient(ABC):
         NextPageToken: str | None = None,
     ) -> dict[str, Any]:
         pass
+
+    @abstractmethod
+    def close(self):
+        pass
