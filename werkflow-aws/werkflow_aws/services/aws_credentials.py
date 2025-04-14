@@ -3,7 +3,7 @@ import boto3
 import json
 import functools
 from werkflow_aws.models import AWSCredentialsSet
-from werkflow.modules.secrets import Secrets
+from werkflow_secrets import Secrets
 from werkflow.modules.shell import Shell
 from typing import (
     Union, 
