@@ -101,6 +101,22 @@ class AWSs3:
         self._client = None
 
         self.service_name = 's3'
+    
+    async def sso(
+        self,
+        profile_name: str,
+    ):
+
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        await self._loop.run_in_executor(
+            None,
+            functools.partial(
+                boto3.setup_default_session,
+                profile_name=profile_name
+            )
+        )
 
     async def connect(
         self,
@@ -387,7 +403,8 @@ class AWSs3:
         bucket: str,
         key: str,
         part_number: str,
-        upload_id: str
+        upload_id: str,
+        options: AWSs3UploadPartOptions | None = None
     ): 
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
@@ -414,7 +431,8 @@ class AWSs3:
         bucket: str,
         key: str,
         part_number: str,
-        upload_id: str
+        upload_id: str,
+        options: AWSs3UploadPartCopyOptions | None = None,
     ): 
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
@@ -723,8 +741,8 @@ class AWSs3:
         copy_source: AWSs3CopySource,
         bucket: str,
         key: str,
-        extra_args: Optional[AWSs3TransferAllowedUploadArgs]=None,
-        config: Optional[AWSs3TransferConfigOptions]=None
+        config: Optional[AWSs3TransferConfigOptions]=None,
+        options: AWSs3TransferAllowedUploadArgs | None = None,
     ):
         if self._loop is None:
             self._loop = asyncio.get_event_loop()

@@ -1,4 +1,7 @@
-import orjson
+import asyncio
+import boto3
+import json
+import functools
 from werkflow_aws.models import AWSCredentialsSet
 from werkflow.modules.secrets import Secrets
 from werkflow.modules.shell import Shell
@@ -26,6 +29,22 @@ class AWSCredentials:
         self.access_token: Union[str, None] = None
 
         self.credentials: Union[AWSCredentialsSet, None] = None
+    
+    async def sso(
+        self,
+        profile_name: str,
+    ):
+
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        await self._loop.run_in_executor(
+            None,
+            functools.partial(
+                boto3.setup_default_session,
+                profile_name=profile_name
+            )
+        )
 
     async def get_credentials(
         self,
@@ -228,7 +247,7 @@ class AWSCredentials:
             silent=True
         )
 
-        data: Dict[str, str] = orjson.loads(cache_data)
+        data: Dict[str, str] = json.loads(cache_data)
 
         self.access_token = data.get('accessToken')
 
