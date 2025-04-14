@@ -32,6 +32,23 @@ class AWSElastiCache:
         self._client = None
 
         self.service_name = 'ElastiCache'
+    
+        
+    async def sso(
+        self,
+        profile_name: str,
+    ):
+
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        await self._loop.run_in_executor(
+            None,
+            functools.partial(
+                boto3.setup_default_session,
+                profile_name=profile_name
+            )
+        )
 
     async def connect(
         self,
