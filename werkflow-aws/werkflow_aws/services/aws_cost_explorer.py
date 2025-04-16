@@ -9,7 +9,10 @@ from werkflow_aws.models import (
     AWSRegion,
 )
 from werkflow_aws.models.cost_explorer import CostExplorerQuery, CostExplorerResponse
-from werkflow_aws.types import CostExplorerClient
+from werkflow_aws.types import (
+    CostExplorerClient,
+    STSClient,
+)
 from werkflow.modules.system import System
 from typing import Union
 
@@ -26,6 +29,7 @@ class AWSCostExplorer:
         )
 
         self._client = None
+        self._session: boto3.Session | None = None
 
         self.service_name = 'CostExplorer'
 
@@ -42,7 +46,7 @@ class AWSCostExplorer:
             self._executor,
             functools.partial(
                 boto3.client,
-                'codeartifact',
+                'ce',
                 aws_access_key_id=credentials.aws_access_key_id,
                 aws_secret_access_key=credentials.aws_secret_access_key,
                 aws_session_token=credentials.aws_session_token,
@@ -68,6 +72,39 @@ class AWSCostExplorer:
             )
         )
 
+        self._client: CostExplorerClient = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                boto3.client,
+                'ce',
+            )
+        )
+
+    async def assume_role(
+        self,
+        role_arn: str,
+        role_session_name: str,
+        role_external_id: str,
+        region_name: str,
+    ):
+        
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        self._session = boto3.Session(region_name=region_name)
+        sts_client: STSClient = self._session.client('sts', region_name=region_name)
+        
+        response = sts_client.assume_role(
+            RoleArn=role_arn,
+            RoleSessionName=role_session_name,
+            ExternalId=role_external_id
+        )
+        self.current_role_details = {
+            'role_arn': role_arn,
+            'external_id': role_external_id,
+            'source_profile': 'N/A'  # Assuming source_profile is not available here
+        }
+
     async def get_cost_and_usage(
         self,
         query: CostExplorerQuery
@@ -80,19 +117,13 @@ class AWSCostExplorer:
                 self.service_name,
             )
         
-        dumped = query.model_dump(exclude_none=True)
+        dumped = query.dump()
         
         result = await self._loop.run_in_executor(
             self._executor,
             functools.partial(
                 self._client.get_cost_and_usage,
-                TimePeriod=dumped.get('TimePeriod'),
-                Granularity=dumped.get('Granularity'),
-                Metrics=dumped.get('Metrics'),
-                Filter=dumped.get('Filter'),
-                GroupBy=dumped.get('GroupBy'),
-                BillingViewArn=dumped.get('BillingViewArn'),
-                NextPageToken=dumped.get('NextPageToken')
+                **dumped
             )
         )
 

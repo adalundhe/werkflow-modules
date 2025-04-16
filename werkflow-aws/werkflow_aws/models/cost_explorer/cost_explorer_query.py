@@ -34,12 +34,24 @@ class CostExplorerQuery(BaseModel):
                 time_format='%Y-%m',
             )
 
-        return {
+        dumped = {
             'TimePeriod': self.TimePeriod.dump(options.time_format),
             'Granularity': self.Granularity,
-            'Filter': self.Filter.dump(),
             'Metrics': self.Metrics,
-            'GroupBy': [
-                group.dump() for group in self.GroupBy
-            ]
         }
+
+        if filters := self.Filter:
+            dumped['Filter'] = filters.dump()
+
+        if groups := self.GroupBy:
+            dumped['GroupBy'] = [
+                group.dump() for group in groups
+            ]
+
+        if self.BillingViewArn:
+            dumped['BillingViewArn'] = self.BillingViewArn
+
+        if self.NextPageToken:
+            dumped['NextPageToken'] = self.NextPageToken
+
+        return dumped

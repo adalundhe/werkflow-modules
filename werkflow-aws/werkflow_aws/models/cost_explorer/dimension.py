@@ -1,4 +1,4 @@
-from pydantic import BaseModel, StrictStr, Field
+from pydantic import BaseModel, StrictStr, Field, conlist
 from typing import Literal
 from .match_option_types import MatchOptionTypes
 
@@ -43,8 +43,8 @@ DimensionKeys = Literal[
 
 class Dimension(BaseModel):
     Key: DimensionKeys
-    MatchOptions: MatchOptionTypes
-    Values: list[StrictStr] = Field(pattern=r'[\S\s]*')
+    MatchOptions: list[MatchOptionTypes]
+    Values: list[StrictStr]
 
     def dump(self):
         return self.model_dump()
