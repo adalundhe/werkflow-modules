@@ -8,4 +8,4 @@ class CostExplorerResponse(BaseModel):
     NextPageToken: StrictStr | None = None
     GroupDefinitions: list[GroupDefinition] | None = None
     ResultsByTime: list[Result]
-    DimensionValueAttributes: list[DimensionValueAttribute] | None = None
+    DimensionValueAttributes: list[DimensionValueAttribute]

@@ -1,6 +1,6 @@
 [project]
 name = "werkflow-aws"
-version = "0.3.24"
+version = "0.3.25"
 description = "An AWS module for Werkflow powered by Boto3."
 readme = "README.md"
 requires-python = ">=3.11"
