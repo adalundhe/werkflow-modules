@@ -4,7 +4,7 @@ from typing import Literal
 from .dump_options import DumpOptions
 from .expression import Expression
 from .group import Group
-from .period import Period
+from .time_period import TimePeriod
 
 
 ValidMetrics = Literal[
@@ -20,7 +20,7 @@ ValidMetrics = Literal[
 
 
 class CostExplorerQuery(BaseModel):
-    TimePeriod: Period
+    TimePeriod: TimePeriod
     Granularity: Literal['DAILY', 'MONTHLY', 'HOURLY'] = 'MONTHLY'
     Filter: Expression | None = None
     Metrics: list[ValidMetrics]
@@ -31,7 +31,7 @@ class CostExplorerQuery(BaseModel):
     def dump(self, options: DumpOptions | None = None):
         if options is None:
             options = DumpOptions(
-                time_format='%Y-%m-%d',
+                time_format='%Y-%m',
             )
 
         dumped = {
