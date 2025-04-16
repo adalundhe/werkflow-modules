@@ -4,6 +4,7 @@ from .services import (
     AWSCodeArtifact,
     AWSCostExplorer,
     AWSElastiCache,
+    AWSSTS,
 )
 
 
@@ -16,6 +17,7 @@ class AWS(Module):
         self.code_artifact = AWSCodeArtifact()
         self.cost_explorer = AWSCostExplorer()
         self.elasticache = AWSElastiCache()
+        self.sts = AWSSTS()
 
     async def close(self):
         await self.credentials.close()

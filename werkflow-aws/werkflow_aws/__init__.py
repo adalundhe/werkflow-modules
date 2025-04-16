@@ -1,5 +1,5 @@
-from .aws import AWS
+from .aws import AWS as AWS
 from .models import (
-    AWSCredentialsSet,
-    AWSRegion
+    AWSCredentialsSet as AWSCredentialsSet,
+    AWSRegion as AWSRegion,
 )
