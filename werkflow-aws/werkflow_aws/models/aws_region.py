@@ -107,7 +107,7 @@ class AWSRegionMap:
     def get(
         self,
         region_name: RegionName,
-        default_region: RegionName = 'us-east-1'
+        default_region: AWSRegion = AWSRegion.US_EAST_1
     ):
         return self._region_map.get(region_name, default_region)
 
