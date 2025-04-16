@@ -31,7 +31,7 @@ class CostExplorerQuery(BaseModel):
     def dump(self, options: DumpOptions | None = None):
         if options is None:
             options = DumpOptions(
-                time_format='%Y-%m',
+                time_format='%Y-%m-%d',
             )
 
         dumped = {
