@@ -144,7 +144,7 @@ class AWSs3:
                 aws_secret_access_key=credentials.aws_secret_access_key,
                 aws_session_token=credentials.aws_session_token,
                 config=Config(
-                    region=region.value
+                    region_name=region.value
                 )
             )
         )

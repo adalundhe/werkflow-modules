@@ -2,7 +2,6 @@ from pydantic import (
     BaseModel,
     StrictStr
 )
-from typing import Optional
 
 
 class AWSCredentialsSet(BaseModel):
