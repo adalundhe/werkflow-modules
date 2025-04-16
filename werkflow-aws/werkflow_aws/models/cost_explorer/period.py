@@ -2,7 +2,7 @@ import datetime
 from pydantic import BaseModel
 
 
-class TimePeriod(BaseModel):
+class Period(BaseModel):
     Start: datetime.datetime | datetime.date
     End: datetime.datetime | datetime.date
     
