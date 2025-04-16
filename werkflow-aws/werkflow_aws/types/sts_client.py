@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any, Literal
 
+
 PolicyArn = dict[
     Literal["arn"],
     str,
@@ -16,35 +17,6 @@ ProvidedContext = dict[
     str,
 ]
 
-
-    # RoleArn='string',
-    # RoleSessionName='string',
-    # PolicyArns=[
-    #     {
-    #         'arn': 'string'
-    #     },
-    # ],
-    # Policy='string',
-    # DurationSeconds=123,
-    # Tags=[
-    #     {
-    #         'Key': 'string',
-    #         'Value': 'string'
-    #     },
-    # ],
-    # TransitiveTagKeys=[
-    #     'string',
-    # ],
-    # ExternalId='string',
-    # SerialNumber='string',
-    # TokenCode='string',
-    # SourceIdentity='string',
-    # ProvidedContexts=[
-    #     {
-    #         'ProviderArn': 'string',
-    #         'ContextAssertion': 'string'
-    #     },
-    # ]
 
 class STSClient(ABC):
 
@@ -64,4 +36,8 @@ class STSClient(ABC):
         SourceIdentity: str | None = None,
         ProvidedContexts: list[ProvidedContext] | None = None,
     ) -> dict[str, Any]:
+        pass
+
+    @abstractmethod
+    def close(self):
         pass
