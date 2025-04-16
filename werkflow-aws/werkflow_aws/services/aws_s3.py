@@ -118,6 +118,14 @@ class AWSs3:
             )
         )
 
+        self._client: s3Client = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                boto3.client,
+                's3',
+            )
+        )
+
     async def connect(
         self,
         credentials: AWSCredentialsSet,

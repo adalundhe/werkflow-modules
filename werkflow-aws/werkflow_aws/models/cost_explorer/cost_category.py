@@ -7,7 +7,7 @@ class CostCategory(BaseModel):
         min_length=1,
         max_length=50,
     )
-    MatchOptions: MatchOptionTypes
+    MatchOptions: list[MatchOptionTypes]
     Values: list[StrictStr] = Field(pattern=r'[\S\s]*')
 
     def dump(self):

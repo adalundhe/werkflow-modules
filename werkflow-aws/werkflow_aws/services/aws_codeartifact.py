@@ -50,6 +50,14 @@ class AWSCodeArtifact:
             )
         )
 
+        self._client: CodeArtifactClient = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                boto3.client,
+                'codeartifact',
+            )
+        )
+
 
     async def connect(
         self,
@@ -64,7 +72,7 @@ class AWSCodeArtifact:
             self._executor,
             functools.partial(
                 boto3.client,
-                'ce',
+                'codeartifact',
                 aws_access_key_id=credentials.aws_access_key_id,
                 aws_secret_access_key=credentials.aws_secret_access_key,
                 aws_session_token=credentials.aws_session_token,
