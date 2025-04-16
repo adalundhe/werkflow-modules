@@ -34,6 +34,10 @@ class AWSSTS:
         credentials: AWSCredentialsSet,
         region: AWSRegion,
     ):
+        
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
         self._client: STSClient = await self._loop.run_in_executor(
             self._executor,
             functools.partial(
@@ -52,6 +56,10 @@ class AWSSTS:
         self,
         region: AWSRegion,
     ):
+        
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
         self._client: STSClient = await self._loop.run_in_executor(
             self._executor,
             functools.partial(
@@ -67,6 +75,10 @@ class AWSSTS:
         self,
         assume_role_request: AssumeRoleRequest
     ):
+        
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
         response = await self._loop.run_in_executor(
             self._executor,
             functools.partial(
@@ -78,6 +90,9 @@ class AWSSTS:
         return AssumedRoleResponse(**response)
     
     async def close(self):
+
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
 
         await self._loop.run_in_executor(
             None,
