@@ -1,6 +1,6 @@
 from pydantic import BaseModel, StrictStr
 
 
-class AssumedRoledUser(BaseModel):
+class AssumedRoleUser(BaseModel):
     AssumedRoleId: StrictStr
     Arn: StrictStr
