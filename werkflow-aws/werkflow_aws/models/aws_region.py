@@ -72,7 +72,36 @@ class AWSRegionMap:
 
     def __init__(self):
         self._region_map = {
-            region.value: region for region in AWSRegion
+            'af-south-1': AWSRegion.AF_SOUTH_1,
+            'ap-east-1': AWSRegion.AP_EAST_1,
+            'ap-northeast-1': AWSRegion.AP_NORTHEAST_1,
+            'ap-northeast-2': AWSRegion.AP_NORTHEAST_2,
+            'ap-northeast-3': AWSRegion.AP_NORTHEAST_3,
+            'ap-south-1': AWSRegion.AP_SOUTH_1,
+            'ap-south-2': AWSRegion.AP_SOUTH_2,
+            'ap-southeast-1': AWSRegion.AP_SOUTHEAST_1,
+            'ap-southeast-2': AWSRegion.AP_SOUTHEAST_2,
+            'ap-southeast-3': AWSRegion.AP_SOUTHEAST_3,
+            'ap-southeast-4': AWSRegion.AP_SOUTHEAST_4,
+            'ca-central-1': AWSRegion.CA_CENTRAL_1,
+            'eu-central-1': AWSRegion.EU_CENTRAL_1,
+            'eu-central-2': AWSRegion.EU_CENTRAL_2,
+            'eu-north-1': AWSRegion.EU_NORTH_1,
+            'eu-south-1': AWSRegion.EU_SOUTH_1,
+            'eu-south-2': AWSRegion.EU_SOUTH_2,
+            'eu-west-1': AWSRegion.EU_WEST_1,
+            'eu-west-2': AWSRegion.EU_WEST_2,
+            'eu-west-3': AWSRegion.EU_WEST_3,
+            'il-central-1': AWSRegion.IL_CENTRAL_1,
+            'me-central-1': AWSRegion.ME_CENTRAL_1,
+            'me-south-1': AWSRegion.ME_SOUTH_1,
+            'sa-east-1': AWSRegion.SA_EAST_1,
+            'us-east-1': AWSRegion.US_EAST_1,
+            'us-east-2': AWSRegion.US_EAST_2,
+            'us-gov-east-1': AWSRegion.US_GOV_EAST_1,
+            'us-gov-west-1': AWSRegion.US_GOV_WEST_1,
+            'us-west-1': AWSRegion.US_WEST_1,
+            'us-west-2': AWSRegion.US_WEST_2,
         }
 
     def get(
