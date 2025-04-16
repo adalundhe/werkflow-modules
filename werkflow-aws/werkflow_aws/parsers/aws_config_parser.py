@@ -18,6 +18,38 @@ class AWSConfigParser:
             max_workers=self._system.configuration.cores.physical
         )
 
+        self._matching_roles: dict[str, AWSConfigRole] = {}
+        self._roles: list[AWSConfigRole] = []
+        self._active_role_idx = 0
+
+    def __iter__(self):
+        for role in self._matching_roles.values():
+            yield role
+
+    def __next__(self):
+
+        if len(self._roles) < 1:
+            raise StopIteration('No roles found! Did you call load() first?')
+        
+        role = self._roles[self._active_role_idx]
+        self._active_role_idx = (self._active_role_idx + 1) % len(self._matching_roles)
+        return role
+
+    def __getitem__(self, role_name: str):
+        return self._matching_roles[role_name]
+    
+    def first(self):
+        if len(self._roles) < 1:
+            raise StopIteration('No roles found! Did you call load() first?')
+
+        return self._roles[0]
+
+    def next(self):
+        return self.__next__()
+    
+    def get(self, role_name: str):
+        return self._matching_roles.get(role_name)
+
     async def load(
         self,
         path: str,
@@ -50,10 +82,8 @@ class AWSConfigParser:
             str(resolved_path)
         )
 
-        for section in self._parser.sections():
-            pass
-
-        matching_roles: dict[str, AWSConfigRole] = {}
+        self._matching_roles.clear()
+        self._roles.clear()
         
         for section in self._parser.sections():
             section_line: str = section
@@ -68,9 +98,10 @@ class AWSConfigParser:
                     role_arn=self._parser.get(section, 'role_arn', fallback='N/A'),
                 )
 
-                matching_roles[role_name] = role
+                self._roles.append(role)
+                self._matching_roles[role_name] = role
 
-        return matching_roles
+        return list(self._roles)
     
     async def close(self):
         await self._system.close()
