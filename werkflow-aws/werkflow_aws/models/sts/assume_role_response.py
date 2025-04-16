@@ -1,10 +1,10 @@
 from pydantic import BaseModel, StrictStr, StrictInt
 from .credentials import Credentials
-from .assumed_role_user import AssumedRoleUser
+from .role_user import RoleUser
 
 
 class AssumedRoleResponse(BaseModel):
     Credentials: Credentials
-    AssumedRoledUser: AssumedRoleUser | None = None
+    AssumedRoleUser: RoleUser | None = None
     PackedPolicySize: StrictInt | None = None
     SourceIdentity: StrictStr | None = None
