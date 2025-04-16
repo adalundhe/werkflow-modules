@@ -1,4 +1,5 @@
 from werkflow.modules.base import Module
+from .parsers import AWSConfigParser
 from .services import (
     AWSCredentials,
     AWSCodeArtifact,
@@ -13,6 +14,7 @@ class AWS(Module):
     def __init__(self) -> None:
         super().__init__()
 
+        self.config = AWSConfigParser()
         self.credentials = AWSCredentials()
         self.code_artifact = AWSCodeArtifact()
         self.cost_explorer = AWSCostExplorer()
