@@ -12,5 +12,5 @@ from .metric import Metric as Metric
 from .result_group import ResultGroup as ResultGroup
 from .result import Result as Result
 from .tag_value import TagValue as TagValue
-from .period import Period as Period
+from .time_period import TimePeriod as TimePeriod
 from .total import Total as Total
