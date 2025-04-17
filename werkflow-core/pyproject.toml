@@ -1,0 +1,27 @@
+[project]
+name = "werkflow-core"
+version = "0.1.0"
+description = "The base Werkflow Modules library for creating modules."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+    {name = "Ada Lundhe", email = "adalundhe@lundhe.audio"}
+]
+classifiers = [
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
+        "Operating System :: OS Independent",
+]
+keywords = [
+    'pypi', 
+    'cicd', 
+    'python',
+    'werkflow',
+    'workflow',
+    'werkflow-core',
+]
+license-files = [ "LICENSE" ]
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"

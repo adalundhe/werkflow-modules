@@ -6,11 +6,12 @@ from concurrent.futures import ThreadPoolExecutor
 from werkflow_aws.exceptions import UnsetAWSConnectionException
 from werkflow_aws.models import (
     AWSCredentialsSet,
-    AWSRegion,
+    AWSRegionMap,
+    RegionName,
 )
 from werkflow_aws.models.cost_explorer import CostExplorerQuery, CostExplorerResponse
 from werkflow_aws.types import CostExplorerClient
-from werkflow.modules.system import System
+from werkflow_system import System
 from typing import Union
 
 
@@ -28,12 +29,15 @@ class AWSCostExplorer:
         self._client = None
 
         self.service_name = 'CostExplorer'
+        self._regions = AWSRegionMap()
 
     async def connect(
         self,
         credentials: AWSCredentialsSet,
-        region: AWSRegion
+        region: RegionName,
     ):
+
+        aws_region = self._regions.get(region)
 
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
@@ -47,7 +51,7 @@ class AWSCostExplorer:
                 aws_secret_access_key=credentials.aws_secret_access_key,
                 aws_session_token=credentials.aws_session_token,
                 config=Config(
-                    region_name=region.value
+                    region_name=aws_region.value
                 )
             )
         )

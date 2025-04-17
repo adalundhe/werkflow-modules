@@ -4,7 +4,7 @@ import json
 import functools
 from werkflow_aws.models import AWSCredentialsSet
 from werkflow_secrets import Secrets
-from werkflow.modules.shell import Shell
+from werkflow_shell import Shell
 from typing import (
     Union, 
     Optional, 

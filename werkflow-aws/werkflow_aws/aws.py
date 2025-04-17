@@ -1,4 +1,4 @@
-from werkflow.modules.base import Module
+from werkflow_core import Module
 from .parsers import AWSConfigParser
 from .services import (
     AWSCredentials,

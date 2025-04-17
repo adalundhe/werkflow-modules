@@ -4,16 +4,17 @@ from concurrent.futures import ThreadPoolExecutor
 
 import boto3
 from botocore.config import Config
-
+from werkflow_aws.exceptions import UnsetAWSConnectionException
 from werkflow_aws.models import (
     AWSCredentialsSet,
-    AWSRegion,
+    AWSRegionMap,
+    RegionName,
 )
 from werkflow_aws.models.sts import (
     AssumeRoleRequest,
     AssumedRoleResponse,
 )
-from werkflow.modules.system import System
+from werkflow_system import System
 from werkflow_aws.types import STSClient
 
 
@@ -29,14 +30,20 @@ class AWSSTS:
 
         self._client = None
 
+        self.service_name = 'STS'
+
+        self._regions = AWSRegionMap()
+
     async def connect(
         self,
         credentials: AWSCredentialsSet,
-        region: AWSRegion,
+        region: RegionName,
     ):
         
+        aws_region = self._regions.get(region)
+        
         if self._loop is None:
-            self._loop = asyncio.get_event_loop()
+            self._loop = asyncio.get_event_loop()       
 
         self._client: STSClient = await self._loop.run_in_executor(
             self._executor,
@@ -47,16 +54,18 @@ class AWSSTS:
                 aws_secret_access_key=credentials.aws_secret_access_key,
                 aws_session_token=credentials.aws_session_token,
                 config=Config(
-                    region_name=region.value
+                    region_name=aws_region.value
                 )
             )
         )
 
     async def connect_unauthorized(
         self,
-        region: AWSRegion,
+        region: RegionName,
     ):
         
+        aws_region = self._regions.get(region)
+
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
 
@@ -66,7 +75,7 @@ class AWSSTS:
                 boto3.client,
                 'sts',
                 config=Config(
-                    region_name=region.value
+                    region_name=aws_region.value
                 )
             )
         )
@@ -78,6 +87,11 @@ class AWSSTS:
         
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
+
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            )
 
         response = await self._loop.run_in_executor(
             self._executor,

@@ -6,9 +6,9 @@ from concurrent.futures import ThreadPoolExecutor
 from typing import List, Optional
 from urllib.parse import urlparse
 
-from werkflow.modules.base import Module
-from werkflow.modules.shell import Shell
-from werkflow.modules.system import System
+from werkflow_core import Module
+from werkflow_shell import Shell
+from werkflow_system import System
 
 try:
     module_enabled = True

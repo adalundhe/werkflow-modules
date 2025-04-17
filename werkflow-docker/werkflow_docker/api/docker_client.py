@@ -5,8 +5,8 @@ import functools
 from concurrent.futures import ThreadPoolExecutor
 from docker.models.images import Image as DockerImage
 from werkflow.env import TimeParser
-from werkflow.modules.shell import Shell
-from werkflow.modules.system import System
+from werkflow_shell import Shell
+from werkflow_system import System
 from werkflow_docker.cli import BuildOptions
 from werkflow_docker.images import Image
 from typing import (
