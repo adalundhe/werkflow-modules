@@ -4,13 +4,11 @@ import functools
 from botocore.config import Config
 from concurrent.futures import ThreadPoolExecutor
 from io import FileIO
-from werkflow_aws.exceptions import (
-    EmptyResponseException,
-    UnsetAWSConnectionException
-)
+from werkflow_aws.exceptions import UnsetAWSConnectionException
 from werkflow_aws.models import (
     AWSCredentialsSet,
-    AWSRegion
+    AWSRegionMap,
+    RegionName,
 )
 from werkflow_aws.models.s3 import (
     AWSs3AbortMultipartUploadOptions,
@@ -78,7 +76,7 @@ from typing import List
 from werkflow_aws.types import (
     s3Client
 )
-from werkflow.modules.system import System
+from werkflow_system import System
 from typing import (
     Union, 
     Optional,
@@ -101,6 +99,7 @@ class AWSs3:
         self._client = None
 
         self.service_name = 's3'
+        self._regions = AWSRegionMap()
     
     async def sso(
         self,
@@ -129,8 +128,10 @@ class AWSs3:
     async def connect(
         self,
         credentials: AWSCredentialsSet,
-        region: AWSRegion
+        region: RegionName,
     ):
+
+        aws_region = self._regions.get(region)
 
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
@@ -144,7 +145,7 @@ class AWSs3:
                 aws_secret_access_key=credentials.aws_secret_access_key,
                 aws_session_token=credentials.aws_session_token,
                 config=Config(
-                    region_name=region.value
+                    region_name=aws_region.value
                 )
             )
         )
@@ -153,6 +154,12 @@ class AWSs3:
 
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
+
+        
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            ) 
 
         listed_buckets = await self._loop.run_in_executor(
             self._executor,
@@ -164,11 +171,16 @@ class AWSs3:
     async def list_objects(
         self,
         bucket: str,
-        options: Optional[AWSs3ListObjectsOptions]=None
+        options: AWSs3ListObjectsOptions | None=None
     ):
         
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
+
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            ) 
         
         if options is None:
             options = AWSs3ListObjectsOptions()
@@ -188,10 +200,15 @@ class AWSs3:
         self,
         bucket: str,
         key: str,
-        options: Optional[AWSs3GetObjectOptions]=None
+        options: AWSs3GetObjectOptions | None=None
     ):
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
+
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            ) 
         
         if options is None:
             options = AWSs3GetObjectOptions()
@@ -217,11 +234,16 @@ class AWSs3:
         self,
         bucket: str,
         key: str,
-        body: Union[bytes, BinaryIO, TextIO],
-        options: Optional[AWSs3PutObjectOptions]=None
+        body: bytes | BinaryIO | TextIO,
+        options: AWSs3PutObjectOptions | None=None
     ):
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
+
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            ) 
         
         if options is None:
             options = AWSs3PutObjectOptions()
@@ -247,6 +269,11 @@ class AWSs3:
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
 
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            ) 
+
         if options is None:
             options = AWSs3DeleteBucketOptions()
 
@@ -270,6 +297,11 @@ class AWSs3:
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
 
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            ) 
+        
         if options is None:
             options = AWSs3DeleteObjectOptions()
 
@@ -293,6 +325,11 @@ class AWSs3:
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
 
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            ) 
+        
         if options is None:
             options = AWSs3ListMultipartUploadsOptions()
 
@@ -315,6 +352,11 @@ class AWSs3:
     ):
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
+
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            ) 
 
         if options is None:
             options = AWSs3ListPartsOptions()
@@ -339,6 +381,11 @@ class AWSs3:
     ):
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
+
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            ) 
 
         if options is None:
             options = AWSs3CompleteMultipartUploadOptions()
@@ -366,6 +413,11 @@ class AWSs3:
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
 
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            ) 
+
         if options is None:
             options = AWSs3AbortMultipartUploadOptions()
         
@@ -390,6 +442,11 @@ class AWSs3:
     ):
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
+
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            ) 
 
         if options is None:
             options = AWSs3CreateMultipartUploadOptions()
@@ -416,6 +473,11 @@ class AWSs3:
     ): 
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
+
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            ) 
 
         if options is None:
             options = AWSs3UploadPartOptions()
@@ -445,6 +507,11 @@ class AWSs3:
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
 
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            ) 
+
         if options is None:
             options = AWSs3UploadPartCopyOptions()
 
@@ -472,6 +539,11 @@ class AWSs3:
     ):
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
+
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            ) 
 
         if options is None:
             options = AWSs3TransferAllowedUploadArgs()
@@ -508,6 +580,11 @@ class AWSs3:
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
 
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            ) 
+
         if options is None:
             options = AWSs3TransferAllowedUploadArgs()
 
@@ -534,6 +611,11 @@ class AWSs3:
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
 
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            ) 
+
         if options is None:
             options = AWSs3ListDirectoryBucketsOptions()
 
@@ -554,6 +636,11 @@ class AWSs3:
     ):
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
+
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            ) 
 
         if options is None:
             options = AWSs3ListObjectVersionsOptions()
@@ -578,6 +665,11 @@ class AWSs3:
     ):
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
+
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            ) 
 
         if options is None:
             options = AWSs3DeleteObjectsOptions()
@@ -611,6 +703,11 @@ class AWSs3:
     ):
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
+
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            ) 
 
         if options is None:
             options = AWSs3TransferAllowedUploadArgs()
@@ -647,6 +744,11 @@ class AWSs3:
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
 
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            ) 
+
         if options is None:
             options = AWSs3TransferAllowedUploadArgs()
 
@@ -675,6 +777,11 @@ class AWSs3:
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
 
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            ) 
+
         if options is None:
             options = AWSs3GeneratePresignedURLOptions()
 
@@ -700,6 +807,11 @@ class AWSs3:
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
 
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            ) 
+
         if options is None:
             options = AWSs3GeneratePresignedPostOptions()
 
@@ -724,6 +836,11 @@ class AWSs3:
     ):
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
+
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            ) 
 
         if options is None:
             options = AWSs3CopyObjectOptions()
@@ -755,6 +872,11 @@ class AWSs3:
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
 
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            ) 
+
         if options is None:
             options = AWSs3TransferAllowedUploadArgs()
 
@@ -783,6 +905,11 @@ class AWSs3:
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
 
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            ) 
+
         if options is None:
             options = AWSs3PutBucketVersioningOptions()
 
@@ -804,6 +931,11 @@ class AWSs3:
     ):
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
+
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            ) 
 
         if options is None:
             options = AWSs3GetBucketTaggingOptions()
@@ -828,6 +960,11 @@ class AWSs3:
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
 
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            ) 
+
         if options is None:
             options = AWSs3GetObjectTaggingOptions()
 
@@ -851,6 +988,11 @@ class AWSs3:
     ):
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
+
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            ) 
 
         if options is None:
             options = AWSs3PutBucketTaggingOptions()
@@ -881,6 +1023,11 @@ class AWSs3:
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
 
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            ) 
+
         if options is None:
             options = AWSs3PutObjectTaggingOptions()
 
@@ -909,6 +1056,11 @@ class AWSs3:
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
 
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            ) 
+
         if options is None:
             options = AWSs3PutObjectTaggingOptions()
 
@@ -931,6 +1083,11 @@ class AWSs3:
     ):
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
+
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            ) 
 
         if options is None:
             options = AWSs3DeleteObjectTaggingOptions()

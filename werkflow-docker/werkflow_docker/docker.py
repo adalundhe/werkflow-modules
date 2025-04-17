@@ -1,4 +1,4 @@
-from werkflow.modules.base import Module
+from werkflow_core import Module
 from werkflow.modules import Shell
 from typing import Dict, Optional
 from .api import DockerClient

@@ -1,3 +1,6 @@
-boto3
-werkflow
+werkflow-core
+werkflow-file
 werkflow-secrets
+werkflow-shell
+werkflow-system
+boto3

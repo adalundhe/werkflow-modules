@@ -1,2 +1,5 @@
 cryptography
-werkflow
+werkflow-core
+werkflow-file
+werkflow-shell
+werkflow-system

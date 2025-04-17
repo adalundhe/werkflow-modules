@@ -1,0 +1,33 @@
+[project]
+name = "werkflow-file"
+version = "0.1.0"
+description = "A module for working with Files."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+    {name = "Ada Lundhe", email = "adalundhe@lundhe.audio"}
+]
+classifiers = [
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
+        "Operating System :: OS Independent",
+]
+keywords = [
+    'pypi', 
+    'cicd', 
+    'python',
+    'werkflow',
+    'workflow',
+    'files',
+]
+license-files = [ "LICENSE" ]
+dependencies = [
+    'werkflow-core',
+    'werkflow-shell',
+    'werkflow-system',
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"

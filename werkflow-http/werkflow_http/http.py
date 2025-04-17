@@ -2,7 +2,7 @@ import asyncio
 from typing import Dict
 
 import orjson
-from werkflow.modules.base import Module
+from werkflow_core import Module
 
 from .connections.http import MercurySyncHTTPConnection
 from .request import (

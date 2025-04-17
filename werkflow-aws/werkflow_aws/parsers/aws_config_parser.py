@@ -3,7 +3,7 @@ import configparser
 import functools
 import pathlib
 from concurrent.futures import ThreadPoolExecutor
-from werkflow.modules.system import System
+from werkflow_system import System
 from werkflow_aws.models.parsing import AWSConfigRole
 
 

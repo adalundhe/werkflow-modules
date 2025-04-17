@@ -3,12 +3,12 @@ import functools
 import re
 from typing import Dict, Union, Optional
 from concurrent.futures import ThreadPoolExecutor
-from werkflow.modules.base import Module
+from werkflow_core import Module
 from werkflow.modules.exceptions import MissingModuleError
 from werkflow_encryption import Encryption
 from werkflow_http import HTTP
 from werkflow_http.connections.http.models.http import HTTPResponse
-from werkflow.modules.system import System
+from werkflow_system import System
 from .exceptions import (
     BadRequestError,
     MethodNotAllowedError,

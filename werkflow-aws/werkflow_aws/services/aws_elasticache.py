@@ -6,7 +6,8 @@ from concurrent.futures import ThreadPoolExecutor
 from werkflow_aws.exceptions import UnsetAWSConnectionException
 from werkflow_aws.models import (
     AWSCredentialsSet,
-    AWSRegion,
+    AWSRegionMap,
+    RegionName,
 )
 from werkflow_aws.models.elasticache import (
     DescribeCacheClustersRequest,
@@ -14,7 +15,7 @@ from werkflow_aws.models.elasticache import (
 )
 
 from werkflow_aws.types import ElastiCacheClient
-from werkflow.modules.system import System
+from werkflow_system import System
 from typing import Union
 
 
@@ -32,6 +33,7 @@ class AWSElastiCache:
         self._client = None
 
         self.service_name = 'ElastiCache'
+        self._regions = AWSRegionMap()
     
         
     async def sso(
@@ -61,8 +63,10 @@ class AWSElastiCache:
     async def connect(
         self,
         credentials: AWSCredentialsSet,
-        region: AWSRegion
+        region: RegionName,
     ):
+        
+        aws_region = self._regions.get(region)
 
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
@@ -76,7 +80,7 @@ class AWSElastiCache:
                 aws_secret_access_key=credentials.aws_secret_access_key,
                 aws_session_token=credentials.aws_session_token,
                 config=Config(
-                    region_name=region.value
+                    region_name=aws_region.value
                 )
             )
         )

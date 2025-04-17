@@ -1,8 +1,8 @@
 import orjson
 import os
-from werkflow.modules.base import Module
+from werkflow_core import Module
 from werkflow_encryption import Encryption
-from werkflow.modules.shell import Shell
+from werkflow_shell import Shell
 from typing import Dict, Literal, Optional
 
 class Secrets(Module):

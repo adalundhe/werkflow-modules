@@ -2,7 +2,7 @@ import asyncio
 import datetime
 import re
 
-from werkflow.modules.base import Module
+from werkflow_core import Module
 from werkflow_encryption import Encryption
 from werkflow_http import HTTP
 from werkflow_http.connections.http.models.http import HTTPResponse
