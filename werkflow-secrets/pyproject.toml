@@ -1,6 +1,6 @@
 [project]
 name = "werkflow-secrets"
-version = "0.2.0"
+version = "0.2.1"
 description = "An secrets module for Werkflow."
 readme = "README.md"
 requires-python = ">=3.11"

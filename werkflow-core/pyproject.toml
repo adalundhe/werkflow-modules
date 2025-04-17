@@ -1,6 +1,6 @@
 [project]
 name = "werkflow-core"
-version = "0.1.5"
+version = "0.1.6"
 description = "The base Werkflow Modules library for creating modules."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -21,7 +21,9 @@ keywords = [
     'workflow',
     'werkflow-core',
 ]
+
 license-files = [ "LICENSE" ]
+
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
