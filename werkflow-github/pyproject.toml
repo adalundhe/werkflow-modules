@@ -1,6 +1,6 @@
 [project]
 name = "werkflow-github"
-version = "0.2.0"
+version = "0.2.1"
 description = "An GitHub module for Werkflow."
 readme = "README.md"
 requires-python = ">=3.11"
