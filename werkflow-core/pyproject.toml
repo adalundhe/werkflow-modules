@@ -1,6 +1,6 @@
 [project]
 name = "werkflow-core"
-version = "0.1.4"
+version = "0.1.5"
 description = "The base Werkflow Modules library for creating modules."
 readme = "README.md"
 requires-python = ">=3.11"
