@@ -1,6 +1,6 @@
 [project]
-name = "werkflow-system"
-version = "0.2.0"
+name = "werkflow-encryption"
+version = "0.2.1"
 description = "An encryption module for Werkflow powered by the Cryptography library."
 readme = "README.md"
 requires-python = ">=3.11"
