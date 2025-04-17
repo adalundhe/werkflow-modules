@@ -1,4 +1,4 @@
-import orjson
+import json
 import os
 from werkflow_core import Module
 from werkflow_encryption import Encryption
@@ -106,7 +106,7 @@ class Secrets(Module):
 
                 secrets[key] = secret.decode()
 
-        json_data = orjson.dumps(secrets).decode()
+        json_data = json.dumps(secrets)
         
         await self._shell.pipe_to_file(
             path,
@@ -217,7 +217,7 @@ class Secrets(Module):
             silent=True
         )
 
-        secrets: Dict[str, str] = orjson.loads(secrets_file)
+        secrets: Dict[str, str] = json.loads(secrets_file)
 
         if method == 'aes256gcm':
             for key, value in secrets.items():
