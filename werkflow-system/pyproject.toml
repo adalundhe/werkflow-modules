@@ -1,6 +1,6 @@
 [project]
 name = "werkflow-system"
-version = "0.3.0"
+version = "0.3.1"
 description = "A module for working with operating systems of all architectures and types."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -24,6 +24,7 @@ keywords = [
 license-files = [ "LICENSE" ]
 dependencies = [
     'werkflow-core',
+    'psutil',
 ]
 
 [build-system]
