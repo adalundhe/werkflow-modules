@@ -1,30 +1,31 @@
 import asyncio
 import functools
 import re
-from typing import Dict, Union, Optional
 from concurrent.futures import ThreadPoolExecutor
+from typing import Dict, Optional, Union
+
 from werkflow_core import Module
-from werkflow.modules.exceptions import MissingModuleError
+from werkflow_core.exceptions import MissingModuleError
 from werkflow_encryption import Encryption
 from werkflow_http import HTTP
 from werkflow_http.connections.http.models.http import HTTPResponse
 from werkflow_system import System
+
 from .exceptions import (
     BadRequestError,
     MethodNotAllowedError,
     ResourceNotFoundError,
     ServerFailedError,
     UnauthorizedRequestError,
-    UnprocessableContentError
+    UnprocessableContentError,
 )
 from .validators import (
-    GithubRepoOptions,
     GithubBranchProtections,
     GithubPullRequest,
+    GithubRepoOptions,
     GithubSecret,
-    GithubVariable
+    GithubVariable,
 )
-
 
 
 class Github(Module):
@@ -204,7 +205,7 @@ class Github(Module):
         parsed_options = default_options.json()
 
         response = await self.client.post(
-            f'https://api.github.com/user/repos',
+            'https://api.github.com/user/repos',
             headers={
                 'Authorization': f'Bearer {access_token}',
                 'X-GitHub-Api-Version': f'{api_version}',
