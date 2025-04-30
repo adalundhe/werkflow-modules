@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "werkflow-metrikflow"
-version = "0.2.0"
+version = "0.2.1"
 requires-python = ">=3.10"
 description="A library for processing and sending metrics."
 readme = "README.md"

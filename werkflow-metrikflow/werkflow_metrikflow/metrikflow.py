@@ -7,8 +7,8 @@ from metrikflow.connectors.connector import ConnectorTypes
 from metrikflow.dashboards import Dashboard
 from metrikflow.metrics import MetricStore
 from metrikflow.metrics.types import Event, Interval, Rate
-from werkflow.modules import Shell
 from werkflow_core import Module
+from werkflow_shell import Shell
 
 
 class Metrik(Module):
