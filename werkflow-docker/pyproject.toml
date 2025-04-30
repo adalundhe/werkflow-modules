@@ -1,6 +1,6 @@
 [project]
 name = "werkflow-docker"
-version = "0.3.1"
+version = "0.3.2"
 description = "An Docker module for Werkflow."
 readme = "README.md"
 requires-python = ">=3.11"

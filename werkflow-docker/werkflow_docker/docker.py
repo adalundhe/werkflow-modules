@@ -1,6 +1,8 @@
-from werkflow_core import Module
-from werkflow.modules import Shell
 from typing import Dict, Optional
+
+from werkflow_core import Module
+from werkflow_Shell import Shell
+
 from .api import DockerClient
 from .images import Image
 
