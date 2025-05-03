@@ -11,7 +11,8 @@ class Granularity(Enum):
     DAILY='DAILY'
     MONTHLY='MONTHLY'
 
-    def to_granularity(self, granularity: GranularityLevel):
+    @classmethod
+    def to_granularity(cls, granularity: GranularityLevel):
         levels = {
             'hourly': Granularity.HOURLY,
             'daily': Granularity.DAILY,
@@ -20,8 +21,8 @@ class Granularity(Enum):
 
         return levels.get(granularity, Granularity.DAILY)
 
-
-    def to_aws_granularity_slug(self, granularity: GranularityLevel):
+    @classmethod
+    def to_aws_granularity_slug(cls, granularity: GranularityLevel):
         levels: dict[GranularityLevel, AWSGranularityLevel] = {
             level.name.lower(): level.value for level in Granularity
         }
