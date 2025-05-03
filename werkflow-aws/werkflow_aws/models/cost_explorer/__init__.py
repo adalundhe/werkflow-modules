@@ -6,6 +6,9 @@ from .dimension_value_attribute import DimensionValueAttribute as DimensionValue
 from .dimension import Dimension as Dimension
 from .dump_options import DumpOptions as DumpOptions
 from .expression import Expression as Expression
+from .granularity import AWSGranularityLevel as AWSGranularityLevel
+from .granularity import Granularity as Granularity
+from .granularity import GranularityLevel as GranularityLevel
 from .group_definition import GroupDefinition as GroupDefinition
 from .group import Group as Group
 from .metric import Metric as Metric

@@ -4,6 +4,7 @@ from typing import Literal
 from .dump_options import DumpOptions
 from .expression import Expression
 from .group import Group
+from .granularity import AWSGranularityLevel
 from .time_period import TimePeriod
 
 
@@ -21,7 +22,7 @@ ValidMetrics = Literal[
 
 class CostExplorerQuery(BaseModel):
     TimePeriod: TimePeriod
-    Granularity: Literal['DAILY', 'MONTHLY', 'HOURLY'] = 'MONTHLY'
+    Granularity: AWSGranularityLevel = 'MONTHLY'
     Filter: Expression | None = None
     Metrics: list[ValidMetrics]
     GroupBy: list[Group] | None = None
