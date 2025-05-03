@@ -1,4 +1,5 @@
 from __future__ import annotations
+from botocore.paginate import Paginator
 from abc import ABC, abstractmethod
 from typing import Literal, Any
 
@@ -59,6 +60,13 @@ class CostExplorerClient(ABC):
         BillingViewArn: str | None = None,
         NextPageToken: str | None = None,
     ) -> dict[str, Any]:
+        pass
+
+    @abstractmethod
+    def get_paginator(
+        self,
+        Operation: str,
+    ) -> Paginator:
         pass
 
     @abstractmethod

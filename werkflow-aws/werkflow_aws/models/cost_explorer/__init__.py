@@ -9,6 +9,7 @@ from .expression import Expression as Expression
 from .group_definition import GroupDefinition as GroupDefinition
 from .group import Group as Group
 from .metric import Metric as Metric
+from .operations import Operations as Operations
 from .result_group import ResultGroup as ResultGroup
 from .result import Result as Result
 from .tag_value import TagValue as TagValue
