@@ -1,0 +1,1 @@
+from .collect_paginator import collect_paginator as collect_paginator
