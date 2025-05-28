@@ -35,7 +35,7 @@ class AWSCloudwatch:
 
         self._client = None
 
-        self.service_name = 'ElasticBlockStorage'
+        self.service_name = 'CloudWatch'
         self._regions = AWSRegionMap()
     
         
