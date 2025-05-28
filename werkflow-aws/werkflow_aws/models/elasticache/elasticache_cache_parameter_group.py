@@ -1,7 +1,7 @@
 from pydantic import BaseModel, StrictStr
 
 
-class CacheParameterGroup(BaseModel):
+class ElasticacheCacheParameterGroup(BaseModel):
     CacheParameterGroupName: StrictStr
     ParameterApplyStatus: StrictStr
     CacheNodeIdsToReboot: list[StrictStr]

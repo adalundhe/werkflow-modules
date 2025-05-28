@@ -139,11 +139,12 @@ class AWSCostExplorer:
             functools.partial(
                 collect_paginator,
                 pagination_result,
-                CostExplorerResponse,
             )
         )
 
-        return results
+        return [
+            CostExplorerResponse(**result['Contents']) for result in results
+        ]
     
  
     

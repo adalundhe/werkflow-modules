@@ -1,5 +1,5 @@
 from pydantic import BaseModel, StrictStr
 
 
-class CloudWatchLogsDetail(BaseModel):
+class ElasticacheCloudWatchLogsDetail(BaseModel):
     LogGroup: StrictStr

@@ -1,6 +1,6 @@
 from pydantic import BaseModel, StrictStr
 
 
-class SecurityGroup(BaseModel):
+class ElasticacheSecurityGroup(BaseModel):
     SecurityGroupId: StrictStr
     Status: StrictStr

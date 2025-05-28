@@ -1,5 +1,7 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
+from botocore.paginate import Paginator
+from typing import Any
 
 class ElastiCacheClient(ABC):
 
@@ -11,9 +13,25 @@ class ElastiCacheClient(ABC):
         Marker: str = None,
         ShowCacheNodeInfo: bool = True,
         ShowCacheClustersNotInReplicationGroups: bool = True,
-    ) -> dict[str, str]:
+    ) -> dict[str, Any]:
         pass
-        
+    
+    @abstractmethod
+    def describe_replication_groups(
+        self,
+        ReplicationGroupId: str = None,
+        MaxRecords: int = None,
+        Marker: str = None,
+    ) -> dict[str, Any]:
+        pass
+
+    @abstractmethod
+    def get_paginator(
+        self,
+        Operation: str,
+    ) -> Paginator:
+        pass
+
     @abstractmethod
     def close(self):
         pass

@@ -1,5 +1,5 @@
 from pydantic import BaseModel, StrictStr
 
 
-class KinesisFirehoseDetail(BaseModel):
+class ElasticacheKinesisFirehoseDetail(BaseModel):
     DeliveryStream: StrictStr
