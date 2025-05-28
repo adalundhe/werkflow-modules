@@ -1105,10 +1105,15 @@ class AWSs3:
         return AWSs3DeleteObjectTaggingResponse(**deleted_object_tagging)
 
     async def close(self):
-        await self._loop.run_in_executor(
-            None,
-            self._client.close
-        )
+
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()     
+
+        if self._client:
+            await self._loop.run_in_executor(
+                None,
+                self._client.close
+            )
 
         await self._system.close()
         self._executor.shutdown()
