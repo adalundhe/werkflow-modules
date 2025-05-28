@@ -1,3 +1,4 @@
+from .cloudwatch_client import CloudWatchClient as CloudWatchClient
 from .codeartifact_client import CodeArtifactClient as CodeArtifactClient
 from .codeartifact_format import CodeArtifactFormat as CodeArtifactFormat
 from .cost_explorer_client import CostExplorerClient as CostExplorerClient
