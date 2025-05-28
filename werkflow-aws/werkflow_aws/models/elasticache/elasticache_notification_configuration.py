@@ -1,6 +1,6 @@
 from pydantic import BaseModel, StrictStr
 
 
-class NotificationConfiguration(BaseModel):
+class ElasticacheNotificationConfiguration(BaseModel):
     TopicArn: StrictStr
     TopicStatus: StrictStr

@@ -1,12 +1,12 @@
 from pydantic import BaseModel, StrictStr
 from typing import Literal
-from .destination_details import DestinationDetails
+from .elasticache_destination_details import ElasticacheDestinationDetails
 
 
-class LogDeliveryConfiguration(BaseModel):
+class ElasticacheLogDeliveryConfiguration(BaseModel):
     LogType: Literal['slow-log', 'engine-log']
     DestinationType: Literal['cloudwatch-logs', 'kinesis-firehose']
-    DestinationDetails: DestinationDetails
+    DestinationDetails: ElasticacheDestinationDetails
     LogFormat: Literal['text', 'json']
     Status: Literal[
         'active',

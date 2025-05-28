@@ -1,13 +1,13 @@
 import datetime
 from pydantic import BaseModel, StrictStr
-from .endpoint import Endpoint
+from .elasticache_endpoint import ElasticacheEndpoint
 
 
-class CacheNode(BaseModel):
+class ElasticacheCacheNode(BaseModel):
     CacheNodeId: StrictStr
     CacheNodeStatus: StrictStr
     CacheNodeCreateTime: datetime.datetime
-    Endpoint: Endpoint
+    Endpoint: ElasticacheEndpoint
     ParameterGroupStatus: StrictStr
     SourceCacheNodeId: StrictStr
     CustomerAvailabilityZone: StrictStr

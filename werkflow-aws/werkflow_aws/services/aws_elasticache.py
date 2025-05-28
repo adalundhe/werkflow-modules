@@ -10,29 +10,30 @@ from werkflow_aws.models import (
     RegionName,
 )
 from werkflow_aws.models.elasticache import (
-    DescribeCacheClustersRequest,
-    DescribeCacheClustersResponse,
+    ElasticacheDescribeCacheClustersRequest,
+    ElasticacheDescribeCacheClustersResponse,
+    ElasticacheDescribeReplicationGroupsRequest,
+    ElasticacheDescribeReplicationGroupsResponse,
 )
+from werkflow_aws.helpers import collect_paginator
 
 from werkflow_aws.types import ElastiCacheClient
 from werkflow_system import System
-from typing import Union
 
 
 class AWSElastiCache:
     
     def __init__(self) -> None:
-        
         self._system = System()
 
-        self._loop: Union[asyncio.AbstractEventLoop, None] = None
+        self._loop: asyncio.AbstractEventLoop | None = None
         self._executor = ThreadPoolExecutor(
             max_workers=self._system.configuration.cores.physical
         )
 
         self._client = None
 
-        self.service_name = 'ElastiCache'
+        self.service_name = 'ElasticBlockStorage'
         self._regions = AWSRegionMap()
     
         
@@ -87,8 +88,8 @@ class AWSElastiCache:
 
     async def describe_cache_clusters(
         self,
-        request: DescribeCacheClustersRequest
-    ) -> DescribeCacheClustersResponse:
+        request: ElasticacheDescribeCacheClustersRequest
+    ) -> ElasticacheDescribeCacheClustersResponse:
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
 
@@ -102,17 +103,121 @@ class AWSElastiCache:
         result = await self._loop.run_in_executor(
             self._executor,
             functools.partial(
-                self._client.describe_cache_clusters(
-                    CacheClusterId=dumped.get('CacheClusterId'),
-                    MaxRecords=dumped.get('MaxRecords'),
-                    Marker=dumped.get('Marker'),
-                    ShowCacheNodeInfo=dumped.get('ShowCacheNodeInfo'),
-                    ShowCacheClustersNotInReplicationGroups=dumped.get('ShowCacheClustersNotInReplicationGroups')
-                ),
+                self._client.describe_cache_clusters,
+                **dumped
             )
         )
 
-        return DescribeCacheClustersResponse(**result)
+        return ElasticacheDescribeCacheClustersResponse(**result)
+    
+
+    async def describe_cache_clusters_paginated(
+        self,
+        request: ElasticacheDescribeCacheClustersRequest
+    ) -> list[ElasticacheDescribeCacheClustersResponse]:
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name,
+            )
+        
+        dumped = request.model_dump(exclude_none=True)
+
+        paginator = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.get_paginator,
+                'describe_cache_clusters',
+            )
+        )
+
+        pagination_result = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                paginator.paginate,
+                **dumped
+            )
+        )
+
+        results = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                collect_paginator,
+                pagination_result,
+            )
+        )
+
+        return [
+            ElasticacheDescribeCacheClustersResponse(**result['CacheClusters']) for result in results
+        ]
+    
+    async def describe_replication_groups(
+        self,
+        request: ElasticacheDescribeReplicationGroupsRequest
+    ) -> ElasticacheDescribeReplicationGroupsResponse:
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name,
+            )
+        
+        dumped = request.model_dump(exclude_none=True)
+        
+        result = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.describe_cache_clusters,
+                **dumped
+            )
+        )
+
+        return ElasticacheDescribeReplicationGroupsResponse(**result)
+    
+    async def describe_replication_groups_paginated(
+        self,
+        request: ElasticacheDescribeCacheClustersRequest
+    ) -> list[ElasticacheDescribeCacheClustersResponse]:
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name,
+            )
+        
+        dumped = request.model_dump(exclude_none=True)
+
+        paginator = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.get_paginator,
+                'describe_replication_groups',
+            )
+        )
+
+        pagination_result = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                paginator.paginate,
+                **dumped
+            )
+        )
+
+        results = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                collect_paginator,
+                pagination_result,
+            )
+        )
+
+        return [
+            ElasticacheDescribeReplicationGroupsResponse(**result['CacheClusters']) for result in results
+        ]
     
     async def close(self):
 

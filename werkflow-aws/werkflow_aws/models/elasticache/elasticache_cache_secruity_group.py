@@ -1,6 +1,6 @@
 from pydantic import BaseModel, StrictStr
 
 
-class CacheSecurityGroup(BaseModel):
+class ElasticacheCacheSecurityGroup(BaseModel):
     CacheSecurityGroupName: StrictStr
     Status: StrictStr
