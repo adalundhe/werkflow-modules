@@ -31,7 +31,7 @@ class AWSEC2:
 
         self._client = None
 
-        self.service_name = 'ElasticBlockStorage'
+        self.service_name = 'EC2'
         self._regions = AWSRegionMap()
 
     async def sso(
