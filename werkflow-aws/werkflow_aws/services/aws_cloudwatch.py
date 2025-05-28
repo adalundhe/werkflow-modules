@@ -10,15 +10,22 @@ from werkflow_aws.models import (
     RegionName,
 )
 from werkflow_aws.helpers import collect_paginator
-from werkflow_aws.models.cost_explorer import CostExplorerQuery, CostExplorerResponse, Operations
-from werkflow_aws.types import CostExplorerClient
+from werkflow_aws.models.cloudwatch import (
+    CloudWatchGetMetricDataRequest,
+    CloudWatchGetMetricDataResponse,
+    CloudWatchGetMetricStatisticsRequest,
+    CloudWatchGetMetricStatisticsResponse,
+    CloudWatchListMetricsRequest,
+    CloudWatchListMetricsResponse,
+)
+from werkflow_aws.types import CloudWatchClient
+
 from werkflow_system import System
 
 
-class AWSCostExplorer:
+class AWSCloudwatch:
     
     def __init__(self) -> None:
-        
         self._system = System()
 
         self._loop: asyncio.AbstractEventLoop | None = None
@@ -28,34 +35,10 @@ class AWSCostExplorer:
 
         self._client = None
 
-        self.service_name = 'CostExplorer'
+        self.service_name = 'ElasticBlockStorage'
         self._regions = AWSRegionMap()
-
-    async def connect(
-        self,
-        credentials: AWSCredentialsSet,
-        region: RegionName,
-    ):
-
-        aws_region = self._regions.get(region)
-
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        self._client: CostExplorerClient = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                boto3.client,
-                'ce',
-                aws_access_key_id=credentials.aws_access_key_id,
-                aws_secret_access_key=credentials.aws_secret_access_key,
-                aws_session_token=credentials.aws_session_token,
-                config=Config(
-                    region_name=aws_region.value
-                )
-            )
-        )
-
+    
+        
     async def sso(
         self,
         profile_name: str,
@@ -65,86 +48,122 @@ class AWSCostExplorer:
             self._loop = asyncio.get_event_loop()
 
         await self._loop.run_in_executor(
-            self._executor,
+            None,
             functools.partial(
                 boto3.setup_default_session,
                 profile_name=profile_name
             )
         )
 
-        self._client: CostExplorerClient = await self._loop.run_in_executor(
+        self._client: CloudWatchClient = await self._loop.run_in_executor(
             self._executor,
             functools.partial(
                 boto3.client,
-                'ce',
+                'cloudwatch',
             )
         )
 
-    async def get_cost_and_usage(
+    async def connect(
         self,
-        query: CostExplorerQuery,
-    ) -> CostExplorerResponse:
+        credentials: AWSCredentialsSet,
+        region: RegionName,
+    ):
+        
+        aws_region = self._regions.get(region)
+
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        self._client: CloudWatchClient = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                boto3.client,
+                'cloudwatch',
+                aws_access_key_id=credentials.aws_access_key_id,
+                aws_secret_access_key=credentials.aws_secret_access_key,
+                aws_session_token=credentials.aws_session_token,
+                config=Config(
+                    region_name=aws_region.value
+                )
+            )
+        )
+    
+        
+    async def get_metric_data(
+        self,
+        request: CloudWatchGetMetricDataRequest
+    ):
+        
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
 
         if self._client is None:
             raise UnsetAWSConnectionException(
-                self.service_name,
+                self.service_name
             )
         
-        dumped = query.dump()
-        
-        result = await self._loop.run_in_executor(
+        dumped = request.model_dump(exclude_none=True)
+
+        response = await self._loop.run_in_executor(
             self._executor,
             functools.partial(
-                self._client.get_cost_and_usage,
+                self._client.get_metric_data,
                 **dumped
             )
         )
 
-        return CostExplorerResponse(**result)
+        return CloudWatchGetMetricDataResponse(**response)
+        
 
-    async def get_cost_and_usage_paginated(
+    async def get_metric_statistics(
         self,
-        query: CostExplorerQuery,
-    ) -> list[CostExplorerResponse]:
+        request: CloudWatchGetMetricStatisticsRequest
+    ):
+        
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
 
         if self._client is None:
             raise UnsetAWSConnectionException(
-                self.service_name,
+                self.service_name
             )
         
-        dumped = query.dump()
+        dumped = request.model_dump(exclude_none=True)
 
-        paginator = await self._loop.run_in_executor(
+        response = await self._loop.run_in_executor(
             self._executor,
             functools.partial(
-                self._client.get_paginator,
-                'get_cost_and_usage',
-            )
-        )
-
-        pagination_result = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                paginator.paginate,
+                self._client.get_metric_statistics,
                 **dumped
             )
         )
 
-        results = await self._loop.run_in_executor(
+        return CloudWatchGetMetricStatisticsResponse(**response)
+    
+    async def list_metrics(
+        self,
+        request: CloudWatchListMetricsRequest
+    ):
+        
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            )
+        
+        dumped = request.model_dump(exclude_none=True)
+
+        response = await self._loop.run_in_executor(
             self._executor,
             functools.partial(
-                collect_paginator,
-                pagination_result,
+                self._client.list_metrics,
+                **dumped
             )
         )
 
-        return [
-            CostExplorerResponse(**result['Contents']) for result in results
-        ]
+        return CloudWatchListMetricsResponse(**response)
     
     async def close(self):
 

@@ -149,3 +149,17 @@ class AWSEC2:
             EC2DescribeVolumesResponse(**result['Volumes']) for result in results
         ]
     
+    async def close(self):
+
+        await self._loop.run_in_executor(
+            None,
+            self._client.close
+        )
+
+        await self._system.close()
+        self._executor.shutdown()
+
+    def abort(self):
+        self._client.close()
+        self._system.abort()
+        self._executor.shutdown()
