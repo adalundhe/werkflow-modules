@@ -104,14 +104,15 @@ class AWSSTS:
         return AssumedRoleResponse(**response)
     
     async def close(self):
-
+        
         if self._loop is None:
-            self._loop = asyncio.get_event_loop()
+            self._loop = asyncio.get_event_loop()     
 
-        await self._loop.run_in_executor(
-            None,
-            self._client.close
-        )
+        if self._client:
+            await self._loop.run_in_executor(
+                None,
+                self._client.close
+            )
 
         await self._system.close()
         self._executor.shutdown()
