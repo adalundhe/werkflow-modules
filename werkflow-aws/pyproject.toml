@@ -1,6 +1,6 @@
 [project]
 name = "werkflow-aws"
-version = "0.5.1"
+version = "0.5.2"
 description = "An AWS module for Werkflow powered by Boto3."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -32,6 +32,7 @@ dependencies = [
     'werkflow-shell',
     'werkflow-system',
     'boto3',
+    'pydantic',
 ]
 
 [build-system]
