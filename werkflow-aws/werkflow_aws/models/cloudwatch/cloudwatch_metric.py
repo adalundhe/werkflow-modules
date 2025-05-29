@@ -3,6 +3,6 @@ from .cloudwatch_dimension import CloudWatchDimension
 
 
 class CloudWatchMetric(BaseModel):
-    Name: StrictStr
-    Value: StrictStr
+    MetricName: StrictStr
+    Namespace: StrictStr
     Dimensions: list[CloudWatchDimension] | None = None
