@@ -8,4 +8,4 @@ class CloudWatchMetricDataQuery(BaseModel):
     Label: StrictStr | None = None
     ReturnData: StrictBool = False
     Period: StrictInt | None = None
-    AccountId: StrictStr
+    AccountId: StrictStr | None = None
