@@ -16,6 +16,6 @@ class CloudWatchMetricDataResult(BaseModel):
     Id: StrictStr
     Label: StrictStr
     Timestamps: list[datetime.datetime]
-    Value: list[StrictInt]
+    Values: list[StrictInt]
     StatusCode: CloudWatchMetricDataResultStatusCode
     Messages: list[CloudWatchMessage] | None =None
