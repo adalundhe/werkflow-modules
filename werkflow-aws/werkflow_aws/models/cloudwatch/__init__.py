@@ -8,3 +8,4 @@ from .cloudwatch_metric_data_query import CloudWatchMetricDataQuery as CloudWatc
 from .cloudwatch_metric_stat import CloudWatchMetricStat as CloudWatchMetricStat
 from .cloudwatch_metric import CloudWatchMetric as CloudWatchMetric
 from .cloudwatch_get_metric_data_response import CloudWatchGetMetricDataResponse as CloudWatchGetMetricDataResponse
+from .cloudwatch_datapoint import CloudWatchDatapoint as CloudWatchDatapoint
