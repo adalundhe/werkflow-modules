@@ -5,7 +5,7 @@ from typing import Literal
 ServiceName = Literal[
     "amplify",
     "api-gateway",
-    "app-stream"
+    "app-stream",
     "athena",
     "app-sync",
     "app-flow",
