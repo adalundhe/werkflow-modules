@@ -6,7 +6,7 @@ ServiceName = Literal[
     "amplify",
     "api-gateway",
     "app-stream"
-    "athena"
+    "athena",
     "app-sync",
     "app-flow",
     "app-studio",
