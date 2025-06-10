@@ -14,8 +14,6 @@ CloudWatchAPIOperationName = Literal[
     "deletesession",
     "describeaccesspoints",
     "describeaccountattributes",
-    "describeaccountattributes",
-    "describeaccountlimits",
     "describeaccountlimits",
     "describeacls",
     "describeactivereceiptruleset",
@@ -36,8 +34,6 @@ CloudWatchAPIOperationName = Literal[
     "describecarriergateways",
     "describeclientvpnendpoints",
     "describeclusters",
-    "describeclusters",
-    "describeclusters",
     "describeclustersecuritygroups",
     "describeclustersnapshots",
     "describeclustersubnetgroups",
@@ -56,7 +52,6 @@ CloudWatchAPIOperationName = Literal[
     "describedbclustersnapshots",
     "describedbinstanceautomatedbackups",
     "describedbinstances",
-    "describedbrecommendations",
     "describedbsecuritygroups",
     "describedbsnapshots",
     "describedbsubnetgroups",
@@ -66,15 +61,12 @@ CloudWatchAPIOperationName = Literal[
     "describedocument",
     "describedocumentpermission",
     "describeegressonlyinternetgateways",
+    "describeendpointaccess",
     "describeendpointauthorization",
     "describeenvironments",
     "describeeventbus",
-    "describeevents",
-    "describeeventsubscriptions",
-    "describeeventsubscriptions",
     "describeeventsubscriptions",
     "describefleetattributes",
-    "describefleets",
     "describefleets",
     "describeflowlogs",
     "describefpgaimages",
@@ -120,6 +112,7 @@ CloudWatchAPIOperationName = Literal[
     "describependingaggregationrequests",
     "describependingmaintenanceactions",
     "describeplacementgroups",
+    "describepullthroughcacherules",
     "describeregions",
     "describeregistry",
     "describeremediationconfigurations",
@@ -140,22 +133,17 @@ CloudWatchAPIOperationName = Literal[
     "describesecuritygroups",
     "describeserverlesscaches",
     "describesnapshots",
-    "describesnapshots",
-    "describesnapshots",
     "describesnapshotschedules",
     "describespotfleetrequests",
     "describespotinstancerequests",
     "describesslpolicies",
-    "describestacks",
     "describestacks",
     "describestandardscontrols",
     "describesubnetgroups",
     "describesubnets",
     "describesubscriptionfilters",
     "describetags",
-    "describetags",
     "describetargetgroups",
-    "describetenantdatabases",
     "describetrafficmirrortargets",
     "describetrails",
     "describetransitgatewayattachments",
@@ -166,7 +154,6 @@ CloudWatchAPIOperationName = Literal[
     "describetransitgateways",
     "describetransitgatewayvpcattachments",
     "describeusagelimits",
-    "describeusers",
     "describeusers",
     "describeverifiedaccessgroups",
     "describeverifiedaccesstrustproviders",
@@ -197,8 +184,6 @@ CloudWatchAPIOperationName = Literal[
     "getapis",
     "getapps",
     "getbackupvaultaccesspolicy",
-    "getblockpublicaccessconfiguration",
-    "getblockpublicaccessconfiguration",
     "getblockpublicaccessconfiguration",
     "getblueprints",
     "getbucketacl",
@@ -280,14 +265,8 @@ CloudWatchAPIOperationName = Literal[
     "listagents",
     "listalarmmodels",
     "listaliases",
-    "listaliases",
     "listanalyzers",
     "listapidestinations",
-    "listapplications",
-    "listapplications",
-    "listapplications",
-    "listapplications",
-    "listapplications",
     "listapplications",
     "listarchiverules",
     "listarchives",
@@ -302,18 +281,12 @@ CloudWatchAPIOperationName = Literal[
     "listcallanalyticsjobs",
     "listcertificateauthorities",
     "listcertificates",
-    "listcertificates",
-    "listcertificates",
     "listchangesets",
     "listchannels",
-    "listclusters",
-    "listclusters",
-    "listclusters",
     "listclusters",
     "listcoderepositories",
     "listcodesigningconfigs",
     "listcollaborations",
-    "listcomponents",
     "listcomponents",
     "listconfigs",
     "listconfigurationrecorders",
@@ -324,8 +297,6 @@ CloudWatchAPIOperationName = Literal[
     "listcontainers",
     "listcustommetrics",
     "listdatacatalogs",
-    "listdatasets",
-    "listdatasets",
     "listdatasets",
     "listdatastores",
     "listdeploymentstrategies",
@@ -338,14 +309,11 @@ CloudWatchAPIOperationName = Literal[
     "listdocumentclassifiers",
     "listdocuments",
     "listdomains",
-    "listdomains",
-    "listdomains",
     "listdominantlanguagedetectionjobs",
     "listemailidentities",
     "listemailtemplates",
     "listenabledproductsforimport",
     "listendpointconfigs",
-    "listendpoints",
     "listendpoints",
     "listentitiesdetectionjobs",
     "listentityrecognizers",
@@ -360,7 +328,6 @@ CloudWatchAPIOperationName = Literal[
     "listfirewalls",
     "listfleetmetrics",
     "listflows",
-    "listflows",
     "listflywheels",
     "listfunctiondefinitions",
     "listfunctions20150331",
@@ -368,15 +335,11 @@ CloudWatchAPIOperationName = Literal[
     "listfuotatasks",
     "listgameservergroups",
     "listgateways",
-    "listgateways",
     "listgrants",
-    "listgraphs",
     "listgraphs",
     "listgraphsnapshots",
     "listgroups",
-    "listgroups",
     "listimagerecipes",
-    "listimages",
     "listimages",
     "listinferenceexperiments",
     "listinfrastructureconfigurations",
@@ -397,7 +360,6 @@ CloudWatchAPIOperationName = Literal[
     "listmedicaltranscriptionjobs",
     "listmedicalvocabularies",
     "listmembers",
-    "listmembers",
     "listmetrics",
     "listmissionprofiles",
     "listmitigationactions",
@@ -411,7 +373,6 @@ CloudWatchAPIOperationName = Literal[
     "listphonenumbersv2",
     "listpiientitiesdetectionjobs",
     "listpipelines",
-    "listpipelines",
     "listplaybackconfigurations",
     "listplaybackkeypairs",
     "listpolicies",
@@ -420,8 +381,6 @@ CloudWatchAPIOperationName = Literal[
     "listpresets",
     "listprofiles",
     "listprojects",
-    "listprojects",
-    "listprojects",
     "listpublishingdestinations",
     "listreceiptfilters",
     "listreceiptrulesets",
@@ -429,7 +388,6 @@ CloudWatchAPIOperationName = Literal[
     "listrecordingconfigurations",
     "listrecoverypointsbybackupvault",
     "listreportgroups",
-    "listrepositories",
     "listrepositories",
     "listresolverendpoints",
     "listresolverquerylogconfigs",
@@ -443,11 +401,8 @@ CloudWatchAPIOperationName = Literal[
     "listscheduledaudits",
     "listschedulegroups",
     "listschedules",
-    "listschedules",
     "listschedulingpolicies",
     "listsecrets",
-    "listsecurityconfigurations",
-    "listsecurityconfigurations",
     "listsecurityconfigurations",
     "listsecurityprofiles",
     "listsentimentdetectionjobs",
@@ -466,12 +421,6 @@ CloudWatchAPIOperationName = Literal[
     "listsubscriptionsbytopic",
     "listtags",
     "listtagsforresource",
-    "listtagsforresource",
-    "listtagsforresource",
-    "listtagsforresource",
-    "listtagsforresource",
-    "listtagsforresource",
-    "listtagsforresource",
     "listtargetsbyrule",
     "listtasks",
     "listtemplates",
@@ -488,8 +437,8 @@ CloudWatchAPIOperationName = Literal[
     "listversionsbyfunction20150331",
     "listvirtualclusters",
     "listvocabularies",
+    "listworkflows",
     "listworkgroups",
-    "listworkspaces",
     "listworkspaces",
     "listworkteams",
     "memcachednodespercluster",
@@ -506,8 +455,8 @@ CloudWatchAPIOperationName = Literal[
     "usergroup",
     "userpoolread",
     "usersperusergroup",
-
 ]
+
 
 
 class CloudWatchAPIOperation(Enum):
@@ -519,8 +468,6 @@ class CloudWatchAPIOperation(Enum):
     DELETE_SESSION="DeleteSession"
     DESCRIBE_ACCESS_POINTS="DescribeAccessPoints"
     DESCRIBE_ACCOUNT_ATTRIBUTES="DescribeAccountAttributes"
-    DESCRIBE_ACCOUNT_ATTRIBUTES="DescribeAccountAttributes"
-    DESCRIBE_ACCOUNT_LIMITS="DescribeAccountLimits"
     DESCRIBE_ACCOUNT_LIMITS="DescribeAccountLimits"
     DESCRIBE_ACTIVE_RECEIPT_RULE_SET="DescribeActiveReceiptRuleSet"
     DESCRIBE_AC_LS="DescribeACLs"
@@ -541,8 +488,6 @@ class CloudWatchAPIOperation(Enum):
     DESCRIBE_CARRIER_GATEWAYS="DescribeCarrierGateways"
     DESCRIBE_CLIENT_VPN_ENDPOINTS="DescribeClientVpnEndpoints"
     DESCRIBE_CLUSTERS="DescribeClusters"
-    DESCRIBE_CLUSTERS="DescribeClusters"
-    DESCRIBE_CLUSTERS="DescribeClusters"
     DESCRIBE_CLUSTER_SECURITY_GROUPS="DescribeClusterSecurityGroups"
     DESCRIBE_CLUSTER_SNAPSHOTS="DescribeClusterSnapshots"
     DESCRIBE_CLUSTER_SUBNET_GROUPS="DescribeClusterSubnetGroups"
@@ -561,7 +506,6 @@ class CloudWatchAPIOperation(Enum):
     DESCRIBE_DB_CLUSTER_SNAPSHOTS="DescribeDBClusterSnapshots"
     DESCRIBE_DB_INSTANCES="DescribeDBInstances"
     DESCRIBE_DB_INSTANCE_AUTOMATED_BACKUPS="DescribeDBInstanceAutomatedBackups"
-    DESCRIBE_DB_RECOMMENDATIONS="DescribeDBRecommendations"
     DESCRIBE_DB_SECURITY_GROUPS="DescribeDBSecurityGroups"
     DESCRIBE_DB_SNAPSHOTS="DescribeDBSnapshots"
     DESCRIBE_DB_SUBNET_GROUPS="DescribeDBSubnetGroups"
@@ -571,14 +515,11 @@ class CloudWatchAPIOperation(Enum):
     DESCRIBE_DOCUMENT="DescribeDocument"
     DESCRIBE_DOCUMENT_PERMISSION="DescribeDocumentPermission"
     DESCRIBE_EGRESS_ONLY_INTERNET_GATEWAYS="DescribeEgressOnlyInternetGateways"
+    DESCRIBE_ENDPOINT_ACCESS="DescribeEndpointAccess"
     DESCRIBE_ENDPOINT_AUTHORIZATION="DescribeEndpointAuthorization"
     DESCRIBE_ENVIRONMENTS="DescribeEnvironments"
-    DESCRIBE_EVENTS="DescribeEvents"
     DESCRIBE_EVENT_BUS="DescribeEventBus"
     DESCRIBE_EVENT_SUBSCRIPTIONS="DescribeEventSubscriptions"
-    DESCRIBE_EVENT_SUBSCRIPTIONS="DescribeEventSubscriptions"
-    DESCRIBE_EVENT_SUBSCRIPTIONS="DescribeEventSubscriptions"
-    DESCRIBE_FLEETS="DescribeFleets"
     DESCRIBE_FLEETS="DescribeFleets"
     DESCRIBE_FLEET_ATTRIBUTES="DescribeFleetAttributes"
     DESCRIBE_FLOW_LOGS="DescribeFlowLogs"
@@ -625,6 +566,7 @@ class CloudWatchAPIOperation(Enum):
     DESCRIBE_PENDING_AGGREGATION_REQUESTS="DescribePendingAggregationRequests"
     DESCRIBE_PENDING_MAINTENANCE_ACTIONS="DescribePendingMaintenanceActions"
     DESCRIBE_PLACEMENT_GROUPS="DescribePlacementGroups"
+    DESCRIBE_PULL_THROUGH_CACHE_RULES="DescribePullThroughCacheRules"
     DESCRIBE_REGIONS="DescribeRegions"
     DESCRIBE_REGISTRY="DescribeRegistry"
     DESCRIBE_REMEDIATION_CONFIGURATIONS="DescribeRemediationConfigurations"
@@ -645,22 +587,17 @@ class CloudWatchAPIOperation(Enum):
     DESCRIBE_SECURITY_GROUP_RULES="DescribeSecurityGroupRules"
     DESCRIBE_SERVERLESS_CACHES="DescribeServerlessCaches"
     DESCRIBE_SNAPSHOTS="DescribeSnapshots"
-    DESCRIBE_SNAPSHOTS="DescribeSnapshots"
-    DESCRIBE_SNAPSHOTS="DescribeSnapshots"
     DESCRIBE_SNAPSHOT_SCHEDULES="DescribeSnapshotSchedules"
     DESCRIBE_SPOT_FLEET_REQUESTS="DescribeSpotFleetRequests"
     DESCRIBE_SPOT_INSTANCE_REQUESTS="DescribeSpotInstanceRequests"
     DESCRIBE_SSL_POLICIES="DescribeSSLPolicies"
-    DESCRIBE_STACKS="DescribeStacks"
     DESCRIBE_STACKS="DescribeStacks"
     DESCRIBE_STANDARDS_CONTROLS="DescribeStandardsControls"
     DESCRIBE_SUBNETS="DescribeSubnets"
     DESCRIBE_SUBNET_GROUPS="DescribeSubnetGroups"
     DESCRIBE_SUBSCRIPTION_FILTERS="DescribeSubscriptionFilters"
     DESCRIBE_TAGS="DescribeTags"
-    DESCRIBE_TAGS="DescribeTags"
     DESCRIBE_TARGET_GROUPS="DescribeTargetGroups"
-    DESCRIBE_TENANT_DATABASES="DescribeTenantDatabases"
     DESCRIBE_TRAFFIC_MIRROR_TARGETS="DescribeTrafficMirrorTargets"
     DESCRIBE_TRAILS="DescribeTrails"
     DESCRIBE_TRANSIT_GATEWAYS="DescribeTransitGateways"
@@ -671,7 +608,6 @@ class CloudWatchAPIOperation(Enum):
     DESCRIBE_TRANSIT_GATEWAY_ROUTE_TABLE_ANNOUNCEMENTS="DescribeTransitGatewayRouteTableAnnouncements"
     DESCRIBE_TRANSIT_GATEWAY_VPC_ATTACHMENTS="DescribeTransitGatewayVpcAttachments"
     DESCRIBE_USAGE_LIMITS="DescribeUsageLimits"
-    DESCRIBE_USERS="DescribeUsers"
     DESCRIBE_USERS="DescribeUsers"
     DESCRIBE_VERIFIED_ACCESS_GROUPS="DescribeVerifiedAccessGroups"
     DESCRIBE_VERIFIED_ACCESS_TRUST_PROVIDERS="DescribeVerifiedAccessTrustProviders"
@@ -702,8 +638,6 @@ class CloudWatchAPIOperation(Enum):
     GET_APIS="GetApis"
     GET_APPS="GetApps"
     GET_BACKUP_VAULT_ACCESS_POLICY="GetBackupVaultAccessPolicy"
-    GET_BLOCK_PUBLIC_ACCESS_CONFIGURATION="GetBlockPublicAccessConfiguration"
-    GET_BLOCK_PUBLIC_ACCESS_CONFIGURATION="GetBlockPublicAccessConfiguration"
     GET_BLOCK_PUBLIC_ACCESS_CONFIGURATION="GetBlockPublicAccessConfiguration"
     GET_BLUEPRINTS="GetBlueprints"
     GET_BUCKETS="GetBuckets"
@@ -785,14 +719,8 @@ class CloudWatchAPIOperation(Enum):
     LIST_AGENTS="ListAgents"
     LIST_ALARM_MODELS="ListAlarmModels"
     LIST_ALIASES="ListAliases"
-    LIST_ALIASES="ListAliases"
     LIST_ANALYZERS="ListAnalyzers"
     LIST_API_DESTINATIONS="ListApiDestinations"
-    LIST_APPLICATIONS="ListApplications"
-    LIST_APPLICATIONS="ListApplications"
-    LIST_APPLICATIONS="ListApplications"
-    LIST_APPLICATIONS="ListApplications"
-    LIST_APPLICATIONS="ListApplications"
     LIST_APPLICATIONS="ListApplications"
     LIST_ARCHIVES="ListArchives"
     LIST_ARCHIVE_RULES="ListArchiveRules"
@@ -806,19 +734,13 @@ class CloudWatchAPIOperation(Enum):
     LIST_CALL_ANALYTICS_JOBS="ListCallAnalyticsJobs"
     LIST_CA_CERTIFICATES="ListCACertificates"
     LIST_CERTIFICATES="ListCertificates"
-    LIST_CERTIFICATES="ListCertificates"
-    LIST_CERTIFICATES="ListCertificates"
     LIST_CERTIFICATE_AUTHORITIES="ListCertificateAuthorities"
     LIST_CHANGE_SETS="ListChangeSets"
     LIST_CHANNELS="ListChannels"
     LIST_CLUSTERS="ListClusters"
-    LIST_CLUSTERS="ListClusters"
-    LIST_CLUSTERS="ListClusters"
-    LIST_CLUSTERS="ListClusters"
     LIST_CODE_REPOSITORIES="ListCodeRepositories"
     LIST_CODE_SIGNING_CONFIGS="ListCodeSigningConfigs"
     LIST_COLLABORATIONS="ListCollaborations"
-    LIST_COMPONENTS="ListComponents"
     LIST_COMPONENTS="ListComponents"
     LIST_CONFIGS="ListConfigs"
     LIST_CONFIGURATION_RECORDERS="ListConfigurationRecorders"
@@ -828,7 +750,6 @@ class CloudWatchAPIOperation(Enum):
     LIST_CONTAINERS="ListContainers"
     LIST_CONTAINER_RECIPES="ListContainerRecipes"
     LIST_CUSTOM_METRICS="ListCustomMetrics"
-    LIST_DATASETS="ListDatasets"
     LIST_DATASETS="ListDatasets"
     LIST_DATASTORES="ListDatastores"
     LIST_DATA_CATALOGS="ListDataCatalogs"
@@ -843,13 +764,10 @@ class CloudWatchAPIOperation(Enum):
     LIST_DOCUMENTS="ListDocuments"
     LIST_DOCUMENT_CLASSIFIERS="ListDocumentClassifiers"
     LIST_DOMAINS="ListDomains"
-    LIST_DOMAINS="ListDomains"
-    LIST_DOMAINS="ListDomains"
     LIST_DOMINANT_LANGUAGE_DETECTION_JOBS="ListDominantLanguageDetectionJobs"
     LIST_EMAIL_IDENTITIES="ListEmailIdentities"
     LIST_EMAIL_TEMPLATES="ListEmailTemplates"
     LIST_ENABLED_PRODUCTS_FOR_IMPORT="ListEnabledProductsForImport"
-    LIST_ENDPOINTS="ListEndpoints"
     LIST_ENDPOINTS="ListEndpoints"
     LIST_ENDPOINT_CONFIGS="ListEndpointConfigs"
     LIST_ENTITIES_DETECTION_JOBS="ListEntitiesDetectionJobs"
@@ -865,7 +783,6 @@ class CloudWatchAPIOperation(Enum):
     LIST_FIREWALL_POLICIES="ListFirewallPolicies"
     LIST_FLEET_METRICS="ListFleetMetrics"
     LIST_FLOWS="ListFlows"
-    LIST_FLOWS="ListFlows"
     LIST_FLYWHEELS="ListFlywheels"
     LIST_FUNCTIONS20150331="ListFunctions20150331"
     LIST_FUNCTION_DEFINITIONS="ListFunctionDefinitions"
@@ -873,14 +790,10 @@ class CloudWatchAPIOperation(Enum):
     LIST_FUOTA_TASKS="ListFuotaTasks"
     LIST_GAME_SERVER_GROUPS="ListGameServerGroups"
     LIST_GATEWAYS="ListGateways"
-    LIST_GATEWAYS="ListGateways"
     LIST_GRANTS="ListGrants"
-    LIST_GRAPHS="ListGraphs"
     LIST_GRAPHS="ListGraphs"
     LIST_GRAPH_SNAPSHOTS="ListGraphSnapshots"
     LIST_GROUPS="ListGroups"
-    LIST_GROUPS="ListGroups"
-    LIST_IMAGES="ListImages"
     LIST_IMAGES="ListImages"
     LIST_IMAGE_RECIPES="ListImageRecipes"
     LIST_INFERENCE_EXPERIMENTS="ListInferenceExperiments"
@@ -902,7 +815,6 @@ class CloudWatchAPIOperation(Enum):
     LIST_MEDICAL_TRANSCRIPTION_JOBS="ListMedicalTranscriptionJobs"
     LIST_MEDICAL_VOCABULARIES="ListMedicalVocabularies"
     LIST_MEMBERS="ListMembers"
-    LIST_MEMBERS="ListMembers"
     LIST_METRICS="ListMetrics"
     LIST_MISSION_PROFILES="ListMissionProfiles"
     LIST_MITIGATION_ACTIONS="ListMitigationActions"
@@ -916,7 +828,6 @@ class CloudWatchAPIOperation(Enum):
     LIST_PHONE_NUMBERS_V2="ListPhoneNumbersV2"
     LIST_PII_ENTITIES_DETECTION_JOBS="ListPiiEntitiesDetectionJobs"
     LIST_PIPELINES="ListPipelines"
-    LIST_PIPELINES="ListPipelines"
     LIST_PLAYBACK_CONFIGURATIONS="ListPlaybackConfigurations"
     LIST_PLAYBACK_KEY_PAIRS="ListPlaybackKeyPairs"
     LIST_POLICIES="ListPolicies"
@@ -925,8 +836,6 @@ class CloudWatchAPIOperation(Enum):
     LIST_PRESETS="ListPresets"
     LIST_PROFILES="ListProfiles"
     LIST_PROJECTS="ListProjects"
-    LIST_PROJECTS="ListProjects"
-    LIST_PROJECTS="ListProjects"
     LIST_PUBLISHING_DESTINATIONS="ListPublishingDestinations"
     LIST_RECEIPT_FILTERS="ListReceiptFilters"
     LIST_RECEIPT_RULE_SETS="ListReceiptRuleSets"
@@ -934,7 +843,6 @@ class CloudWatchAPIOperation(Enum):
     LIST_RECORDING_CONFIGURATIONS="ListRecordingConfigurations"
     LIST_RECOVERY_POINTS_BY_BACKUP_VAULT="ListRecoveryPointsByBackupVault"
     LIST_REPORT_GROUPS="ListReportGroups"
-    LIST_REPOSITORIES="ListRepositories"
     LIST_REPOSITORIES="ListRepositories"
     LIST_RESOLVER_ENDPOINTS="ListResolverEndpoints"
     LIST_RESOLVER_QUERY_LOG_CONFIGS="ListResolverQueryLogConfigs"
@@ -947,12 +855,9 @@ class CloudWatchAPIOperation(Enum):
     LIST_RULESETS="ListRulesets"
     LIST_SCHEDULED_AUDITS="ListScheduledAudits"
     LIST_SCHEDULES="ListSchedules"
-    LIST_SCHEDULES="ListSchedules"
     LIST_SCHEDULE_GROUPS="ListScheduleGroups"
     LIST_SCHEDULING_POLICIES="ListSchedulingPolicies"
     LIST_SECRETS="ListSecrets"
-    LIST_SECURITY_CONFIGURATIONS="ListSecurityConfigurations"
-    LIST_SECURITY_CONFIGURATIONS="ListSecurityConfigurations"
     LIST_SECURITY_CONFIGURATIONS="ListSecurityConfigurations"
     LIST_SECURITY_PROFILES="ListSecurityProfiles"
     LIST_SENTIMENT_DETECTION_JOBS="ListSentimentDetectionJobs"
@@ -971,12 +876,6 @@ class CloudWatchAPIOperation(Enum):
     LIST_SUBSCRIPTIONS_BY_TOPIC="ListSubscriptionsByTopic"
     LIST_TAGS="ListTags"
     LIST_TAGS_FOR_RESOURCE="ListTagsForResource"
-    LIST_TAGS_FOR_RESOURCE="ListTagsForResource"
-    LIST_TAGS_FOR_RESOURCE="ListTagsForResource"
-    LIST_TAGS_FOR_RESOURCE="ListTagsForResource"
-    LIST_TAGS_FOR_RESOURCE="ListTagsForResource"
-    LIST_TAGS_FOR_RESOURCE="ListTagsForResource"
-    LIST_TAGS_FOR_RESOURCE="ListTagsForResource"
     LIST_TARGETS_BY_RULE="ListTargetsByRule"
     LIST_TASKS="ListTasks"
     LIST_TEMPLATES="ListTemplates"
@@ -993,7 +892,7 @@ class CloudWatchAPIOperation(Enum):
     LIST_VERSIONS_BY_FUNCTION20150331="ListVersionsByFunction20150331"
     LIST_VIRTUAL_CLUSTERS="ListVirtualClusters"
     LIST_VOCABULARIES="ListVocabularies"
-    LIST_WORKSPACES="ListWorkspaces"
+    LIST_WORKFLOWS="ListWorkflows"
     LIST_WORKSPACES="ListWorkspaces"
     LIST_WORKTEAMS="ListWorkteams"
     LIST_WORK_GROUPS="ListWorkGroups"
@@ -1011,6 +910,7 @@ class CloudWatchAPIOperation(Enum):
     USERS_PER_USER_GROUP="UsersPerUserGroup"
     USER_GROUP="UserGroup"
     USER_POOL_READ="UserPoolRead"
+
 
 
 class CloudServiceAPIOpsMap:
@@ -1032,464 +932,460 @@ class CloudServiceAPIOpsMap:
                 "accountprovisionedwritecapacityunits"
             ],
             "ELASTICACHE": [
-                "cachesperregion",
                 "describecacheparametergroups",
-                "describecachesubnetgroups",
-                "describereplicationgroups",
-                "describereservedcachenodes",
-                "describeserverlesscaches",
-                "describesnapshots",
-                "describeusers",
-                "memcachednodespercluster",
                 "nodesperregion",
-                "parametergroup",
+                "describesnapshots",
+                "describeserverlesscaches",
                 "snapshotsperdaypercache",
+                "cachesperregion",
+                "describereplicationgroups",
+                "parametergroup",
                 "subnetspersubnetgroup",
+                "describereservedcachenodes",
+                "describeusers",
                 "user",
                 "usergroup",
-                "usersperusergroup"
+                "usersperusergroup",
+                "memcachednodespercluster",
+                "describecachesubnetgroups"
             ],
             "CLOUDTRAIL": [
-                "channel",
                 "describetrails",
-                "getinsightselectors",
                 "gettrailstatus",
-                "listchannels"
+                "getinsightselectors",
+                "listchannels",
+                "channel"
             ],
             "LOGS": [
-                "createlogstream",
-                "describedestinations",
-                "describeloggroups",
+                "describesubscriptionfilters",
                 "describelogstreams",
                 "describemetricfilters",
                 "describeresourcepolicies",
-                "describesubscriptionfilters",
-                "putlogevents"
+                "createlogstream",
+                "putlogevents",
+                "describeloggroups",
+                "describedestinations"
             ],
             "CLOUDSHELL": [
-                "deletesession",
-                "getenvironmentstatus"
+                "getenvironmentstatus",
+                "deletesession"
             ],
             "EFS": [
                 "describeaccesspoints"
             ],
             "EC2": [
-                "describeaccountattributes",
-                "describeaccountlimits",
-                "describeaddresses",
-                "describeaddressesattribute",
-                "describeautoscalinggroups",
-                "describeautoscalinginstances",
-                "describebyoipcidrs",
-                "describecapacityreservationfleets",
-                "describecapacityreservations",
-                "describecarriergateways",
-                "describeclientvpnendpoints",
-                "describecoippools",
-                "describedhcpoptions",
-                "describeegressonlyinternetgateways",
-                "describefleets",
-                "describeflowlogs",
-                "describefpgaimages",
-                "describehostreservations",
-                "describeimages",
-                "describeinstanceconnectendpoints",
-                "describeinstances",
-                "describeinstancestatus",
-                "describeinstancetypes",
-                "describeinternetgateways",
-                "describeipampools",
-                "describeipamresourcediscoveries",
-                "describeipamresourcediscoveryassociations",
-                "describeipams",
-                "describeipamscopes",
-                "describelaunchconfigurations",
-                "describelaunchtemplateversions",
-                "describelocalgatewayroutetables",
-                "describenatgateways",
-                "describenetworkinsightsaccessscopeanalyses",
                 "describenetworkinsightsaccessscopes",
-                "describenetworkinsightsanalyses",
-                "describenetworkinsightspaths",
-                "describenetworkinterfaces",
-                "describeplacementgroups",
-                "describeregions",
-                "describereservedinstances",
+                "describetransitgatewayconnects",
+                "describetransitgatewayroutetables",
+                "describevpngateways",
+                "getmanagedprefixlistentries",
+                "describebyoipcidrs",
+                "describeegressonlyinternetgateways",
+                "describeaccountattributes",
+                "describeflowlogs",
+                "describeclientvpnendpoints",
                 "describereservedinstancesmodifications",
-                "describescalabletargets",
-                "describescalingpolicies",
-                "describesecuritygrouprules",
-                "describesecuritygroups",
-                "describesnapshots",
-                "describespotfleetrequests",
+                "describeipams",
+                "describeipamresourcediscoveryassociations",
+                "getsnapshotblockpublicaccessstate",
+                "describefleets",
+                "describetransitgateways",
+                "describedhcpoptions",
+                "describevpcendpointservices",
+                "describeimages",
+                "describecarriergateways",
+                "describeinstanceconnectendpoints",
                 "describespotinstancerequests",
-                "describesubnets",
-                "describetags",
+                "describesnapshots",
+                "describeverifiedaccesstrustproviders",
+                "describevpcendpointconnectionnotifications",
+                "describeinstancestatus",
+                "describevpcendpointserviceconfigurations",
+                "describevpcs",
+                "describeipamscopes",
+                "describeaddressesattribute",
+                "describesecuritygroups",
+                "describeipampools",
                 "describetags",
                 "describetrafficmirrortargets",
-                "describetransitgatewayattachments",
-                "describetransitgatewayconnectpeers",
-                "describetransitgatewayconnects",
-                "describetransitgatewayroutetableannouncements",
-                "describetransitgatewayroutetables",
-                "describetransitgateways",
                 "describetransitgatewayvpcattachments",
-                "describeverifiedaccessgroups",
-                "describeverifiedaccesstrustproviders",
+                "describescalabletargets",
                 "describevpcblockpublicaccessexclusions",
-                "describevpcblockpublicaccessoptions",
-                "describevpcendpointconnectionnotifications",
-                "describevpcendpoints",
-                "describevpcendpointserviceconfigurations",
-                "describevpcendpointservices",
-                "describevpcs",
                 "describevpnconnections",
-                "describevpngateways",
-                "getallowedimagessettings",
-                "getebsencryptionbydefault",
-                "getimageblockpublicaccessstate",
                 "getinstancemetadatadefaults",
-                "getmanagedprefixlistentries",
-                "getsnapshotblockpublicaccessstate"
+                "describeaddresses",
+                "describeipamresourcediscoveries",
+                "describehostreservations",
+                "describevpcblockpublicaccessoptions",
+                "getallowedimagessettings",
+                "describeaccountlimits",
+                "describesubnets",
+                "describeverifiedaccessgroups",
+                "describeautoscalinginstances",
+                "describecapacityreservations",
+                "describelaunchtemplateversions",
+                "describereservedinstances",
+                "describeautoscalinggroups",
+                "describesecuritygrouprules",
+                "describenetworkinsightsanalyses",
+                "describespotfleetrequests",
+                "describevpcendpoints",
+                "describeregions",
+                "getimageblockpublicaccessstate",
+                "getebsencryptionbydefault",
+                "describefpgaimages",
+                "describenetworkinsightspaths",
+                "describescalingpolicies",
+                "describecoippools",
+                "describetransitgatewayroutetableannouncements",
+                "describecapacityreservationfleets",
+                "describeinternetgateways",
+                "describetransitgatewayconnectpeers",
+                "describeinstancetypes",
+                "describelaunchconfigurations",
+                "describenetworkinterfaces",
+                "describelocalgatewayroutetables",
+                "describenatgateways",
+                "describetransitgatewayattachments",
+                "describeplacementgroups",
+                "describeinstances",
+                "describenetworkinsightsaccessscopeanalyses"
             ],
             "RDS": [
-                "describeaccountattributes",
-                "describebluegreendeployments",
-                "describedbclusterendpoints",
-                "describedbclusterparametergroups",
-                "describedbclusters",
-                "describedbclustersnapshots",
-                "describedbinstanceautomatedbackups",
-                "describedbinstances",
-                "describedbsecuritygroups",
                 "describedbsnapshots",
-                "describedbsubnetgroups",
+                "describereserveddbinstances",
+                "describedbinstances",
+                "describeoptiongroups",
+                "describedbclusters",
+                "describedbsecuritygroups",
+                "describeaccountattributes",
+                "describedbclusterparametergroups",
+                "describedbclustersnapshots",
+                "describedbclusterendpoints",
+                "describedbinstanceautomatedbackups",
+                "describebluegreendeployments",
                 "describeeventsubscriptions",
                 "describeglobalclusters",
-                "describeoptiongroups",
                 "describependingmaintenanceactions",
-                "describereserveddbinstances"
+                "describedbsubnetgroups"
             ],
             "CLOUDFORMATION": [
-                "describeaccountlimits",
-                "describeorganizationsaccess",
-                "describestacks",
-                "getstackpolicy",
-                "gettemplate",
                 "gettemplatesummary",
-                "listchangesets",
-                "liststackresources",
-                "liststacks",
-                "liststacksets",
                 "listtypes",
-                "stackinstanceoperations"
+                "getstackpolicy",
+                "describeorganizationsaccess",
+                "listchangesets",
+                "liststacks",
+                "liststackresources",
+                "gettemplate",
+                "describeaccountlimits",
+                "stackinstanceoperations",
+                "liststacksets",
+                "describestacks"
             ],
             "MEMORYDB": [
                 "describeacls",
-                "describeclusters",
-                "describeparametergroups",
                 "describesnapshots",
+                "describeusers",
                 "describesubnetgroups",
-                "describeusers"
+                "describeclusters",
+                "describeparametergroups"
             ],
             "SES": [
-                "describeactivereceiptruleset",
                 "getaccount",
-                "listconfigurationsets",
-                "listcontactlists",
-                "listemailidentities",
-                "listemailtemplates",
                 "listreceiptfilters",
-                "listreceiptrulesets"
+                "listemailtemplates",
+                "listreceiptrulesets",
+                "listemailidentities",
+                "describeactivereceiptruleset",
+                "listconfigurationsets",
+                "listcontactlists"
             ],
             "CLOUDWATCH": [
-                "describealarms",
-                "describeinsightrules",
                 "getmetricdata",
                 "getmetricstatistics",
+                "describeinsightrules",
                 "listapplications",
+                "listtagsforresource",
                 "listmetrics",
-                "listtagsforresource"
+                "describealarms"
             ],
             "ELASTIC": [
-                "describeapplications",
-                "describeapplicationversions",
                 "describeenvironments",
                 "describesslpolicies",
-                "describetargetgroups"
+                "describetargetgroups",
+                "describeapplications",
+                "describeapplicationversions"
             ],
             "BACKUP": [
-                "describebackupvault",
-                "getbackupvaultaccesspolicy",
-                "listbackupplans",
+                "listtags",
                 "listrecoverypointsbybackupvault",
-                "listtags"
+                "listbackupplans",
+                "describebackupvault",
+                "getbackupvaultaccesspolicy"
             ],
             "CLOUDHSM": [
                 "describeclusters"
             ],
             "REDSHIFT": [
-                "describeclusters",
-                "describeclustersecuritygroups",
                 "describeclustersnapshots",
-                "describeclustersubnetgroups",
                 "describeendpointaccess",
-                "describeendpointauthorization",
-                "describeeventsubscriptions",
-                "describereservednodes",
                 "describesnapshotschedules",
-                "describeusagelimits"
+                "describeendpointauthorization",
+                "describeclustersecuritygroups",
+                "describeclusters",
+                "describeclustersubnetgroups",
+                "describeeventsubscriptions",
+                "describeusagelimits",
+                "describereservednodes"
             ],
             "AWS": [
-                "describecompliancebyconfigrule",
-                "describecompliancebyresource",
-                "describeconfigruleevaluationstatus",
-                "describeconfigrules",
-                "describeconfigurationrecorders",
-                "describeconfigurationrecorderstatus",
-                "describependingaggregationrequests",
-                "describeremediationconfigurations",
-                "getcompliancedetailsbyconfigrule",
-                "getdatabases",
-                "getdeploymentstrategy",
-                "getdiscoveredresourcecounts",
-                "getresourcepolicy",
-                "listapplications",
-                "listconfigurationrecorders",
                 "listdatastores",
+                "describecompliancebyresource",
+                "getcompliancedetailsbyconfigrule",
                 "listdeploymentstrategies",
-                "listdiscoveredresources",
+                "describeconfigurationrecorders",
+                "getresourcepolicy",
+                "getdiscoveredresourcecounts",
+                "getdeploymentstrategy",
                 "listdomains",
-                "listextensionassociations",
-                "listnotificationhubs",
+                "describeremediationconfigurations",
+                "selectresourceconfig",
+                "describeconfigruleevaluationstatus",
+                "getdatabases",
+                "describependingaggregationrequests",
+                "listdiscoveredresources",
                 "listrepositories",
-                "listtagsforresource",
                 "putevaluations",
-                "selectresourceconfig"
+                "describeconfigrules",
+                "listconfigurationrecorders",
+                "describeconfigurationrecorderstatus",
+                "describecompliancebyconfigrule",
+                "listnotificationhubs",
+                "listapplications",
+                "listtagsforresource",
+                "listextensionassociations"
             ],
             "BATCH": [
                 "describecomputeenvironments",
                 "describejobdefinitions",
-                "describejobqueues",
-                "listschedulingpolicies"
+                "listschedulingpolicies",
+                "describejobqueues"
             ],
             "KMS": [
-                "describecustomkeystores",
                 "describekey",
-                "getkeypolicy",
-                "keysperaccount",
-                "listaliases",
-                "listgrants",
-                "listkeyrotations",
                 "listkeys",
-                "listresourcetags"
+                "listresourcetags",
+                "keysperaccount",
+                "describecustomkeystores",
+                "listkeyrotations",
+                "getkeypolicy",
+                "listgrants",
+                "listaliases"
             ],
             "DIRECTORY": [
                 "describedirectories"
             ],
             "SSM": [
-                "describedocument",
-                "describedocumentpermission",
-                "describeinstanceinformation",
-                "describemaintenancewindows",
-                "describeparameters",
                 "getparameter",
-                "getservicesetting",
+                "describeparameters",
                 "listassociations",
+                "describemaintenancewindows",
                 "listdocuments",
+                "describedocument",
+                "describeinstanceinformation",
+                "describedocumentpermission",
+                "getservicesetting",
                 "listresourcedatasync"
             ],
             "EVENTBRIDGE": [
                 "describeeventbus",
-                "listapidestinations",
-                "listarchives",
-                "listendpoints",
-                "listeventbuses",
                 "listrules",
+                "listtargetsbyrule",
+                "listapidestinations",
+                "listeventbuses",
+                "listarchives",
                 "listtagsforresource",
-                "listtargetsbyrule"
+                "listendpoints"
             ],
             "DATABASE": [
-                "describeeventsubscriptions",
+                "describereplicationsubnetgroups",
                 "describereplicationinstances",
-                "describereplicationsubnetgroups"
+                "describeeventsubscriptions"
             ],
             "GAMELIFT": [
-                "describefleetattributes",
-                "describegamesessionqueues",
                 "describematchmakingconfigurations",
-                "listaliases",
+                "describegamesessionqueues",
+                "describefleetattributes",
                 "listgameservergroups",
-                "listlocations"
+                "listlocations",
+                "listaliases"
             ],
             "APPSTREAM": [
-                "describefleets",
                 "describeimagebuilders",
-                "describestacks"
+                "describestacks",
+                "describefleets"
             ],
             "KINESIS": [
-                "describelimits",
-                "listapplications",
                 "listsignalingchannels",
-                "liststreams"
+                "liststreams",
+                "listapplications",
+                "describelimits"
             ],
             "ECR": [
-                "describepullthroughcacherules",
                 "describeregistry",
+                "getregistryscanningconfiguration",
+                "describepullthroughcacherules",
                 "describerepositories",
-                "getaccountsetting",
                 "getregistrypolicy",
-                "getregistryscanningconfiguration"
+                "getaccountsetting"
             ],
             "SECRETS": [
-                "describesecret",
                 "getsecretvalue",
-                "listsecrets"
+                "listsecrets",
+                "describesecret"
             ],
             "SECURITY": [
+                "listmembers",
                 "describestandardscontrols",
-                "getadministratoraccount",
                 "getenabledstandards",
                 "getfindings",
-                "listenabledproductsforimport",
+                "getadministratoraccount",
+                "listtagsforresource",
                 "listinvitations",
-                "listmembers",
-                "listtagsforresource"
+                "listenabledproductsforimport"
             ],
             "WORKSPACES": [
                 "describeworkspaces"
             ],
             "COMPUTEOPTIMIZER": [
-                "exportautoscalinggrouprecommendations",
-                "exportebsvolumerecommendations",
-                "exportec2instancerecommendations",
-                "exportecsservicerecommendations",
                 "exportlambdafunctionrecommendations",
+                "exportec2instancerecommendations",
+                "getrecommendationsummaries",
                 "exportlicenserecommendations",
-                "exportrdsdatabaserecommendations",
                 "getenrollmentstatus",
+                "exportecsservicerecommendations",
+                "exportautoscalinggrouprecommendations",
+                "exportrdsdatabaserecommendations",
                 "getrdsdatabaserecommendations",
-                "getrecommendationsummaries"
+                "exportebsvolumerecommendations"
             ],
             "RESOURCE": [
-                "getaccountsettings",
                 "getresources",
                 "getresourceshares",
+                "getaccountsettings",
                 "listgroups"
             ],
             "LAMBDA": [
-                "getaccountsettings20160819",
-                "getfunction20150331v2",
+                "listversionsbyfunction20150331",
+                "listlayers20181031",
                 "getfunctionurlconfig",
-                "getpolicy20150331",
+                "getaccountsettings20160819",
                 "listcodesigningconfigs",
                 "listfunctions20150331",
+                "getpolicy20150331",
                 "listfunctionurlconfigs",
-                "listlayers20181031",
-                "listversionsbyfunction20150331"
+                "getfunction20150331v2"
             ],
             "AUDIT": [
                 "getaccountstatus"
             ],
             "API": [
-                "getapis",
                 "getdomainnames",
-                "getvpclinks"
+                "getvpclinks",
+                "getapis"
             ],
             "PINPOINT": [
                 "getapps",
                 "listtemplates"
             ],
             "EMR": [
-                "getblockpublicaccessconfiguration",
-                "getblockpublicaccessconfiguration",
-                "listapplications",
-                "listclusters",
-                "listclusters",
                 "listsecurityconfigurations",
-                "listsecurityconfigurations",
-                "listvirtualclusters"
+                "getblockpublicaccessconfiguration",
+                "listclusters",
+                "listvirtualclusters",
+                "listapplications"
             ],
             "AMAZON": [
-                "getblockpublicaccessconfiguration",
-                "listbots",
-                "listclusters",
-                "listdatasets",
-                "listorganizations",
+                "listvaults",
                 "listsecurityconfigurations",
-                "listvaults"
+                "listdatasets",
+                "getblockpublicaccessconfiguration",
+                "listorganizations",
+                "listclusters",
+                "listbots"
             ],
             "LIGHTSAIL": [
+                "getcertificates",
+                "getstaticips",
                 "getblueprints",
                 "getbuckets",
-                "getcertificates",
                 "getcontainerservices",
-                "getrelationaldatabases",
-                "getstaticips"
+                "getrelationaldatabases"
             ],
             "S3": [
-                "getbucketacl",
                 "getbucketcors",
-                "getbucketencryption",
-                "getbucketintelligenttieringconfiguration",
-                "getbucketlifecycle",
-                "getbucketlocation",
-                "getbucketlogging",
-                "getbucketmetricsconfiguration",
-                "getbucketnotification",
-                "getbucketobjectlockconfiguration",
+                "listmultiregionaccesspoints",
                 "getbucketownershipcontrols",
+                "getbucketlocation",
+                "getbucketacl",
+                "getbucketversioning",
+                "getbucketobjectlockconfiguration",
+                "getbucketlogging",
+                "getbucketwebsite",
+                "getbucketencryption",
                 "getbucketreplication",
                 "getbucketrequestpayment",
-                "getbucketversioning",
-                "getbucketwebsite",
+                "getbucketnotification",
+                "getbucketlifecycle",
                 "listaccesspoints",
+                "liststoragelensgroups",
                 "listbuckets",
-                "listmultiregionaccesspoints",
-                "liststoragelensgroups"
+                "getbucketintelligenttieringconfiguration",
+                "getbucketmetricsconfiguration"
             ],
             "ATHENA": [
                 "getdatacatalog",
-                "getworkgroup",
-                "listdatacatalogs",
                 "listpreparedstatements",
+                "getworkgroup",
                 "listtagsforresource",
-                "listworkgroups"
+                "listworkgroups",
+                "listdatacatalogs"
             ],
             "GUARDDUTY": [
+                "listmembers",
+                "listdetectors",
+                "listpublishingdestinations",
                 "getdetector",
                 "getinvitationscount",
                 "getmalwarescansettings",
                 "getmasteraccount",
-                "listdetectors",
                 "listfilters",
-                "listmembers",
-                "listpublishingdestinations",
                 "listthreatintelsets"
             ],
             "FRAUD": [
                 "getdetectors",
                 "getentitytypes",
-                "geteventtypes",
                 "getexternalmodels",
+                "getvariables",
                 "getoutcomes",
-                "getvariables"
+                "geteventtypes"
             ],
             "X_RAY": [
                 "getencryptionconfig"
             ],
             "DATA": [
-                "getlifecyclepolicies",
-                "listdatasets"
+                "listdatasets",
+                "getlifecyclepolicies"
             ],
             "MACIE": [
                 "getmaciesession"
             ],
             "ROUTE": [
-                "getresolverrule",
+                "listresolverquerylogconfigs",
                 "listfirewalldomainlists",
                 "listresolverendpoints",
-                "listresolverquerylogconfigs"
+                "getresolverrule"
             ],
             "SERVICE": [
                 "getservicequota",
@@ -1499,36 +1395,36 @@ class CloudServiceAPIOpsMap:
             "SNS": [
                 "gettopicattributes",
                 "listsubscriptions",
-                "listsubscriptionsbytopic",
+                "numberofmessagespublishedperaccount",
                 "listtagsforresource",
-                "numberofmessagespublishedperaccount"
+                "listsubscriptionsbytopic"
             ],
             "BEDROCK": [
                 "listagents"
             ],
             "IOT": [
-                "listalarmmodels",
-                "listassetmodels",
-                "listcacertificates",
+                "listinputs",
+                "listrolealiases",
                 "listcertificates",
                 "listcustommetrics",
-                "listdetectormodels",
-                "listdimensions",
-                "listfleetmetrics",
-                "listfuotatasks",
-                "listgateways",
-                "listinputs",
-                "listmitigationactions",
-                "listmulticastgroups",
-                "listpolicies",
-                "listportals",
-                "listrolealiases",
-                "listscheduledaudits",
-                "listsecurityprofiles",
+                "listalarmmodels",
                 "listserviceprofiles",
+                "listworkspaces",
+                "listfleetmetrics",
+                "listdetectormodels",
                 "listthings",
+                "listpolicies",
+                "listassetmodels",
+                "listcacertificates",
+                "listdimensions",
+                "listfuotatasks",
+                "listmitigationactions",
+                "listsecurityprofiles",
                 "listtopicruledestinations",
-                "listworkspaces"
+                "listgateways",
+                "listscheduledaudits",
+                "listportals",
+                "listmulticastgroups"
             ],
             "ACCESS": [
                 "listanalyzers",
@@ -1539,17 +1435,17 @@ class CloudServiceAPIOpsMap:
                 "listeventintegrations"
             ],
             "MEDIACONNECT": [
-                "listbridges",
+                "listgateways",
                 "listflows",
-                "listgateways"
+                "listbridges"
             ],
             "TRANSCRIBE": [
                 "listcallanalyticsjobs",
-                "listlanguagemodels",
-                "listmedicalscribejobs",
+                "listvocabularies",
                 "listmedicaltranscriptionjobs",
                 "listmedicalvocabularies",
-                "listvocabularies"
+                "listmedicalscribejobs",
+                "listlanguagemodels"
             ],
             "PRIVATE": [
                 "listcertificateauthorities"
@@ -1558,71 +1454,71 @@ class CloudServiceAPIOpsMap:
                 "listcertificates"
             ],
             "TRANSFER": [
-                "listcertificates",
-                "listprofiles",
                 "listservers",
+                "listprofiles",
+                "listcertificates",
                 "listworkflows"
             ],
             "EKS": [
                 "listclusters"
             ],
             "SAGEMAKER": [
-                "listcoderepositories",
-                "listdomains",
-                "listendpointconfigs",
-                "listendpoints",
                 "listfeaturegroups",
-                "listimages",
-                "listinferenceexperiments",
-                "listnotebookinstancelifecycleconfigs",
+                "listworkteams",
                 "listpipelines",
-                "listworkteams"
+                "listnotebookinstancelifecycleconfigs",
+                "listcoderepositories",
+                "listendpointconfigs",
+                "listdomains",
+                "listendpoints",
+                "listimages",
+                "listinferenceexperiments"
             ],
             "CLEAN": [
                 "listcollaborations"
             ],
             "GREENGRASS": [
-                "listcomponents",
-                "listconnectordefinitions",
-                "listdevicedefinitions",
                 "listfunctiondefinitions",
-                "listgroups",
+                "listcomponents",
+                "listresourcedefinitions",
+                "listdevicedefinitions",
                 "listloggerdefinitions",
-                "listresourcedefinitions"
+                "listgroups",
+                "listconnectordefinitions"
             ],
             "IMAGE": [
+                "listinfrastructureconfigurations",
                 "listcomponents",
-                "listcontainerrecipes",
-                "listdistributionconfigurations",
                 "listimagerecipes",
+                "listdistributionconfigurations",
                 "listimages",
-                "listinfrastructureconfigurations"
+                "listcontainerrecipes"
             ],
             "GROUND": [
-                "listconfigs",
-                "listmissionprofiles"
+                "listmissionprofiles",
+                "listconfigs"
             ],
             "MEDIASTORE": [
                 "listcontainers"
             ],
             "DATABREW": [
                 "listdatasets",
-                "listprojects",
-                "listrecipes",
                 "listrulesets",
-                "listschedules"
+                "listprojects",
+                "listschedules",
+                "listrecipes"
             ],
             "COMPREHEND": [
-                "listdocumentclassifiers",
-                "listdominantlanguagedetectionjobs",
-                "listentitiesdetectionjobs",
-                "listentityrecognizers",
                 "listeventsdetectionjobs",
+                "listpiientitiesdetectionjobs",
+                "listdominantlanguagedetectionjobs",
+                "listentityrecognizers",
+                "listsentimentdetectionjobs",
+                "listdocumentclassifiers",
                 "listflywheels",
                 "listkeyphrasesdetectionjobs",
-                "listpiientitiesdetectionjobs",
-                "listsentimentdetectionjobs",
-                "listtopicsdetectionjobs"
+                "listtopicsdetectionjobs",
+                "listentitiesdetectionjobs"
             ],
             "CUSTOMER": [
                 "listdomains"
@@ -1635,8 +1531,8 @@ class CloudServiceAPIOpsMap:
                 "listflows"
             ],
             "NEPTUNEGRAPH": [
-                "listgraphs",
-                "listgraphsnapshots"
+                "listgraphsnapshots",
+                "listgraphs"
             ],
             "DETECTIVE": [
                 "listgraphs"
@@ -1652,15 +1548,15 @@ class CloudServiceAPIOpsMap:
                 "listloggingconfigurations"
             ],
             "LOCATION": [
-                "listmaps",
-                "listtrackers"
+                "listtrackers",
+                "listmaps"
             ],
             "CODESTAR": [
                 "listnotificationrules"
             ],
             "TRANSLATE": [
-                "listparalleldata",
                 "listterminologies",
+                "listparalleldata",
                 "listtexttranslationjobs"
             ],
             "CODEPIPELINE": [
@@ -1670,8 +1566,8 @@ class CloudServiceAPIOpsMap:
                 "listplaybackconfigurations"
             ],
             "IVS": [
-                "listplaybackkeypairs",
-                "listrecordingconfigurations"
+                "listrecordingconfigurations",
+                "listplaybackkeypairs"
             ],
             "MEDIACONVERT": [
                 "listpresets"
@@ -1680,19 +1576,19 @@ class CloudServiceAPIOpsMap:
                 "listprojects"
             ],
             "CODEBUILD": [
-                "listprojects",
-                "listreportgroups"
+                "listreportgroups",
+                "listprojects"
             ],
             "CODECOMMIT": [
                 "listrepositories"
             ],
             "ROBOMAKER": [
-                "listrobotapplications",
-                "listsimulationapplications"
+                "listsimulationapplications",
+                "listrobotapplications"
             ],
             "SCHEDULER": [
-                "listschedulegroups",
-                "listschedules"
+                "listschedules",
+                "listschedulegroups"
             ],
             "CLOUD": [
                 "listservices"
@@ -1707,8 +1603,8 @@ class CloudServiceAPIOpsMap:
                 "listtasks"
             ],
             "COGNITO": [
-                "listuserpools",
-                "userpoolread"
+                "userpoolread",
+                "listuserpools"
             ],
             "GRAFANA": [
                 "listworkspaces"
