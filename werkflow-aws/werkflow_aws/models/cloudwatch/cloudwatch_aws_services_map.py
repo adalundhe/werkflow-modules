@@ -119,7 +119,7 @@ CloudWatchServiceName = Literal[
 ]
 
 
-class CloudWatchAWSServices(Enum):
+class CloudWatchAWSService(Enum):
     ACCESS_ANALYZER='Access Analyzer'
     AMAZON_EMR='Amazon EMR'
     AMAZON_LEX='Amazon Lex'
@@ -241,12 +241,12 @@ class CloudWatchAWSServicesMap:
     def __init__(self):
         self._services_map: dict[
             CloudWatchServiceName,
-            str
+            CloudWatchAWSService
         ] = {
             service.name.lower().replace(
                 '_',
                 '-'
-            ): service.value for service in CloudWatchAWSServices
+            ): service for service in CloudWatchAWSService
         }
 
     def get(self, service_name: CloudWatchServiceName):
