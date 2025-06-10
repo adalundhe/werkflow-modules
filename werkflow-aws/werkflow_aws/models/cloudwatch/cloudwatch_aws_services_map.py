@@ -236,7 +236,7 @@ class CloudWatchAWSServices(Enum):
 
 
 
-class CloudwatchAWSServicesMap:
+class CloudWatchAWSServicesMap:
 
     def __init__(self):
         self._services_map: dict[
