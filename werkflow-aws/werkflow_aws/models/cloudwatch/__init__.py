@@ -1,4 +1,7 @@
 
+from .cloudwatch_api_operations_map import CloudWatchAPIOperationName as CloudWatchAPIOperationName
+from .cloudwatch_api_operations_map import CloudServiceAPIOpsMap as CloudServiceAPIOpsMap
+from .cloudwatch_api_operations_map import CloudWatchAPIOperation as CloudWatchAPIOperation
 from .cloudwatch_aws_services_map import CloudWatchServiceName as CloudWatchServiceName
 from .cloudwatch_aws_services_map import CloudWatchAWSService as CloudWatchAWSService
 from .cloudwatch_aws_services_map import CloudWatchAWSServicesMap as CloudWatchAWSServicesMap
