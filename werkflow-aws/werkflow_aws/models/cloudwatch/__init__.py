@@ -1,3 +1,7 @@
+
+from .cloudwatch_aws_services_map import CloudWatchServiceName as CloudWatchServiceName
+from .cloudwatch_aws_services_map import CloudWatchAWSServices as CloudWatchAWSServices
+from .cloudwatch_aws_services_map import CloudwatchAWSServicesMap as CloudwatchAWSServicesMap
 from .cloudwatch_dimension import CloudWatchDimension as CloudWatchDimension
 from .cloudwatch_list_metrics_request import CloudWatchListMetricsRequest as CloudWatchListMetricsRequest
 from .cloudwatch_list_metrics_response import CloudWatchListMetricsResponse as CloudWatchListMetricsResponse
