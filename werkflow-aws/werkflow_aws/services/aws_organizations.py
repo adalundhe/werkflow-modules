@@ -9,20 +9,17 @@ from werkflow_aws.models import (
     AWSRegionMap,
     RegionName,
 )
-from werkflow_aws.models.cloudwatch import (
-    CloudWatchGetMetricDataRequest,
-    CloudWatchGetMetricDataResponse,
-    CloudWatchGetMetricStatisticsRequest,
-    CloudWatchGetMetricStatisticsResponse,
-    CloudWatchListMetricsRequest,
-    CloudWatchListMetricsResponse,
+from werkflow_aws.models.organizations import (
+    OrganizationsListAccountsRequest,
+    OrganizationsListAccountsResponse,
 )
-from werkflow_aws.types import CloudWatchClient
+from werkflow_aws.helpers import collect_paginator
+from werkflow_aws.types import OrganizationsClient
 
 from werkflow_system import System
 
 
-class AWSCloudwatch:
+class AWSOrganizations:
     
     def __init__(self) -> None:
         self._system = System()
@@ -34,7 +31,7 @@ class AWSCloudwatch:
 
         self._client = None
 
-        self.service_name = 'CloudWatch'
+        self.service_name = 'Organizations'
         self._regions = AWSRegionMap()
     
     async def sso(
@@ -53,11 +50,11 @@ class AWSCloudwatch:
             )
         )
 
-        self._client: CloudWatchClient = await self._loop.run_in_executor(
+        self._client: OrganizationsClient = await self._loop.run_in_executor(
             self._executor,
             functools.partial(
                 boto3.client,
-                'cloudwatch',
+                'organizations',
             )
         )
 
@@ -72,11 +69,11 @@ class AWSCloudwatch:
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
 
-        self._client: CloudWatchClient = await self._loop.run_in_executor(
+        self._client: OrganizationsClient = await self._loop.run_in_executor(
             self._executor,
             functools.partial(
                 boto3.client,
-                'cloudwatch',
+                'organizations',
                 aws_access_key_id=credentials.aws_access_key_id,
                 aws_secret_access_key=credentials.aws_secret_access_key,
                 aws_session_token=credentials.aws_session_token,
@@ -85,82 +82,73 @@ class AWSCloudwatch:
                 )
             )
         )
-        
-    async def get_metric_data(
-        self,
-        request: CloudWatchGetMetricDataRequest
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
 
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        response = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.get_metric_data,
-                **dumped
-            )
-        )
-
-        return CloudWatchGetMetricDataResponse(**response)
-        
-
-    async def get_metric_statistics(
-        self,
-        request: CloudWatchGetMetricStatisticsRequest
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        response = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.get_metric_statistics,
-                **dumped
-            )
-        )
-
-        return CloudWatchGetMetricStatisticsResponse(**response)
     
-    async def list_metrics(
+    async def list_accounts(
         self,
-        request: CloudWatchListMetricsRequest
-    ):
-        
+        request: OrganizationsListAccountsRequest
+    ) -> OrganizationsListAccountsResponse:
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
 
         if self._client is None:
             raise UnsetAWSConnectionException(
-                self.service_name
+                self.service_name,
             )
         
         dumped = request.model_dump(exclude_none=True)
-
-        response = await self._loop.run_in_executor(
+        
+        result = await self._loop.run_in_executor(
             self._executor,
             functools.partial(
-                self._client.list_metrics,
+                self._client.list_accounts,
                 **dumped
             )
         )
 
-        return CloudWatchListMetricsResponse(**response)
+        return OrganizationsListAccountsResponse(**result)
+
+    async def describe_cache_clusters_paginated(
+        self,
+        request: OrganizationsListAccountsRequest
+    ) -> list[OrganizationsListAccountsResponse]:
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name,
+            )
+        
+        dumped = request.model_dump(exclude_none=True)
+
+        paginator = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.get_paginator,
+                'describe_cache_clusters',
+            )
+        )
+
+        pagination_result = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                paginator.paginate,
+                **dumped
+            )
+        )
+
+        results = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                collect_paginator,
+                pagination_result,
+            )
+        )
+
+        return [
+            OrganizationsListAccountsResponse(**result) for result in results
+        ]
     
     async def close(self):
 
