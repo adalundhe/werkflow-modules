@@ -34,6 +34,8 @@ class AWS(Module):
         await self.cost_explorer.close()
         await self.ec2.close()
         await self.elasticache.close()
+        await self.organizations.close()
+        await self.sts.close()
 
     def abort(self):
         self.cloudwatch.abort()
@@ -42,6 +44,8 @@ class AWS(Module):
         self.cost_explorer.abort()
         self.ec2.abort()
         self.elasticache.abort()
+        self.organizations.abort()
+        self.sts.abort()
 
     
 
