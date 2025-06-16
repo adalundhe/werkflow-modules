@@ -108,7 +108,7 @@ class AWSOrganizations:
 
         return OrganizationsListAccountsResponse(**result)
 
-    async def describe_cache_clusters_paginated(
+    async def list_accounts_paginated(
         self,
         request: OrganizationsListAccountsRequest
     ) -> list[OrganizationsListAccountsResponse]:
