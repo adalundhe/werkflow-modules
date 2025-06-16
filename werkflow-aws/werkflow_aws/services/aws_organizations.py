@@ -126,7 +126,7 @@ class AWSOrganizations:
             self._executor,
             functools.partial(
                 self._client.get_paginator,
-                'describe_cache_clusters',
+                'list_accounts',
             )
         )
 
