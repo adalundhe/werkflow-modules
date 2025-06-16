@@ -8,4 +8,4 @@ from .organizations_account import OrganizationsAccount
 
 class OrganizationsListAccountsResponse(BaseModel):
     Accounts: list[OrganizationsAccount]
-    NextToken: StrictStr
+    NextToken: StrictStr | None = None

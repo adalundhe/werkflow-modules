@@ -147,7 +147,9 @@ class AWSOrganizations:
         )
 
         return [
-            OrganizationsListAccountsResponse(**result) for result in results
+            OrganizationsListAccountsResponse(
+                Accounts=result['Accounts'],
+            ) for result in results
         ]
     
     async def close(self):
