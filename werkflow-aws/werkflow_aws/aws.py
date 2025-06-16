@@ -7,6 +7,7 @@ from .services import (
     AWSCostExplorer,
     AWSEC2,
     AWSElastiCache,
+    AWSOrganizations,
     AWSSTS,
 )
 
@@ -23,6 +24,7 @@ class AWS(Module):
         self.cost_explorer = AWSCostExplorer()
         self.ec2 = AWSEC2()
         self.elasticache = AWSElastiCache()
+        self.organizations = AWSOrganizations()
         self.sts = AWSSTS()
 
     async def close(self):
