@@ -1367,13 +1367,24 @@ class CloudWatchAPIOperation(Enum):
 class CloudServiceAPIOpsMap:
 
     def __init__(self):
-        self._api_ops_map: dict[
+
+        self._api_ops_slug_map: dict[
             CloudWatchAPIOperationName,
             CloudWatchAPIOperation
         ] = {
             service.name.lower().replace(
                 '_',
                 '-'
+            ): service for service in CloudWatchAPIOperation
+        }
+
+        self._api_ops_map: dict[
+            CloudWatchAPIOperationName,
+            CloudWatchAPIOperation
+        ] = {
+            service.name.lower().replace(
+                '_',
+                ''
             ): service for service in CloudWatchAPIOperation
         }
 
@@ -2073,6 +2084,9 @@ class CloudServiceAPIOpsMap:
 
     def get(self, operation_name: CloudWatchAPIOperationName):
         return self._api_ops_map[operation_name]
+    
+    def get_by_slug(self, operation_slug: str):
+        return self._api_ops_slug_map[operation_slug]
     
     def get_api_operation_slug(self, operation: CloudWatchAPIOperationValue):
         return self._api_ops_reverse_map[operation]
