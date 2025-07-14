@@ -1,2 +1,3 @@
 from .msk_list_clusters_request import MSKListClustersRequest as MSKListClustersRequest
 from .msk_list_clusters_response import MSKListClustersResponse as MSKListClustersResponse
+from .msk_broker_node_group_info import MSKBrokerNodeGroupInfo as MSKBrokerNodeGroupInfo
