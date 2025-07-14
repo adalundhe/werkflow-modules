@@ -6,6 +6,7 @@ from pydantic import (
 )
 
 from .msk_client_authentication import MSKClientAuthentication
+from .msk_broker_node_group_info import MSKBrokerNodeGroupInfo
 from .msk_current_broker_software_info import MSKCurrentBrokerSoftwareInfo
 from .msk_encryption_info import MSKEncryptionInfo
 from .msk_enhanced_monitoring import MSKEnhancedMonitoring
@@ -19,6 +20,7 @@ from .msk_customer_action_status import MSKCustomerActionStatus
 
 class MSKCluster(BaseModel):
     ActiveOperationArn: StrictStr
+    BrokerNodeGroupInfo: MSKBrokerNodeGroupInfo
     ClientAuthentication: MSKClientAuthentication
     ClusterArn: StrictStr
     ClusterName: StrictStr
