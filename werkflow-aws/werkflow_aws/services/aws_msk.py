@@ -108,7 +108,7 @@ class AWSMSK:
 
         return MSKListClustersResponse(**result)
     
-    async def describe_cache_clusters_paginated(
+    async def list_clusters_paginated(
         self,
         request: MSKListClustersRequest
     ) -> list[MSKListClustersResponse]:
