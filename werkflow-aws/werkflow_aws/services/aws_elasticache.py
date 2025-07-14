@@ -150,7 +150,7 @@ class AWSElastiCache:
         )
 
         return [
-            ElasticacheDescribeCacheClustersResponse(**result['CacheClusters']) for result in results
+            ElasticacheDescribeCacheClustersResponse(**result) for result in results
         ]
     
     async def describe_replication_groups(
@@ -216,7 +216,7 @@ class AWSElastiCache:
         )
 
         return [
-            ElasticacheDescribeReplicationGroupsResponse(**result['CacheClusters']) for result in results
+            ElasticacheDescribeReplicationGroupsResponse(**result) for result in results
         ]
     
     async def close(self):
