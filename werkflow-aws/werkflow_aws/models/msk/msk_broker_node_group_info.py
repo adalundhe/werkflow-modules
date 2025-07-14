@@ -29,22 +29,3 @@ class MSKBrokerNodeGroupInfo(BaseModel):
     SecurityGroups: list[StrictStr]
     StorageInfo: MSKEBSStorageInfo
     ConnectivityInfo: MSKConnectivityInfo
-    ClientAuthentication: MSKClientAuthentication
-    ClusterArn: StrictStr
-    ClusterName: StrictStr
-    CreationTime: datetime.datetime
-    CurrentBrokerSoftwareInfo: MSKCurrentBrokerSoftwareInfo
-    CurrentVersion: StrictStr
-    EncryptionInfo: MSKEncryptionInfo
-    EnhancedMonitoring: MSKEnhancedMonitoring
-    OpenMonitoring: MSKOpenMonitoring
-    LoggingInfo: MSKLoggingInfo
-    NumberOfBrokerNodes: StrictInt
-    State: MSKNodeGroupState
-    StateInfo: MSKStateInfo
-    Tags: dict[StrictStr, StrictStr] | None = None
-    ZookeeperConnectString: StrictStr
-    ZookeeperConnectStringTls: StrictStr
-    StorageMode: MSKStorageMode
-    CustomerActionStatus: MSKCustomerActionStatus
-

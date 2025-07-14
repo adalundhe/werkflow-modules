@@ -1,8 +1,8 @@
 from pydantic import BaseModel, StrictStr
-from .msk_broker_node_group_info import MSKBrokerNodeGroupInfo
+from .msk_cluster import MSKCluster
 
 
 class MSKListClustersResponse(BaseModel):
-    ClusterInfoList: list[MSKBrokerNodeGroupInfo]
+    ClusterInfoList: list[MSKCluster]
     NextToken: StrictStr | None = None
     
