@@ -7,6 +7,7 @@ from .services import (
     AWSCostExplorer,
     AWSEC2,
     AWSElastiCache,
+    AWSMSK,
     AWSOrganizations,
     AWSSTS,
 )
@@ -24,6 +25,7 @@ class AWS(Module):
         self.cost_explorer = AWSCostExplorer()
         self.ec2 = AWSEC2()
         self.elasticache = AWSElastiCache()
+        self.msk = AWSMSK()
         self.organizations = AWSOrganizations()
         self.sts = AWSSTS()
 
@@ -34,6 +36,7 @@ class AWS(Module):
         await self.cost_explorer.close()
         await self.ec2.close()
         await self.elasticache.close()
+        await self.msk.close()
         await self.organizations.close()
         await self.sts.close()
 
@@ -44,6 +47,7 @@ class AWS(Module):
         self.cost_explorer.abort()
         self.ec2.abort()
         self.elasticache.abort()
+        self.msk.abort()
         self.organizations.abort()
         self.sts.abort()
 
