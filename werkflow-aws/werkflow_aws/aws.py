@@ -1,6 +1,7 @@
 from werkflow_core import Module
 from .parsers import AWSConfigParser
 from .services import (
+    AWSAthena,
     AWSCloudwatch,
     AWSCredentials,
     AWSCodeArtifact,
@@ -18,6 +19,7 @@ class AWS(Module):
     def __init__(self) -> None:
         super().__init__()
 
+        self.athena = AWSAthena()
         self.cloudwatch = AWSCloudwatch()
         self.config = AWSConfigParser()
         self.credentials = AWSCredentials()
@@ -30,6 +32,7 @@ class AWS(Module):
         self.sts = AWSSTS()
 
     async def close(self):
+        await self.athena.close()
         await self.cloudwatch.close()
         await self.credentials.close()
         await self.code_artifact.close()
@@ -41,6 +44,7 @@ class AWS(Module):
         await self.sts.close()
 
     def abort(self):
+        self.athena.abort()
         self.cloudwatch.abort()
         self.credentials.abort()
         self.code_artifact.abort()

@@ -1,3 +1,4 @@
+from .aws_athena import AWSAthena as AWSAthena
 from .aws_ec2 import AWSEC2 as AWSEC2
 from .aws_cloudwatch import AWSCloudwatch as AWSCloudwatch
 from .aws_codeartifact import AWSCodeArtifact as AWSCodeArtifact
