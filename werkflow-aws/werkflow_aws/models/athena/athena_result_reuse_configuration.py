@@ -1,0 +1,6 @@
+from pydantic import BaseModel
+from .athena_result_reuse_by_age_configuration import AthenaResultReuseByAgeConfiguration
+
+
+class AthenaResultReuseConfiguration(BaseModel):
+    ResultReuseByAgeConfiguration: AthenaResultReuseByAgeConfiguration

@@ -26,7 +26,7 @@ class AWSCostExplorer:
             max_workers=self._system.configuration.cores.physical
         )
 
-        self._client = None
+        self._client: CostExplorerClient = None
 
         self.service_name = 'CostExplorer'
         self._regions = AWSRegionMap()

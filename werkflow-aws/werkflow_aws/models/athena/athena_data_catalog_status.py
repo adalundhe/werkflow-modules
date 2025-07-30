@@ -1,0 +1,14 @@
+from typing import Literal
+
+
+AthenaDataCatalogStatus = Literal[
+    'CREATE_IN_PROGRESS',
+    'CREATE_COMPLETE',
+    'CREATE_FAILED',
+    'CREATE_FAILED_CLEANUP_IN_PROGRESS',
+    'CREATE_FAILED_CLEANUP_COMPLETE',
+    'CREATE_FAILED_CLEANUP_FAILED',
+    'DELETE_IN_PROGRESS',
+    'DELETE_COMPLETE',
+    'DELETE_FAILED',
+]
