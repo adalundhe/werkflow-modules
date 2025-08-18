@@ -20,12 +20,12 @@ from werkflow_aws.models.s3 import (
     AWSs3CopySource,
     AWSs3CopyObjectOptions,
     AWSs3CopyObjectResponse,
-    AWSs3DeleteBucketOptions,
-    AWSs3DeleteBucketReponse,
+    AWSS3DeleteBucketRequest,
+    AWSS3DeleteBucketReponse,
     AWSs3DeleteBucketTaggingOptions,
     AWSs3DeleteObjectTaggingResponse,
-    AWSs3DeleteObjectOptions,
-    AWSs3DeleteObjectResponse,
+    AWSS3DeleteObjectRequest,
+    AWSS3DeleteObjectResponse,
     AWSs3DeleteObjectTaggingOptions,
     AWSs3DeleteBucketTaggingResponse,
     AWSs3DeleteObjectsOptions,
@@ -34,8 +34,8 @@ from werkflow_aws.models.s3 import (
     AWSs3GeneratePresignedURLResponse,
     AWSs3GetBucketTaggingOptions,
     AWSs3GetBucketTaggingResponse,
-    AWSs3GetObjectOptions,
-    AWSs3GetObjectResponse,
+    AWSS3GetObjectRequest,
+    AWSS3GetObjectResponse,
     AWSs3GetObjectTaggingOptions,
     AWSs3GetObjectTaggingResponse,
     AWSs3ListBucketsResponse,
@@ -43,8 +43,8 @@ from werkflow_aws.models.s3 import (
     AWSs3GeneratePresignedPostResponse,
     AWSs3ListDirectoryBucketsOptions,
     AWSs3ListDirectoryBucketsResponse,
-    AWSs3ListObjectsOptions,
-    AWSs3ListObjectsResponse,
+    AWSS3ListObjectsRequest,
+    AWSS3ListObjectsResponse,
     AWSs3ListObjectVersionsOptions,
     AWSs3ListObjectVersionsResponse,
     AWSs3ListMultipartUploadsOptions,
@@ -57,11 +57,11 @@ from werkflow_aws.models.s3 import (
     AWSs3PutBucketTaggingResponse,
     AWSs3PutBucketVersioningOptions,
     AWSs3PutBucketVersioningResponse,
-    AWSs3PutObjectOptions,
-    AWSs3PutObjectResponse,
+    AWSS3PutObjectRequest,
+    AWSS3PutObjectResponse,
     AWSs3PutObjectTaggingOptions,
     AWSs3PutObjectTaggingResponse,
-    AWSs3StreamingBody,
+    AWSS3StreamingBody,
     AWSs3Tag,
     AWSs3TransferConfigOptions,
     AWSs3TransferAllowedUploadArgs,
@@ -155,7 +155,6 @@ class AWSs3:
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
 
-        
         if self._client is None:
             raise UnsetAWSConnectionException(
                 self.service_name
@@ -170,8 +169,7 @@ class AWSs3:
 
     async def list_objects(
         self,
-        bucket: str,
-        options: AWSs3ListObjectsOptions | None=None
+        request: AWSS3ListObjectsRequest,
     ):
         
         if self._loop is None:
@@ -182,25 +180,21 @@ class AWSs3:
                 self.service_name
             ) 
         
-        if options is None:
-            options = AWSs3ListObjectsOptions()
+        dumped = request.model_dump(exclude_none=True)
 
         listed_objects = await self._loop.run_in_executor(
             self._executor,
             functools.partial(
                 self._client.list_objects_v2,
-                Bucket=bucket,
-                **options.to_data()
+                **dumped
             )
         )
 
-        return AWSs3ListObjectsResponse(**listed_objects)
+        return AWSS3ListObjectsResponse(**listed_objects)
 
     async def get_object(
         self,
-        bucket: str,
-        key: str,
-        options: AWSs3GetObjectOptions | None=None
+        request: AWSS3GetObjectRequest,
     ):
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
@@ -210,32 +204,26 @@ class AWSs3:
                 self.service_name
             ) 
         
-        if options is None:
-            options = AWSs3GetObjectOptions()
+        dumped = request.model_dump(exclude_none=True)
 
-        retrieved_object = await self._loop.run_in_executor(
+        response = await self._loop.run_in_executor(
             self._executor,
             functools.partial(
                 self._client.get_object,
-                Bucket=bucket,
-                Key=key,
-                **options.to_data()
+                **dumped,
             )
         )
 
-        return AWSs3GetObjectResponse(
-            **retrieved_object,
-            Body=AWSs3StreamingBody(
-                retrieved_object['Body']
-            )
+        response_data = response
+        response_data['Body'] = AWSS3StreamingBody(
+            response.get('Body'),
         )
+        
+        return AWSS3GetObjectResponse(**response_data)
 
     async def put_object(
         self,
-        bucket: str,
-        key: str,
-        body: bytes | BinaryIO | TextIO,
-        options: AWSs3PutObjectOptions | None=None
+        request: AWSS3PutObjectRequest,
     ):
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
@@ -243,28 +231,23 @@ class AWSs3:
         if self._client is None:
             raise UnsetAWSConnectionException(
                 self.service_name
-            ) 
+            )
         
-        if options is None:
-            options = AWSs3PutObjectOptions()
+        dumped = request.model_dump(exclude_none=True)
 
         updated_object = await self._loop.run_in_executor(
             self._executor,
             functools.partial(
                 self._client.put_object,
-                Bucket=bucket,
-                Key=key,
-                Body=body,
-                **options.to_data()
+                **dumped
             )
         )
 
-        return AWSs3PutObjectResponse(**updated_object)
+        return AWSS3PutObjectResponse(**updated_object)
 
     async def delete_bucket(
-            self,
-            bucket: str,
-            options: Optional[AWSs3DeleteBucketOptions]=None
+        self,
+        request: AWSS3DeleteBucketRequest,
     ):
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
@@ -273,26 +256,22 @@ class AWSs3:
             raise UnsetAWSConnectionException(
                 self.service_name
             ) 
-
-        if options is None:
-            options = AWSs3DeleteBucketOptions()
+        
+        dumped = request.model_dump(exclude_none=True)
 
         deleted_bucket = await self._loop.run_in_executor(
             self._executor,
             functools.partial(
                 self._client.delete_bucket,
-                Bucket=bucket,
-                **options.to_data()
+                **dumped
             )
         )
 
-        return AWSs3DeleteBucketReponse(**deleted_bucket)
+        return AWSS3DeleteBucketReponse(**deleted_bucket)
     
     async def delete_object(
         self,
-        bucket: str,
-        key: str,
-        options: Optional[AWSs3DeleteObjectOptions]=None
+        request: AWSS3DeleteObjectRequest,
     ):
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
@@ -302,20 +281,17 @@ class AWSs3:
                 self.service_name
             ) 
         
-        if options is None:
-            options = AWSs3DeleteObjectOptions()
+        dumped = request.model_dump(exclude_none=True)
 
         deleted_object = await self._loop.run_in_executor(
             self._executor,
             functools.partial(
                 self._client.delete_bucket,
-                Bucket=bucket,
-                Key=key,
-                **options.to_data()
+                **dumped
             )
         )
         
-        return AWSs3DeleteObjectResponse(**deleted_object)
+        return AWSS3DeleteBucketReponse(**deleted_object)
 
     async def list_multipart_uploads(
         self,
@@ -949,7 +925,7 @@ class AWSs3:
             )
         )
 
-        return AWSs3GetBucketTaggingOptions(**bucket_tagging)
+        return AWSs3GetBucketTaggingResponse(**bucket_tagging)
     
     async def get_object_tagging(
         self,

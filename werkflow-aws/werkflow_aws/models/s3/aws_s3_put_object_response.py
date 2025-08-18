@@ -7,7 +7,7 @@ from pydantic import (
 from typing import Literal, Optional
 
 
-class AWSs3PutObjectResponse(BaseModel):
+class AWSS3PutObjectResponse(BaseModel):
     Expiration: StrictStr
     ETag: StrictStr
     ChecksumCRC32: StrictStr

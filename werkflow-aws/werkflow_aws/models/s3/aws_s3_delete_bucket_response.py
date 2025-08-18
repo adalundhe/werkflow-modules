@@ -1,6 +1,6 @@
-from pydantic import BaseModel, StrictStr
-from typing import Dict, Any
+from pydantic import BaseModel, StrictStr, JsonValue
+from typing import Dict
 
 
-class AWSs3DeleteBucketReponse(BaseModel):
-    ResponseMetadata: Dict[StrictStr, Any]
+class AWSS3DeleteBucketReponse(BaseModel):
+    ResponseMetadata: Dict[StrictStr, JsonValue]

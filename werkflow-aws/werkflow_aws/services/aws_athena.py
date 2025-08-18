@@ -34,6 +34,10 @@ from werkflow_aws.models.athena import (
     AthenaGetQueryExecutionResponse,
     AthenaGetQueryResultsRequest,
     AthenaGetQueryResultsResponse,
+    AthenaGetSessionRequest,
+    AthenaGetSessionResponse,
+    AthenaGetSessionStatusRequest,
+    AthenaGetSessionStatusResponse,
     AthenaListNamedQueriesRequest,
     AthenaListNamedQueriesResponse,
     AthenaListQueryExecutionsRequest,
@@ -46,6 +50,22 @@ from werkflow_aws.models.athena import (
     AthenaListPreparedStatementsResponse,
     AthenaListSessionsRequest,
     AthenaListSessionsResponse,
+    AthenaStartCalculationExecutionRequest,
+    AthenaStartCalculationExecutionResponse,
+    AthenaStartQueryExecutionRequest,
+    AthenaStartQueryExecutionResponse,
+    AthenaStartSessionRequest,
+    AthenaStartSessionResponse,
+    AthenaStopCalculationExecutionRequest,
+    AthenaStopCalculationExecutionResponse,
+    AthenaStopQueryExecutionRequest,
+    AthenaStopQueryExecutionResponse,
+    AthenaTerminateSessionRequest,
+    AthenaTerminateSessionResponse,
+    AthenaUpdateDataCatalogRequest,
+    AthenaUpdateDataCatalogResponse,
+    AthenaUpdateNamedQueryRequest,
+    AthenaUpdateNamedQueryResponse,
 )
 
 from werkflow_aws.helpers import collect_paginator
@@ -419,6 +439,192 @@ class AWSAthena:
 
         return AthenaGetQueryResultsResponse(**response)
 
+    async def get_session_request(
+        self,
+        request: AthenaGetSessionRequest,
+    ):    
+        
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            )
+        
+        dumped = request.model_dump(exclude_none=True)
+
+        response = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.get_session,
+                **dumped
+            )
+        )
+
+        return AthenaGetSessionResponse(**response)
+    
+    async def get_session_status_request(
+        self,
+        request: AthenaGetSessionStatusRequest,
+    ):
+        
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            )
+        
+        dumped = request.model_dump(exclude_none=True)
+
+        response = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.get_session_status,
+                **dumped
+            )
+        )
+
+        return AthenaGetSessionStatusResponse(**response)
+
+    async def list_databases(
+        self,
+        request: AthenaListDatabasesRequest,
+    ):
+        
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            )
+        
+        dumped = request.model_dump(exclude_none=True)
+
+        response = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.list_databases,
+                **dumped
+            )
+        )
+
+        return AthenaListDatabasesResponse(**response)
+
+    async def list_databases_paginated(
+        self,
+        request: AthenaListDatabasesRequest,
+    ):
+        
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            )
+        
+        dumped = request.model_dump(exclude_none=True)
+
+        paginator = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.get_paginator,
+                'list_databases',
+            )
+        )
+
+        pagination_result = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                paginator.paginate,
+                **dumped
+            )
+        )
+
+        results = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                collect_paginator,
+                pagination_result,
+            )
+        )
+
+        return [
+            AthenaListDatabasesResponse(**res) for res in results
+        ]
+    
+    async def list_data_catalogs(
+        self,
+        request: AthenaListDataCatalogsRequest,
+    ):
+        
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            )
+        
+        dumped = request.model_dump(exclude_none=True)
+
+        response = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.list_data_catalogs,
+                **dumped
+            )
+        )
+
+        return AthenaListDataCatalogsResponse(**response)
+
+    async def list_data_catalogs_paginated(
+        self,
+        request: AthenaListDataCatalogsRequest,
+    ):
+        
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            )
+        
+        dumped = request.model_dump(exclude_none=True)
+
+        paginator = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.get_paginator,
+                'list_data_catalogs',
+            )
+        )
+
+        pagination_result = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                paginator.paginate,
+                **dumped
+            )
+        )
+
+        results = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                collect_paginator,
+                pagination_result,
+            )
+        )
+
+        return [
+            AthenaListDataCatalogsResponse(**res) for res in results
+        ]
+
     async def list_named_queries(
         self,
         request: AthenaListNamedQueriesRequest,
@@ -485,6 +691,74 @@ class AWSAthena:
 
         return [
             AthenaListNamedQueriesResponse(**res) for res in results
+        ]
+
+    async def list_prepared_statements(
+        self,
+        request: AthenaListPreparedStatementsRequest,
+    ):
+        
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            )
+        
+        dumped = request.model_dump(exclude_none=True)
+
+        response = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.list_prepared_statements,
+                **dumped
+            )
+        )
+
+        return AthenaListPreparedStatementsResponse(**response)
+    
+    async def list_prepared_statements_paginated(
+        self,
+        request: AthenaListPreparedStatementsRequest,
+    ):
+        
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            )
+        
+        dumped = request.model_dump(exclude_none=True)
+
+        paginator = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.get_paginator,
+                'list_prepared_statements',
+            )
+        )
+
+        pagination_result = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                paginator.paginate,
+                **dumped
+            )
+        )
+
+        results = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                collect_paginator,
+                pagination_result,
+            )
+        )
+
+        return [
+            AthenaListPreparedStatementsResponse(**res) for res in results
         ]
 
     async def list_query_executions(
@@ -622,10 +896,10 @@ class AWSAthena:
         return [
             AthenaListSessionsResponse(**res) for res in results
         ]
-    
-    async def list_prepared_statements(
+
+    async def start_calculation_execution(
         self,
-        request: AthenaListPreparedStatementsRequest,
+        request: AthenaStartCalculationExecutionRequest,
     ):
         
         if self._loop is None:
@@ -641,59 +915,16 @@ class AWSAthena:
         response = await self._loop.run_in_executor(
             self._executor,
             functools.partial(
-                self._client.list_prepared_statements,
+                self._client.start_calculation_execution,
                 **dumped
             )
         )
 
-        return AthenaListPreparedStatementsResponse(**response)
-    
-    async def list_prepared_statements_paginated(
+        return AthenaStartCalculationExecutionResponse(**response)  
+
+    async def start_query_execution(
         self,
-        request: AthenaListPreparedStatementsRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        paginator = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.get_paginator,
-                'list_prepared_statements',
-            )
-        )
-
-        pagination_result = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                paginator.paginate,
-                **dumped
-            )
-        )
-
-        results = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                collect_paginator,
-                pagination_result,
-            )
-        )
-
-        return [
-            AthenaListPreparedStatementsResponse(**res) for res in results
-        ]
-
-    async def list_databases(
-        self,
-        request: AthenaListDatabasesRequest,
+        request: AthenaStartQueryExecutionRequest,
     ):
         
         if self._loop is None:
@@ -709,102 +940,16 @@ class AWSAthena:
         response = await self._loop.run_in_executor(
             self._executor,
             functools.partial(
-                self._client.list_databases,
+                self._client.start_query_execution,
                 **dumped
             )
         )
 
-        return AthenaListDatabasesResponse(**response)
+        return AthenaStartQueryExecutionResponse(**response) 
 
-    async def list_databases_paginated(
+    async def start_session(
         self,
-        request: AthenaListDatabasesRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        paginator = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.get_paginator,
-                'list_databases',
-            )
-        )
-
-        pagination_result = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                paginator.paginate,
-                **dumped
-            )
-        )
-
-        results = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                collect_paginator,
-                pagination_result,
-            )
-        )
-
-        return [
-            AthenaListDatabasesResponse(**res) for res in results
-        ]
-
-    async def list_data_catalogs_paginated(
-        self,
-        request: AthenaListDataCatalogsRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        paginator = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.get_paginator,
-                'list_data_catalogs',
-            )
-        )
-
-        pagination_result = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                paginator.paginate,
-                **dumped
-            )
-        )
-
-        results = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                collect_paginator,
-                pagination_result,
-            )
-        )
-
-        return [
-            AthenaListDataCatalogsResponse(**res) for res in results
-        ]
-    
-    async def list_data_catalogs(
-        self,
-        request: AthenaListDataCatalogsRequest,
+        request: AthenaStartSessionRequest,
     ):
         
         if self._loop is None:
@@ -820,13 +965,88 @@ class AWSAthena:
         response = await self._loop.run_in_executor(
             self._executor,
             functools.partial(
-                self._client.list_databases,
+                self._client.start_session,
                 **dumped
             )
         )
 
-        return AthenaListDataCatalogsResponse(**response)
-          
+        return AthenaStartSessionResponse(**response)   
+    
+    async def terminate_session(
+        self,
+        request: AthenaTerminateSessionRequest,
+    ):
+        
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            )
+        
+        dumped = request.model_dump(exclude_none=True)
+
+        response = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.terminate_session,
+                **dumped
+            )
+        )
+
+        return AthenaTerminateSessionResponse(**response)
+    
+    async def update_data_catalog(
+        self,
+        request: AthenaUpdateDataCatalogRequest,
+    ):
+        
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            )
+        
+        dumped = request.model_dump(exclude_none=True)
+
+        response = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.update_data_catalog,
+                **dumped
+            )
+        )
+
+        return AthenaUpdateDataCatalogResponse(**response)
+    
+    async def update_named_query(
+        self,
+        request: AthenaUpdateNamedQueryRequest,
+    ):
+        
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            )
+        
+        dumped = request.model_dump(exclude_none=True)
+
+        response = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.update_named_query,
+                **dumped
+            )
+        )
+
+        return AthenaUpdateNamedQueryResponse(**response)
+    
     async def close(self):
 
         if self._loop is None:

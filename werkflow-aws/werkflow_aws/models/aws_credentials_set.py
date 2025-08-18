@@ -8,3 +8,4 @@ class AWSCredentialsSet(BaseModel):
     aws_access_key_id: StrictStr
     aws_secret_access_key: StrictStr
     aws_session_token: StrictStr
+    aws_profile: StrictStr | None = None

@@ -10,7 +10,7 @@ from .aws_s3_object_response import AWSs3ObjectResponse
 from .aws_s3_common_prefix import AWSs3CommonPrefix
 
 
-class AWSs3ListObjectsResponse(BaseModel):
+class AWSS3ListObjectsResponse(BaseModel):
     IsTruncated: StrictBool
     Contents: List[AWSs3ObjectResponse]=[]
     Name: StrictStr

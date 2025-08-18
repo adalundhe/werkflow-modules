@@ -9,7 +9,7 @@ from typing import Literal, Optional, Dict
 from .aws_s3_streaming_body import AWSs3StreamingBody
 
 
-class AWSs3GetObjectResponse(BaseModel):
+class AWSS3GetObjectResponse(BaseModel):
     Body: AWSs3StreamingBody
     DeleteMarker: StrictBool
     AcceptRanges: StrictStr
