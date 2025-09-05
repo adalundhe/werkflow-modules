@@ -302,7 +302,7 @@ class MercurySyncHTTPConnection:
             Optional[str],
             Optional[BaseModel]
         ]=None,
-        files: dict[str, File] | None = None,
+        files: list[File] | None = None,
         redirects: int=3
     ):
         async with self._semaphore:
@@ -359,7 +359,7 @@ class MercurySyncHTTPConnection:
             Optional[str],
             Optional[BaseModel]
         ]=None,
-        files: dict[str, File] | None = None,
+        files: list[File] | None = None,
         redirects: int=3
     ):
         async with self._semaphore:

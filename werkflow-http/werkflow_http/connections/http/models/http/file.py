@@ -17,20 +17,24 @@ class File(BaseModel):
     path: StrictStr | None = None
     content_disposition: StrictStr = "form/data"
     content_type: StrictStr = "application/octet-stream"
+    encoding: StrictStr = "utf-8"
     headers: dict[StrictStr, StrictStr] = Field(default_factory=dict)
     data: StrictStr | StrictBytes | None = None
     mode: FileReadMode = 'r'
 
     def to_headers(self) -> dict[str, str] | None:
-        if self.data:
-            return {
-                "content-type": self.content_type,
-                "content-disposition": self.content_disposition,
-            }
+        headers = {
+            "content-type": self.content_type,
+            "content-disposition": self.content_disposition,
+        }
+
+        headers.update(self.headers)
+
+        return headers
         
     def to_data(self):
         if isinstance(self.data, str):
-            return self.data.encode()
+            return self.data.encode(self.encoding)
         
         return self.data
 
