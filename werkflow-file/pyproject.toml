@@ -1,6 +1,6 @@
 [project]
 name = "werkflow-file"
-version = "0.1.4"
+version = "0.1.5"
 description = "A module for working with Files."
 readme = "README.md"
 requires-python = ">=3.11"
