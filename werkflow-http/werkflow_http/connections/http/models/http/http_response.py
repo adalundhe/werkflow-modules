@@ -3,7 +3,7 @@ import re
 from typing import Dict, Literal, Optional, Type, TypeVar, Union
 
 import orjson
-from pydantic import BaseModel, Json, StrictBytes, StrictInt, StrictStr
+from pydantic import BaseModel, JsonValue, StrictBytes, StrictInt, StrictStr
 
 from .cookies import Cookies
 from .url_metadata import URLMetadata
@@ -47,7 +47,7 @@ class HTTPResponse(BaseModel):
     def json(
         self,
         return_failures: bool = True,
-    ) -> Json | Exception:
+    ) -> JsonValue | Exception:
 
         try:
             if self.content:
