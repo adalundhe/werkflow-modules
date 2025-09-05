@@ -59,7 +59,7 @@ class File(Module):
         self,
         path: str,
         mode: FileReadMode = 'r',
-    ) -> str:
+    ):
         absolute_path = await self._shell.to_absolute_path(path)
         return await self._loop.run_in_executor(
             self._executor,
@@ -97,7 +97,7 @@ class File(Module):
         self,
         path: pathlib.Path,
         mode: FileReadMode = 'r',
-    ):
+    ) -> str | bytes:
         with open(path, mode) as file:
             return file.read()
         
