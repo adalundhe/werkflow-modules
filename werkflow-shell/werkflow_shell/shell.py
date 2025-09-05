@@ -71,6 +71,16 @@ class Shell(Module):
             filepath
         )
     
+    async def check_file_access(
+        self,
+        filepath: str,
+        permissions: int,
+    ):
+        return await self._shell.check_file_access(
+            filepath,
+            permissions,
+        )
+
     async def to_relative_path(
         self,
         base_path: str,
