@@ -1,7 +1,11 @@
 from __future__ import annotations
 
 import asyncio
+import binascii
+import io
+import secrets
 import ssl
+from concurrent.futures import ThreadPoolExecutor
 from collections import defaultdict
 from typing import (
     Dict,
@@ -17,6 +21,7 @@ from pydantic import BaseModel
 from .models.http import (
     URL,
     Cookies,
+    File,
     HTTPCookie,
     HTTPEncodableValue,
     HTTPRequest,
@@ -237,17 +242,10 @@ class MercurySyncHTTPConnection:
         auth: Optional[Tuple[str, str]]=None,
         cookies: Optional[List[HTTPCookie]]=None,
         headers: Dict[str, str]={},
-        params: Optional[Dict[str, HTTPEncodableValue]]=None,
-        timeout: Union[
-            Optional[int], 
-            Optional[float]
-        ]=None,
-        data: Union[
-            Optional[str],
-            Optional[BaseModel]
-        ]=None,
-        
-        
+        params: Dict[str, HTTPEncodableValue] | None=None,
+        timeout: int | float | None=None,
+        data: str | BaseModel | None=None,
+        files: list[File] | None = None,
         redirects: int=3
     ):
         async with self._semaphore:
@@ -264,6 +262,7 @@ class MercurySyncHTTPConnection:
                             headers=headers,
                             params=params,
                             data=data,
+                            files=files,
                             redirects=redirects
                         ),
                     ),
@@ -303,6 +302,7 @@ class MercurySyncHTTPConnection:
             Optional[str],
             Optional[BaseModel]
         ]=None,
+        files: dict[str, File] | None = None,
         redirects: int=3
     ):
         async with self._semaphore:
@@ -319,6 +319,7 @@ class MercurySyncHTTPConnection:
                             headers=headers,
                             params=params,
                             data=data,
+                            files=files,
                             redirects=redirects
                         ),
                     ),
@@ -358,8 +359,7 @@ class MercurySyncHTTPConnection:
             Optional[str],
             Optional[BaseModel]
         ]=None,
-        
-        
+        files: dict[str, File] | None = None,
         redirects: int=3
     ):
         async with self._semaphore:
@@ -376,6 +376,7 @@ class MercurySyncHTTPConnection:
                             headers=headers,
                             params=params,
                             data=data,
+                            files=files,
                             redirects=redirects
                         ),
                     ),
@@ -411,8 +412,6 @@ class MercurySyncHTTPConnection:
             Optional[int], 
             Optional[float]
         ]=None,
-        
-        
         redirects: int=3
     ):
         
@@ -554,6 +553,26 @@ class MercurySyncHTTPConnection:
 
             headers, data = request.prepare(url)
 
+            err: Exception | None = None
+            if files := request.files:
+                headers, data, err = await self._upload_files(
+                    files,
+                    data,
+                    headers,
+                )
+
+            if err:
+                return HTTPResponse(
+                    url=URLMetadata(
+                        host=url.hostname,
+                        path=url.path
+                    ),
+                    method=request.method,
+                    status=400,
+                    status_message=str(err),
+                    headers=headers
+                ), False
+
             if connection.reader is None:
                 return HTTPResponse(
                     url=URLMetadata(
@@ -678,7 +697,106 @@ class MercurySyncHTTPConnection:
                 status=400,
                 status_message=str(request_exception)
             ), False
+        
+    async def _upload_files(
+        self,
+        files: list[File | str],
+        body: bytes | None,
+        headers: dict[bytes, bytes],
+    ):
+        
+        executor = ThreadPoolExecutor(
+            max_workers=len(files),
+        )
 
+        try:
+            completed: list[File | Exception] = []
+            for file in files:
+                if isinstance(file, File) and file.data is None:
+                    completed.append(
+                        await File.upload(
+                            file.path,
+                            name=file.name,
+                            content_type=file.content_type,
+                            mode=file.mode,
+                            executor=executor,
+                        )
+                    )
+
+                elif isinstance(file, str):
+                    completed.append(
+                        await File.upload(
+                            file,
+                            executor=executor,
+                        ),
+                    )
+
+                else:
+                    completed.append(file)
+
+            for file in files:
+                
+                if isinstance(file, Exception):
+                    return (
+                        None,
+                        None,
+                        file,
+                    )
+
+                headers.update(file.to_headers())
+
+            boundary = binascii.hexlify(secrets.token_bytes(16)).decode()
+            boundary_break = f"--{boundary}".encode("latin-1")
+            
+            buffer = bytearray()
+            content_length = 0
+
+            if body:
+                buffer.extend(body)
+                content_length = len(body)
+
+            for file in files:
+                file_headers = dict(file.headers)
+                if file_headers := file.to_headers():
+                    file_headers.update(file_headers)
+                
+                encoded_headers = '\r\n'.join([
+                    f'{key}: {value}'
+                    for key, value in headers.items()
+                ]).encode()
+
+                data = file.to_data()
+
+                header_lines = b'\r\n'.join([
+                    boundary_break,
+                    encoded_headers,
+                    data if data else b'',
+                ])
+
+                buffer.extend(header_lines)
+
+            content_length += len(body)
+
+            headers[b'boundary'] = boundary
+            
+            if headers.get(b'content-length') is None:
+                headers[b'content-length'] = str(content_length).encode()
+
+            headers.update({
+                b"content-type": f"multipart/form-data; boundary={boundary}".encode()
+            })
+
+            return (
+                headers,
+                buffer,
+                None,
+            )
+            
+
+        except Exception as err:
+            executor.shutdown()
+            return None, err
+        
     async def _connect_to_url_location(
         self,
         request_url: str,
