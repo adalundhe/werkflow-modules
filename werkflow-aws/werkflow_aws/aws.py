@@ -10,6 +10,8 @@ from .services import (
     AWSElastiCache,
     AWSMSK,
     AWSOrganizations,
+    AWSs3,
+    AWSSecretsManager,
     AWSSTS,
 )
 from werkflow_aws.models import (
@@ -35,7 +37,9 @@ class AWS(Module):
         self.elasticache = AWSElastiCache()
         self.msk = AWSMSK()
         self.organizations = AWSOrganizations()
+        self.s3 = AWSs3()
         self.sts = AWSSTS()
+        self.secrets_manager = AWSSecretsManager()
 
     async def connect(
         self,
@@ -123,8 +127,11 @@ class AWS(Module):
             case "cloudwatch":
                 await self.cloudwatch.connect(credentials, region)
 
-            case "code_artifact":
+            case "code-artifact":
                 await self.code_artifact.connect(credentials, region)
+
+            case "cost-explorer":
+                await self.cost_explorer.connect(credentials, region)
             
             case "ec2":
                 await self.code_artifact.connect(credentials, region)
@@ -138,11 +145,16 @@ class AWS(Module):
             case "organizations":
                 await self.organizations.connect(credentials, region)
 
+            case "s3":
+                await self.s3.connect(credentials, region)
+
+            case "secrets-manager":
+                await self.secrets_manager.connect(credentials, region)
+
             case "sts": 
                 await self.organizations.connect(credentials, region)
                 
     
-
     async def close(self):
         await self.athena.close()
         await self.cloudwatch.close()
@@ -153,6 +165,8 @@ class AWS(Module):
         await self.elasticache.close()
         await self.msk.close()
         await self.organizations.close()
+        await self.s3.close()
+        await self.secrets_manager.close()
         await self.sts.close()
 
     def abort(self):
@@ -165,6 +179,8 @@ class AWS(Module):
         self.elasticache.abort()
         self.msk.abort()
         self.organizations.abort()
+        self.s3.abort()
+        self.secrets_manager.abort()
         self.sts.abort()
 
     
