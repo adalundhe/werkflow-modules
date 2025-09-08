@@ -6,11 +6,11 @@ from pydantic import (
     StrictInt
 )
 from typing import Literal, Optional, Dict
-from .aws_s3_streaming_body import AWSs3StreamingBody
+from .aws_s3_streaming_body import AWSS3StreamingBody
 
 
 class AWSS3GetObjectResponse(BaseModel):
-    Body: AWSs3StreamingBody
+    Body: AWSS3StreamingBody
     DeleteMarker: StrictBool
     AcceptRanges: StrictStr
     Expiration: StrictStr
