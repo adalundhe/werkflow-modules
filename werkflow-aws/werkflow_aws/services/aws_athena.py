@@ -972,6 +972,56 @@ class AWSAthena:
 
         return AthenaStartSessionResponse(**response)   
     
+    async def stop_calculation_execution(
+        self,
+        request: AthenaStopCalculationExecutionRequest,
+    ):
+        
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            )
+        
+        dumped = request.model_dump(exclude_none=True)
+        
+        response = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.stop_calculation_execution,
+                **dumped
+            )
+        )
+
+        return AthenaStopCalculationExecutionResponse(**response)
+    
+    async def stop_query_execution(
+        self,
+        request: AthenaStopQueryExecutionRequest,
+    ):
+        
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
+
+        if self._client is None:
+            raise UnsetAWSConnectionException(
+                self.service_name
+            )
+        
+        dumped = request.model_dump(exclude_none=True)
+        
+        response = await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(
+                self._client.stop_query_execution,
+                **dumped
+            )
+        )
+
+        return AthenaStopQueryExecutionResponse(**response)
+    
     async def terminate_session(
         self,
         request: AthenaTerminateSessionRequest,

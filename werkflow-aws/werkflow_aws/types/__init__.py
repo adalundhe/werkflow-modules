@@ -8,4 +8,5 @@ from .elasticache_client import ElastiCacheClient as ElastiCacheClient
 from .msk_client import MSKClient as MSKClient
 from .organizations_client import OrganizationsClient as OrganizationsClient
 from .s3_client import s3Client as s3Client
+from .secrets_manager_client import SecretsManagerClient as SecretsManagerClient
 from .sts_client import STSClient as STSClient
