@@ -115,8 +115,8 @@ class AWSAthena:
 
     async def connect(
         self,
-        credentials: AWSCredentialsSet,
         region: RegionName,
+        credentials: AWSCredentialsSet | None = None,
     ):
         
         aws_region = self._regions.get(region)
@@ -124,17 +124,21 @@ class AWSAthena:
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
 
+        credentials_data: dict[str, str] = {}
+        if credentials:
+            credentials_data = credentials.model_dump(
+                exclude='aws_profile'
+            )
+
         self._client: AthenaClient = await self._loop.run_in_executor(
             self._executor,
             functools.partial(
                 boto3.client,
                 'athena',
-                aws_access_key_id=credentials.aws_access_key_id,
-                aws_secret_access_key=credentials.aws_secret_access_key,
-                aws_session_token=credentials.aws_session_token,
                 config=Config(
                     region_name=aws_region.value
                 )
+                **credentials_data,
             )
         )
 
