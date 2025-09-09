@@ -138,7 +138,7 @@ class Appito:
             headers={
                 "Content-Type": "application/json",
                 "Accept": "application/json",
-                "apptio-current-environment": "delta"
+                "apptio-current-environment": credentials.appito_current_environment
             },
             data={
                 "keyAccess": credentials.appito_access_key,
