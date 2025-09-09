@@ -1,21 +1,14 @@
-from typing import Dict, List, Tuple, Union, Literal
+from typing import Dict, List, Tuple, Union
 
 from pydantic import BaseModel, StrictStr
+from .connections.http.models.http import File as File
 
 Headers = Dict[str, Union[int, float, str, bytes, None]]
 Params = Dict[str, str]
 
-FileKeys = Literal[
-    "name",
-    "path",
-    "content_disposition",
-    "content_type",
-    "encoding"
-]
 
 JSONEncodable = str | bool | int | float | None
 Data = JSONEncodable | List[JSONEncodable] | Dict[JSONEncodable, JSONEncodable] | BaseModel | List[BaseModel] | Dict[JSONEncodable, JSONEncodable] | None
-File = dict[FileKeys, str | None]
 
 
 class Request(BaseModel):
