@@ -7,4 +7,6 @@ from .aws_cost_explorer import AWSCostExplorer as AWSCostExplorer
 from .aws_elasticache import AWSElastiCache as AWSElastiCache
 from .aws_msk import AWSMSK as AWSMSK
 from .aws_organizations import AWSOrganizations as AWSOrganizations
+from .aws_secrets_manager import AWSSecretsManager as AWSSecretsManager
+from .aws_s3 import AWSs3 as AWSs3
 from .aws_sts import AWSSTS as AWSSTS

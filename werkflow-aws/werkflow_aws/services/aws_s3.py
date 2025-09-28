@@ -11,21 +11,21 @@ from werkflow_aws.models import (
     RegionName,
 )
 from werkflow_aws.models.s3 import (
-    AWSs3AbortMultipartUploadOptions,
+    AWSs3AbortMultipartUploadRequest,
     AWSs3AbortMultipartUploadResponse,
-    AWSs3CreateMultipartUploadOptions,
+    AWSs3CreateMultipartUploadRequest,
     AWSs3CreateMultipartUploadResponse,
-    AWSs3CompleteMultipartUploadOptions,
+    AWSs3CompleteMultipartUploadRequest,
     AWSs3CompleteMultipartUploadResponse,
     AWSs3CopySource,
     AWSs3CopyObjectOptions,
     AWSs3CopyObjectResponse,
-    AWSs3DeleteBucketOptions,
-    AWSs3DeleteBucketReponse,
+    AWSS3DeleteBucketRequest,
+    AWSS3DeleteBucketReponse,
     AWSs3DeleteBucketTaggingOptions,
     AWSs3DeleteObjectTaggingResponse,
-    AWSs3DeleteObjectOptions,
-    AWSs3DeleteObjectResponse,
+    AWSS3DeleteObjectRequest,
+    AWSS3DeleteObjectResponse,
     AWSs3DeleteObjectTaggingOptions,
     AWSs3DeleteBucketTaggingResponse,
     AWSs3DeleteObjectsOptions,
@@ -34,8 +34,8 @@ from werkflow_aws.models.s3 import (
     AWSs3GeneratePresignedURLResponse,
     AWSs3GetBucketTaggingOptions,
     AWSs3GetBucketTaggingResponse,
-    AWSs3GetObjectOptions,
-    AWSs3GetObjectResponse,
+    AWSS3GetObjectRequest,
+    AWSS3GetObjectResponse,
     AWSs3GetObjectTaggingOptions,
     AWSs3GetObjectTaggingResponse,
     AWSs3ListBucketsResponse,
@@ -43,13 +43,13 @@ from werkflow_aws.models.s3 import (
     AWSs3GeneratePresignedPostResponse,
     AWSs3ListDirectoryBucketsOptions,
     AWSs3ListDirectoryBucketsResponse,
-    AWSs3ListObjectsOptions,
-    AWSs3ListObjectsResponse,
+    AWSS3ListObjectsRequest,
+    AWSS3ListObjectsResponse,
     AWSs3ListObjectVersionsOptions,
     AWSs3ListObjectVersionsResponse,
-    AWSs3ListMultipartUploadsOptions,
+    AWSs3ListMultipartUploadsRequest,
     AWSs3ListMultipartUploadsResponse,
-    AWSs3ListPartsOptions,
+    AWSs3ListPartsRequest,
     AWSs3ListPartsResponse,
     AWSs3MultipartUpload,
     AWSs3Object,
@@ -57,17 +57,17 @@ from werkflow_aws.models.s3 import (
     AWSs3PutBucketTaggingResponse,
     AWSs3PutBucketVersioningOptions,
     AWSs3PutBucketVersioningResponse,
-    AWSs3PutObjectOptions,
-    AWSs3PutObjectResponse,
+    AWSS3PutObjectRequest,
+    AWSS3PutObjectResponse,
     AWSs3PutObjectTaggingOptions,
     AWSs3PutObjectTaggingResponse,
-    AWSs3StreamingBody,
+    AWSS3StreamingBody,
     AWSs3Tag,
     AWSs3TransferConfigOptions,
     AWSs3TransferAllowedUploadArgs,
-    AWSs3UploadPartCopyOptions,
+    AWSs3UploadPartCopyRequest,
     AWSs3UploadPartCopyResponse,
-    AWSs3UploadPartOptions,
+    AWSs3UploadPartRequest,
     AWSs3UploadPartResponse
 )
 from typing import List
@@ -106,6 +106,8 @@ class AWSs3:
         profile_name: str,
     ):
 
+        aws_region = self._regions.get(region)
+
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
 
@@ -127,26 +129,30 @@ class AWSs3:
 
     async def connect(
         self,
-        credentials: AWSCredentialsSet,
         region: RegionName,
+        credentials: AWSCredentialsSet | None = None,
     ):
-
+        
         aws_region = self._regions.get(region)
 
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
+
+        credentials_data: dict[str, str] = {}
+        if credentials:
+            credentials_data = credentials.model_dump(
+                exclude='aws_profile'
+            )
 
         self._client: s3Client = await self._loop.run_in_executor(
             self._executor,
             functools.partial(
                 boto3.client,
                 's3',
-                aws_access_key_id=credentials.aws_access_key_id,
-                aws_secret_access_key=credentials.aws_secret_access_key,
-                aws_session_token=credentials.aws_session_token,
                 config=Config(
                     region_name=aws_region.value
                 )
+                **credentials_data,
             )
         )
 
@@ -155,7 +161,6 @@ class AWSs3:
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
 
-        
         if self._client is None:
             raise UnsetAWSConnectionException(
                 self.service_name
@@ -170,8 +175,7 @@ class AWSs3:
 
     async def list_objects(
         self,
-        bucket: str,
-        options: AWSs3ListObjectsOptions | None=None
+        request: AWSS3ListObjectsRequest,
     ):
         
         if self._loop is None:
@@ -182,25 +186,21 @@ class AWSs3:
                 self.service_name
             ) 
         
-        if options is None:
-            options = AWSs3ListObjectsOptions()
+        dumped = request.model_dump(exclude_none=True)
 
         listed_objects = await self._loop.run_in_executor(
             self._executor,
             functools.partial(
                 self._client.list_objects_v2,
-                Bucket=bucket,
-                **options.to_data()
+                **dumped
             )
         )
 
-        return AWSs3ListObjectsResponse(**listed_objects)
+        return AWSS3ListObjectsResponse(**listed_objects)
 
     async def get_object(
         self,
-        bucket: str,
-        key: str,
-        options: AWSs3GetObjectOptions | None=None
+        request: AWSS3GetObjectRequest,
     ):
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
@@ -210,32 +210,26 @@ class AWSs3:
                 self.service_name
             ) 
         
-        if options is None:
-            options = AWSs3GetObjectOptions()
+        dumped = request.model_dump(exclude_none=True)
 
-        retrieved_object = await self._loop.run_in_executor(
+        response = await self._loop.run_in_executor(
             self._executor,
             functools.partial(
                 self._client.get_object,
-                Bucket=bucket,
-                Key=key,
-                **options.to_data()
+                **dumped,
             )
         )
 
-        return AWSs3GetObjectResponse(
-            **retrieved_object,
-            Body=AWSs3StreamingBody(
-                retrieved_object['Body']
-            )
+        response_data = response
+        response_data['Body'] = AWSS3StreamingBody(
+            response.get('Body'),
         )
+        
+        return AWSS3GetObjectResponse(**response_data)
 
     async def put_object(
         self,
-        bucket: str,
-        key: str,
-        body: bytes | BinaryIO | TextIO,
-        options: AWSs3PutObjectOptions | None=None
+        request: AWSS3PutObjectRequest,
     ):
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
@@ -243,28 +237,23 @@ class AWSs3:
         if self._client is None:
             raise UnsetAWSConnectionException(
                 self.service_name
-            ) 
+            )
         
-        if options is None:
-            options = AWSs3PutObjectOptions()
+        dumped = request.model_dump(exclude_none=True)
 
         updated_object = await self._loop.run_in_executor(
             self._executor,
             functools.partial(
                 self._client.put_object,
-                Bucket=bucket,
-                Key=key,
-                Body=body,
-                **options.to_data()
+                **dumped
             )
         )
 
-        return AWSs3PutObjectResponse(**updated_object)
+        return AWSS3PutObjectResponse(**updated_object)
 
     async def delete_bucket(
-            self,
-            bucket: str,
-            options: Optional[AWSs3DeleteBucketOptions]=None
+        self,
+        request: AWSS3DeleteBucketRequest,
     ):
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
@@ -273,26 +262,22 @@ class AWSs3:
             raise UnsetAWSConnectionException(
                 self.service_name
             ) 
-
-        if options is None:
-            options = AWSs3DeleteBucketOptions()
+        
+        dumped = request.model_dump(exclude_none=True)
 
         deleted_bucket = await self._loop.run_in_executor(
             self._executor,
             functools.partial(
                 self._client.delete_bucket,
-                Bucket=bucket,
-                **options.to_data()
+                **dumped
             )
         )
 
-        return AWSs3DeleteBucketReponse(**deleted_bucket)
+        return AWSS3DeleteBucketReponse(**deleted_bucket)
     
     async def delete_object(
         self,
-        bucket: str,
-        key: str,
-        options: Optional[AWSs3DeleteObjectOptions]=None
+        request: AWSS3DeleteObjectRequest,
     ):
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
@@ -302,25 +287,21 @@ class AWSs3:
                 self.service_name
             ) 
         
-        if options is None:
-            options = AWSs3DeleteObjectOptions()
+        dumped = request.model_dump(exclude_none=True)
 
         deleted_object = await self._loop.run_in_executor(
             self._executor,
             functools.partial(
                 self._client.delete_bucket,
-                Bucket=bucket,
-                Key=key,
-                **options.to_data()
+                **dumped
             )
         )
         
-        return AWSs3DeleteObjectResponse(**deleted_object)
+        return AWSS3DeleteObjectResponse(**deleted_object)
 
     async def list_multipart_uploads(
         self,
-        bucket: str,
-        options: Optional[AWSs3ListMultipartUploadsOptions]=None
+        request: AWSs3ListMultipartUploadsRequest,
     ):
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
@@ -330,25 +311,21 @@ class AWSs3:
                 self.service_name
             ) 
         
-        if options is None:
-            options = AWSs3ListMultipartUploadsOptions()
+        dumped = request.model_dump(exclude_none=True)
 
         multipart_uploads = await self._loop.run_in_executor(
             self._executor,
             functools.partial(
                 self._client.list_multipart_uploads,
-                Bucket=bucket,
-                **options.to_data()
+                **dumped
             )
         )
 
         return AWSs3ListMultipartUploadsResponse(**multipart_uploads)
 
-    async def list_multipart_upload_parts(
+    async def list_parts(
         self,
-        bucket: str,
-        key: str,
-        options: Optional[AWSs3ListPartsOptions]=None
+        request: AWSs3ListPartsRequest,
     ):
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
@@ -358,15 +335,13 @@ class AWSs3:
                 self.service_name
             ) 
 
-        if options is None:
-            options = AWSs3ListPartsOptions()
+        dumped = request.model_dump(exclude_none=True)
 
         parts = await self._loop.run_in_executor(
             self._executor,
             functools.partial(
                 self._client.list_parts,
-                Bucket=bucket,
-                **options.to_data()
+                **dumped
             )
         )
 
@@ -374,10 +349,7 @@ class AWSs3:
 
     async def complete_multipart_upload(
         self,
-        bucket: str,
-        key: str,
-        upload_parts: AWSs3MultipartUpload,
-        options: Optional[AWSs3CompleteMultipartUploadOptions]=None
+        request: AWSs3CompleteMultipartUploadRequest,
     ):
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
@@ -387,17 +359,13 @@ class AWSs3:
                 self.service_name
             ) 
 
-        if options is None:
-            options = AWSs3CompleteMultipartUploadOptions()
+        dumped = request.model_dump(exclude_none=True)
 
         completed_multipart_upload = await self._loop.run_in_executor(
             self._executor,
             functools.partial(
                 self._client.complete_multipart_upload,
-                Bucket=bucket,
-                Key=key,
-                MultipartUpload=upload_parts.to_data(),
-                **options.to_data()
+                **dumped
             )
         )
 
@@ -405,10 +373,7 @@ class AWSs3:
 
     async def abort_multipart_upload(
         self,
-        bucket: str,
-        key: str,
-        upload_id: str,
-        options: Optional[AWSs3AbortMultipartUploadOptions]=None
+        request: AWSs3AbortMultipartUploadRequest,
     ):
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
@@ -418,17 +383,13 @@ class AWSs3:
                 self.service_name
             ) 
 
-        if options is None:
-            options = AWSs3AbortMultipartUploadOptions()
+        dumped = request.model_dump(exclude_none=True)
         
         aborted_uploads = await self._loop.run_in_executor(
             self._executor,
             functools.partial(
                 self._client.abort_multipart_upload,
-                Bucket=bucket,
-                Key=key,
-                UploadId=upload_id,
-                **options.to_data()
+                **dumped
             )
         )
 
@@ -436,9 +397,7 @@ class AWSs3:
 
     async def create_multipart_upload(
         self,
-        bucket: str,
-        key: str,
-        options: Optional[AWSs3CreateMultipartUploadOptions]=None
+        request: AWSs3CreateMultipartUploadRequest,
     ):
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
@@ -448,28 +407,21 @@ class AWSs3:
                 self.service_name
             ) 
 
-        if options is None:
-            options = AWSs3CreateMultipartUploadOptions()
+        dumped = request.model_dump(exclude_none=True)
 
         created_multipart_upload = await self._loop.run_in_executor(
             self._executor,
             functools.partial(
                 self._client.create_multipart_upload,
-                Bucket=bucket,
-                Key=key,
-                **options.to_data()
+                **dumped
             )
         )
 
         return AWSs3CreateMultipartUploadResponse(**created_multipart_upload)
 
-    async def upload_multiupload_part(
+    async def upload_part(
         self,
-        bucket: str,
-        key: str,
-        part_number: str,
-        upload_id: str,
-        options: AWSs3UploadPartOptions | None = None
+        request: AWSs3UploadPartRequest,
     ): 
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
@@ -479,30 +431,21 @@ class AWSs3:
                 self.service_name
             ) 
 
-        if options is None:
-            options = AWSs3UploadPartOptions()
+        dumped = request.model_dump(exclude_none=True)
 
         uploaded_part = await self._loop.run_in_executor(
             self._executor,
             functools.partial(
                 self._client.upload_part,
-                Bucket=bucket,
-                Key=key,
-                PartNumber=part_number,
-                UploadId=upload_id,
-                **options.to_data()
+                **dumped
             )
         )
 
         return AWSs3UploadPartResponse(**uploaded_part)
 
-    async def upload_multiupload_part_copy(
+    async def upload_part_copy(
         self,
-        bucket: str,
-        key: str,
-        part_number: str,
-        upload_id: str,
-        options: AWSs3UploadPartCopyOptions | None = None,
+        request: AWSs3UploadPartCopyRequest,
     ): 
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
@@ -512,18 +455,13 @@ class AWSs3:
                 self.service_name
             ) 
 
-        if options is None:
-            options = AWSs3UploadPartCopyOptions()
+        dumped = request.model_dump(exclude_none=True)
 
         copied_upload_part = await self._loop.run_in_executor(
             self._executor,
             functools.partial(
                 self._client.upload_part_copy,
-                Bucket=bucket,
-                Key=key,
-                PartNumber=part_number,
-                UploadId=upload_id,
-                **options.to_data()
+                **dumped
             )
         )
 
@@ -949,7 +887,7 @@ class AWSs3:
             )
         )
 
-        return AWSs3GetBucketTaggingOptions(**bucket_tagging)
+        return AWSs3GetBucketTaggingResponse(**bucket_tagging)
     
     async def get_object_tagging(
         self,
@@ -1013,7 +951,7 @@ class AWSs3:
 
         return AWSs3PutBucketTaggingResponse(**bucket_tagging)
     
-    async def put_bucket_tagging(
+    async def put_object_tagging(
         self,
         bucket: str,
         key: str,

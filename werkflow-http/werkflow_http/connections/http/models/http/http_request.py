@@ -1,10 +1,18 @@
 import base64
+import pathlib
 from typing import Dict, List, Literal, Optional, Tuple, Union
 from urllib.parse import urlencode
 
 import orjson
-from pydantic import BaseModel, StrictBytes, StrictInt, StrictStr
+from pydantic import (
+    BaseModel,
+    StrictBytes,
+    StrictInt,
+    StrictStr,
+    Field,
+)
 
+from .file import File
 from .types import HTTPCookie, HTTPEncodableValue
 from .url import URL
 
@@ -31,6 +39,7 @@ class HTTPRequest(BaseModel):
         Optional[StrictBytes],
         Optional[BaseModel]
     ]=None
+    files: list[File | StrictStr | pathlib.Path] | None = None
     redirects: StrictInt=3
 
     class Config:

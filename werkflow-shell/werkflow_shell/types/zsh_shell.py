@@ -104,6 +104,23 @@ class ZSHShell:
                 filepath
             )
         )
+    
+    async def check_file_access(
+        self,
+        filepath: str,
+        permissions: int,
+    ) -> bool:
+        if self._loop is None:
+            self._loop = asyncio.get_running_loop()
+            
+        return await self._loop.run_in_executor(
+            self._executor,
+            functools.partial(   
+                os.access,
+                filepath,
+                permissions,
+            )
+        )
 
     async def to_absolute_path(
         self, 

@@ -5,7 +5,7 @@ from pydantic import (
 from .athena_data_catalog_type import AthenaDataCatalogType
 
 
-class AthenaUpdateDataCatalog(BaseModel):
+class AthenaUpdateDataCatalogRequest(BaseModel):
     Name: StrictStr
     Type: AthenaDataCatalogType
     Description: StrictStr | None = None

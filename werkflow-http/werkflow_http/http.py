@@ -5,12 +5,14 @@ import orjson
 from werkflow_core import Module
 
 from .connections.http import MercurySyncHTTPConnection
+from .connections.http.models.http import File as HTTPFile
 from .request import (
     Data,
     Headers,
     Params,
     Request,
     RequestWithData,
+    File,
 )
 
 
@@ -55,7 +57,8 @@ class HTTP(Module):
         auth: tuple[str, str] | None = None,
         headers: Headers=None,
         params: Params=None,
-        data: Data=None
+        data: Data=None,
+        files: list[File | str] | None = None,
     ):
         if self._client is None:
             self._client = MercurySyncHTTPConnection()
@@ -65,7 +68,15 @@ class HTTP(Module):
             auth=auth,
             headers=headers,
             params=params,
-            data=data
+            data=data,
+            files=[
+                HTTPFile(
+                    **file
+                ) if isinstance(
+                    file,
+                    dict,
+                ) else file for file in files
+            ],
         )
 
         lowered_headers: Dict[str, str] | None = None
@@ -82,7 +93,15 @@ class HTTP(Module):
             auth=auth,
             headers=headers,
             params=params,
-            data=data
+            data=data,
+            files=[
+                HTTPFile(
+                    **file
+                ) if isinstance(
+                    file,
+                    dict,
+                ) else file for file in files
+            ],
         )
     
     async def put(
@@ -91,7 +110,8 @@ class HTTP(Module):
         auth: tuple[str, str] | None = None,
         headers: Headers=None,
         params: Params=None,
-        data: Data=None
+        data: Data=None,
+        files: list[File | str] | None = None,
     ):
         if self._client is None:
             self._client = MercurySyncHTTPConnection()
@@ -101,7 +121,8 @@ class HTTP(Module):
             auth=auth,
             headers=headers,
             params=params,
-            data=data
+            data=data,
+            files=files,
         )
 
         lowered_headers: Dict[str, str] | None = None
@@ -118,7 +139,15 @@ class HTTP(Module):
             auth=auth,
             headers=headers,
             params=params,
-            data=data
+            data=data,
+            files=[
+                HTTPFile(
+                    **file
+                ) if isinstance(
+                    file,
+                    dict,
+                ) else file for file in files
+            ],
         )
     
     async def patch(
@@ -127,7 +156,8 @@ class HTTP(Module):
         auth: tuple[str, str] | None = None,
         headers: Headers=None,
         params: Params=None,
-        data: Data=None
+        data: Data=None,
+        files: list[File | str] | None = None,
     ):
         if self._client is None:
             self._client = MercurySyncHTTPConnection()
@@ -137,7 +167,8 @@ class HTTP(Module):
             auth=auth,
             headers=headers,
             params=params,
-            data=data
+            data=data,
+            files=files,
         )
 
         lowered_headers: Dict[str, str] | None = None
@@ -154,7 +185,15 @@ class HTTP(Module):
             auth=auth,
             headers=headers,
             params=params,
-            data=data
+            data=data,
+            files=[
+                HTTPFile(
+                    **file
+                ) if isinstance(
+                    file,
+                    dict,
+                ) else file for file in files
+            ],
         )
     
     async def delete(

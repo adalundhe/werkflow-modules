@@ -2,7 +2,7 @@ import asyncio
 from botocore.response import StreamingBody
 
 
-class AWSs3StreamingBody:
+class AWSS3StreamingBody:
 
     def __init__(
         self,
