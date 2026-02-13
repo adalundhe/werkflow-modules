@@ -1,6 +1,6 @@
 [project]
 name = "werkflow-system"
-version = "0.3.2"
+version = "0.3.3"
 description = "A module for working with operating systems of all architectures and types."
 readme = "README.md"
 requires-python = ">=3.11"
