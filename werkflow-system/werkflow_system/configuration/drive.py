@@ -1,11 +1,12 @@
+from typing import Any
+
 import psutil
-from psutil._common import sdiskpart
 from .data_amount import DataAmount
 
 
 class Drive:
 
-    def __init__(self, drive_stats: sdiskpart) -> None:
+    def __init__(self, drive_stats: Any) -> None:
         self.path = drive_stats.mountpoint
         self.name = drive_stats.device
         self.type = drive_stats.fstype

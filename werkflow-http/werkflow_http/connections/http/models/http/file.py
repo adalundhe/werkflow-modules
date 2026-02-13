@@ -22,7 +22,7 @@ class File(BaseModel):
     data: StrictStr | StrictBytes | None = None
     mode: FileReadMode = 'r'
 
-    def to_headers(self) -> dict[str, str] | None:
+    def to_headers(self):
         headers = {
             "content-type": self.content_type,
             "content-disposition": self.content_disposition,

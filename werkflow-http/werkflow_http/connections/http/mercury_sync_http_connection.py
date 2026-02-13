@@ -775,7 +775,7 @@ class MercurySyncHTTPConnection:
 
                 buffer.extend(header_lines)
 
-            content_length += len(body)
+            content_length = len(buffer)
 
             headers[b'boundary'] = boundary
             
