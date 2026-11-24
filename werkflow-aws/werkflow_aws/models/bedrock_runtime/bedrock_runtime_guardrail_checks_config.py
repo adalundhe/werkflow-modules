@@ -1,0 +1,11 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .bedrock_runtime_guardrail_checks_content_filter_config import BedrockRuntimeGuardrailChecksContentFilterConfig
+from .bedrock_runtime_guardrail_checks_prompt_attack_config import BedrockRuntimeGuardrailChecksPromptAttackConfig
+from .bedrock_runtime_guardrail_checks_sensitive_information_config import BedrockRuntimeGuardrailChecksSensitiveInformationConfig
+
+
+class BedrockRuntimeGuardrailChecksConfig(BaseModel):
+    contentFilter: BedrockRuntimeGuardrailChecksContentFilterConfig | None = None
+    promptAttack: BedrockRuntimeGuardrailChecksPromptAttackConfig | None = None
+    sensitiveInformation: BedrockRuntimeGuardrailChecksSensitiveInformationConfig | None = None

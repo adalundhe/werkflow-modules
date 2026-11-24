@@ -1,0 +1,9 @@
+from __future__ import annotations
+from pydantic import BaseModel, StrictStr
+
+
+class SNSCreatePlatformEndpointRequest(BaseModel):
+    PlatformApplicationArn: StrictStr
+    Token: StrictStr
+    CustomUserData: StrictStr | None = None
+    Attributes: dict[StrictStr, StrictStr] | None = None

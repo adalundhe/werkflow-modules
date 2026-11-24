@@ -1,0 +1,9 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .quick_sight_gauge_chart_arc_conditional_formatting import QuickSightGaugeChartArcConditionalFormatting
+from .quick_sight_gauge_chart_primary_value_conditional_formatting import QuickSightGaugeChartPrimaryValueConditionalFormatting
+
+
+class QuickSightGaugeChartConditionalFormattingOption(BaseModel):
+    PrimaryValue: QuickSightGaugeChartPrimaryValueConditionalFormatting | None = None
+    Arc: QuickSightGaugeChartArcConditionalFormatting | None = None

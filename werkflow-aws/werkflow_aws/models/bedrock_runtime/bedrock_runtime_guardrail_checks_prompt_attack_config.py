@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .bedrock_runtime_guardrail_checks_prompt_attack_category_config import BedrockRuntimeGuardrailChecksPromptAttackCategoryConfig
+
+
+class BedrockRuntimeGuardrailChecksPromptAttackConfig(BaseModel):
+    categories: list[BedrockRuntimeGuardrailChecksPromptAttackCategoryConfig]

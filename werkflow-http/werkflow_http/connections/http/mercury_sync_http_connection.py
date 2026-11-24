@@ -335,6 +335,7 @@ class MercurySyncHTTPConnection:
         headers: Optional[Dict[str, Any]] = None,
         params: Optional[Dict[str, HTTPEncodableValue]] = None,
         timeout: Optional[Union[int, float]] = None,
+        data: Any = None,
         redirects: int = 3,
     ) -> HTTPResponse:
         async with self._semaphore:
@@ -348,6 +349,7 @@ class MercurySyncHTTPConnection:
                             auth=auth,
                             headers=headers,
                             params=params,
+                            data=data,
                             redirects=redirects,
                         ),
                     ),

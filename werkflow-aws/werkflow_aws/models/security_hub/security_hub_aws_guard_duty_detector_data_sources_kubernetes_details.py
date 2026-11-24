@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .security_hub_aws_guard_duty_detector_data_sources_kubernetes_audit_logs_details import SecurityHubAwsGuardDutyDetectorDataSourcesKubernetesAuditLogsDetails
+
+
+class SecurityHubAwsGuardDutyDetectorDataSourcesKubernetesDetails(BaseModel):
+    AuditLogs: SecurityHubAwsGuardDutyDetectorDataSourcesKubernetesAuditLogsDetails | None = None

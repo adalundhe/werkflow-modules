@@ -1,0 +1,9 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .bedrock_evaluation_precomputed_retrieve_and_generate_source_config import BedrockEvaluationPrecomputedRetrieveAndGenerateSourceConfig
+from .bedrock_evaluation_precomputed_retrieve_source_config import BedrockEvaluationPrecomputedRetrieveSourceConfig
+
+
+class BedrockEvaluationPrecomputedRagSourceConfig(BaseModel):
+    retrieveSourceConfig: BedrockEvaluationPrecomputedRetrieveSourceConfig | None = None
+    retrieveAndGenerateSourceConfig: BedrockEvaluationPrecomputedRetrieveAndGenerateSourceConfig | None = None

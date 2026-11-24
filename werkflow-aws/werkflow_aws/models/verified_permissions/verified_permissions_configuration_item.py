@@ -1,0 +1,9 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .verified_permissions_cognito_user_pool_configuration_item import VerifiedPermissionsCognitoUserPoolConfigurationItem
+from .verified_permissions_open_id_connect_configuration_item import VerifiedPermissionsOpenIdConnectConfigurationItem
+
+
+class VerifiedPermissionsConfigurationItem(BaseModel):
+    cognitoUserPoolConfiguration: VerifiedPermissionsCognitoUserPoolConfigurationItem | None = None
+    openIdConnectConfiguration: VerifiedPermissionsOpenIdConnectConfigurationItem | None = None

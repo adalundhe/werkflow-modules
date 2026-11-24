@@ -1,6 +1,6 @@
 # werkflow-http
 
-Version `0.7.0`
+Version `0.8.0`
 
 Asynchronous HTTP/1.1 client module for [Werkflow](https://github.com/adalundhe/werkflow) with connection pooling, async DNS resolution, TLS verification, cookies, redirects, and multipart file uploads.
 
@@ -12,9 +12,9 @@ pip install werkflow-http
 
 ## Features
 
-- **HTTP Verbs:** `get()`, `post()`, `put()`, `patch()`, `delete()`, `options()`, and `head()` with Pydantic v2 request validation (`Request`, `RequestWithData`, `HTTPRequest`).
+- **HTTP Verbs:** `get()`, `post()`, `put()`, `patch()`, `delete()` (including optional request bodies), `options()`, and `head()` with Pydantic v2 request validation (`Request`, `RequestWithData`, `HTTPRequest`).
 - **Secure Defaults:** TLS certificate verification enabled by default (`HTTP(verify_ssl=True)`), with support for client certificates and HTTPS redirect upgrades.
-- **Payloads & Multipart Uploads:** Automatic JSON serialization via `orjson` for dictionaries, lists, and Pydantic `BaseModel` payloads, plus async multipart file uploads via `File`.
+- **Payloads & Multipart Uploads:** Automatic JSON serialization via `orjson` for dictionaries, lists, and Pydantic `BaseModel` payloads (supporting `application/json` and `+json` media types such as `application/json-patch+json`), plus async multipart file uploads via `File`.
 - **Protocol Support:** Async DNS lookup via `aiodns`, query parameter encoding, cookie headers, chunked transfer decoding, and `204`/`304`/`HEAD` body handling.
 - **Structured Responses (`HTTPResponse`):** Status code, headers, cookies, raw `content`, decoded `text`, and parsed JSON `data`.
 

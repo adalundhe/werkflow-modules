@@ -1,0 +1,17 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .quick_sight_read_api_key_connection_metadata import QuickSightReadAPIKeyConnectionMetadata
+from .quick_sight_read_authorization_code_grant_metadata import QuickSightReadAuthorizationCodeGrantMetadata
+from .quick_sight_read_basic_auth_connection_metadata import QuickSightReadBasicAuthConnectionMetadata
+from .quick_sight_read_client_credentials_grant_metadata import QuickSightReadClientCredentialsGrantMetadata
+from .quick_sight_read_iam_connection_metadata import QuickSightReadIamConnectionMetadata
+from .quick_sight_read_none_connection_metadata import QuickSightReadNoneConnectionMetadata
+
+
+class QuickSightReadAuthenticationMetadata(BaseModel):
+    AuthorizationCodeGrantMetadata: QuickSightReadAuthorizationCodeGrantMetadata | None = None
+    ClientCredentialsGrantMetadata: QuickSightReadClientCredentialsGrantMetadata | None = None
+    BasicAuthConnectionMetadata: QuickSightReadBasicAuthConnectionMetadata | None = None
+    ApiKeyConnectionMetadata: QuickSightReadAPIKeyConnectionMetadata | None = None
+    NoneConnectionMetadata: QuickSightReadNoneConnectionMetadata | None = None
+    IamConnectionMetadata: QuickSightReadIamConnectionMetadata | None = None

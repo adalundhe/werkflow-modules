@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .security_hub_standards_control_association_update import SecurityHubStandardsControlAssociationUpdate
+
+
+class SecurityHubBatchUpdateStandardsControlAssociationsRequest(BaseModel):
+    StandardsControlAssociationUpdates: list[SecurityHubStandardsControlAssociationUpdate]

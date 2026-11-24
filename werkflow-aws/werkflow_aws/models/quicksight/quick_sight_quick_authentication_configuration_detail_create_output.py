@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .quick_sight_quick_managed_public_auth_code_quick_authentication_config import QuickSightQuickManagedPublicAuthCodeQuickAuthenticationConfig
+
+
+class QuickSightQuickAuthenticationConfigurationDetailCreateOutput(BaseModel):
+    QuickManagedPublicAuthCode: QuickSightQuickManagedPublicAuthCodeQuickAuthenticationConfig | None = None

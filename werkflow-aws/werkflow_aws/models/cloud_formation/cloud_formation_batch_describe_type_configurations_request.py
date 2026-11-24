@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .cloud_formation_type_configuration_identifier import CloudFormationTypeConfigurationIdentifier
+
+
+class CloudFormationBatchDescribeTypeConfigurationsRequest(BaseModel):
+    TypeConfigurationIdentifiers: list[CloudFormationTypeConfigurationIdentifier]

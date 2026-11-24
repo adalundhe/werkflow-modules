@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .security_hub_aws_events_endpoint_routing_config_failover_config_details import SecurityHubAwsEventsEndpointRoutingConfigFailoverConfigDetails
+
+
+class SecurityHubAwsEventsEndpointRoutingConfigDetails(BaseModel):
+    FailoverConfig: SecurityHubAwsEventsEndpointRoutingConfigFailoverConfigDetails | None = None

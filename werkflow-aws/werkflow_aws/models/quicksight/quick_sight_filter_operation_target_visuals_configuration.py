@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .quick_sight_same_sheet_target_visual_configuration import QuickSightSameSheetTargetVisualConfiguration
+
+
+class QuickSightFilterOperationTargetVisualsConfiguration(BaseModel):
+    SameSheetTargetVisualConfiguration: QuickSightSameSheetTargetVisualConfiguration | None = None

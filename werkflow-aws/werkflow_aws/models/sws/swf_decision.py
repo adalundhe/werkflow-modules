@@ -1,0 +1,33 @@
+from __future__ import annotations
+from typing import Literal
+from pydantic import BaseModel
+from .swf_cancel_timer_decision_attributes import SWFCancelTimerDecisionAttributes
+from .swf_cancel_workflow_execution_decision_attributes import SWFCancelWorkflowExecutionDecisionAttributes
+from .swf_complete_workflow_execution_decision_attributes import SWFCompleteWorkflowExecutionDecisionAttributes
+from .swf_continue_as_new_workflow_execution_decision_attributes import SWFContinueAsNewWorkflowExecutionDecisionAttributes
+from .swf_fail_workflow_execution_decision_attributes import SWFFailWorkflowExecutionDecisionAttributes
+from .swf_record_marker_decision_attributes import SWFRecordMarkerDecisionAttributes
+from .swf_request_cancel_activity_task_decision_attributes import SWFRequestCancelActivityTaskDecisionAttributes
+from .swf_request_cancel_external_workflow_execution_decision_attributes import SWFRequestCancelExternalWorkflowExecutionDecisionAttributes
+from .swf_schedule_activity_task_decision_attributes import SWFScheduleActivityTaskDecisionAttributes
+from .swf_schedule_lambda_function_decision_attributes import SWFScheduleLambdaFunctionDecisionAttributes
+from .swf_signal_external_workflow_execution_decision_attributes import SWFSignalExternalWorkflowExecutionDecisionAttributes
+from .swf_start_child_workflow_execution_decision_attributes import SWFStartChildWorkflowExecutionDecisionAttributes
+from .swf_start_timer_decision_attributes import SWFStartTimerDecisionAttributes
+
+
+class SWFDecision(BaseModel):
+    decisionType: Literal['ScheduleActivityTask', 'RequestCancelActivityTask', 'CompleteWorkflowExecution', 'FailWorkflowExecution', 'CancelWorkflowExecution', 'ContinueAsNewWorkflowExecution', 'RecordMarker', 'StartTimer', 'CancelTimer', 'SignalExternalWorkflowExecution', 'RequestCancelExternalWorkflowExecution', 'StartChildWorkflowExecution', 'ScheduleLambdaFunction']
+    scheduleActivityTaskDecisionAttributes: SWFScheduleActivityTaskDecisionAttributes | None = None
+    requestCancelActivityTaskDecisionAttributes: SWFRequestCancelActivityTaskDecisionAttributes | None = None
+    completeWorkflowExecutionDecisionAttributes: SWFCompleteWorkflowExecutionDecisionAttributes | None = None
+    failWorkflowExecutionDecisionAttributes: SWFFailWorkflowExecutionDecisionAttributes | None = None
+    cancelWorkflowExecutionDecisionAttributes: SWFCancelWorkflowExecutionDecisionAttributes | None = None
+    continueAsNewWorkflowExecutionDecisionAttributes: SWFContinueAsNewWorkflowExecutionDecisionAttributes | None = None
+    recordMarkerDecisionAttributes: SWFRecordMarkerDecisionAttributes | None = None
+    startTimerDecisionAttributes: SWFStartTimerDecisionAttributes | None = None
+    cancelTimerDecisionAttributes: SWFCancelTimerDecisionAttributes | None = None
+    signalExternalWorkflowExecutionDecisionAttributes: SWFSignalExternalWorkflowExecutionDecisionAttributes | None = None
+    requestCancelExternalWorkflowExecutionDecisionAttributes: SWFRequestCancelExternalWorkflowExecutionDecisionAttributes | None = None
+    startChildWorkflowExecutionDecisionAttributes: SWFStartChildWorkflowExecutionDecisionAttributes | None = None
+    scheduleLambdaFunctionDecisionAttributes: SWFScheduleLambdaFunctionDecisionAttributes | None = None

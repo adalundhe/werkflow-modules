@@ -1,0 +1,11 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .dev_ops_guru_kms_server_side_encryption_integration_config import DevOpsGuruKMSServerSideEncryptionIntegrationConfig
+from .dev_ops_guru_logs_anomaly_detection_integration_config import DevOpsGuruLogsAnomalyDetectionIntegrationConfig
+from .dev_ops_guru_ops_center_integration_config import DevOpsGuruOpsCenterIntegrationConfig
+
+
+class DevOpsGuruUpdateServiceIntegrationConfig(BaseModel):
+    OpsCenter: DevOpsGuruOpsCenterIntegrationConfig | None = None
+    LogsAnomalyDetection: DevOpsGuruLogsAnomalyDetectionIntegrationConfig | None = None
+    KMSServerSideEncryption: DevOpsGuruKMSServerSideEncryptionIntegrationConfig | None = None

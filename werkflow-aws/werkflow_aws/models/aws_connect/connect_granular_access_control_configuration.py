@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .connect_data_table_access_control_configuration import ConnectDataTableAccessControlConfiguration
+
+
+class ConnectGranularAccessControlConfiguration(BaseModel):
+    DataTableAccessControlConfiguration: ConnectDataTableAccessControlConfiguration | None = None

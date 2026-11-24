@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .bedrock_runtime_guardrail_checks_content_filter_category_config import BedrockRuntimeGuardrailChecksContentFilterCategoryConfig
+
+
+class BedrockRuntimeGuardrailChecksContentFilterConfig(BaseModel):
+    categories: list[BedrockRuntimeGuardrailChecksContentFilterCategoryConfig]

@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .security_hub_aws_wafv2_custom_request_handling_details import SecurityHubAwsWafv2CustomRequestHandlingDetails
+
+
+class SecurityHubAwsWafv2RulesActionCountDetails(BaseModel):
+    CustomRequestHandling: SecurityHubAwsWafv2CustomRequestHandlingDetails | None = None

@@ -1,0 +1,13 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .kinesis_analytics_catalog_configuration import KinesisAnalyticsCatalogConfiguration
+from .kinesis_analytics_custom_artifact_configuration import KinesisAnalyticsCustomArtifactConfiguration
+from .kinesis_analytics_deploy_as_application_configuration import KinesisAnalyticsDeployAsApplicationConfiguration
+from .kinesis_analytics_zeppelin_monitoring_configuration import KinesisAnalyticsZeppelinMonitoringConfiguration
+
+
+class KinesisAnalyticsZeppelinApplicationConfiguration(BaseModel):
+    MonitoringConfiguration: KinesisAnalyticsZeppelinMonitoringConfiguration | None = None
+    CatalogConfiguration: KinesisAnalyticsCatalogConfiguration | None = None
+    DeployAsApplicationConfiguration: KinesisAnalyticsDeployAsApplicationConfiguration | None = None
+    CustomArtifactsConfiguration: list[KinesisAnalyticsCustomArtifactConfiguration] | None = None

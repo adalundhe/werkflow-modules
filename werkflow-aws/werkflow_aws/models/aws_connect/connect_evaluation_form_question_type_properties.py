@@ -1,0 +1,13 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .connect_evaluation_form_multi_select_question_properties import ConnectEvaluationFormMultiSelectQuestionProperties
+from .connect_evaluation_form_numeric_question_properties import ConnectEvaluationFormNumericQuestionProperties
+from .connect_evaluation_form_single_select_question_properties import ConnectEvaluationFormSingleSelectQuestionProperties
+from .connect_evaluation_form_text_question_properties import ConnectEvaluationFormTextQuestionProperties
+
+
+class ConnectEvaluationFormQuestionTypeProperties(BaseModel):
+    Numeric: ConnectEvaluationFormNumericQuestionProperties | None = None
+    SingleSelect: ConnectEvaluationFormSingleSelectQuestionProperties | None = None
+    Text: ConnectEvaluationFormTextQuestionProperties | None = None
+    MultiSelect: ConnectEvaluationFormMultiSelectQuestionProperties | None = None

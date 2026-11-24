@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .guard_duty_kubernetes_audit_logs_configuration import GuardDutyKubernetesAuditLogsConfiguration
+
+
+class GuardDutyKubernetesConfiguration(BaseModel):
+    AuditLogs: GuardDutyKubernetesAuditLogsConfiguration

@@ -1,0 +1,8 @@
+from __future__ import annotations
+from pydantic import BaseModel, StrictStr
+from .kinesis_analytics_application_maintenance_configuration_update import KinesisAnalyticsApplicationMaintenanceConfigurationUpdate
+
+
+class KinesisAnalyticsUpdateApplicationMaintenanceConfigurationRequest(BaseModel):
+    ApplicationName: StrictStr
+    ApplicationMaintenanceConfigurationUpdate: KinesisAnalyticsApplicationMaintenanceConfigurationUpdate

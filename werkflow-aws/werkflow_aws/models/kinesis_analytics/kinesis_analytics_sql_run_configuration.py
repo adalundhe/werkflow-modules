@@ -1,0 +1,8 @@
+from __future__ import annotations
+from pydantic import BaseModel, StrictStr
+from .kinesis_analytics_input_starting_position_configuration import KinesisAnalyticsInputStartingPositionConfiguration
+
+
+class KinesisAnalyticsSqlRunConfiguration(BaseModel):
+    InputId: StrictStr
+    InputStartingPositionConfiguration: KinesisAnalyticsInputStartingPositionConfiguration

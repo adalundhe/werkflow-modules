@@ -1,0 +1,23 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .kinesis_analytics_application_code_configuration import KinesisAnalyticsApplicationCodeConfiguration
+from .kinesis_analytics_application_encryption_configuration import KinesisAnalyticsApplicationEncryptionConfiguration
+from .kinesis_analytics_application_snapshot_configuration import KinesisAnalyticsApplicationSnapshotConfiguration
+from .kinesis_analytics_application_system_rollback_configuration import KinesisAnalyticsApplicationSystemRollbackConfiguration
+from .kinesis_analytics_environment_properties import KinesisAnalyticsEnvironmentProperties
+from .kinesis_analytics_flink_application_configuration import KinesisAnalyticsFlinkApplicationConfiguration
+from .kinesis_analytics_sql_application_configuration import KinesisAnalyticsSqlApplicationConfiguration
+from .kinesis_analytics_vpc_configuration import KinesisAnalyticsVpcConfiguration
+from .kinesis_analytics_zeppelin_application_configuration import KinesisAnalyticsZeppelinApplicationConfiguration
+
+
+class KinesisAnalyticsApplicationConfiguration(BaseModel):
+    SqlApplicationConfiguration: KinesisAnalyticsSqlApplicationConfiguration | None = None
+    FlinkApplicationConfiguration: KinesisAnalyticsFlinkApplicationConfiguration | None = None
+    EnvironmentProperties: KinesisAnalyticsEnvironmentProperties | None = None
+    ApplicationCodeConfiguration: KinesisAnalyticsApplicationCodeConfiguration | None = None
+    ApplicationSnapshotConfiguration: KinesisAnalyticsApplicationSnapshotConfiguration | None = None
+    ApplicationSystemRollbackConfiguration: KinesisAnalyticsApplicationSystemRollbackConfiguration | None = None
+    VpcConfigurations: list[KinesisAnalyticsVpcConfiguration] | None = None
+    ZeppelinApplicationConfiguration: KinesisAnalyticsZeppelinApplicationConfiguration | None = None
+    ApplicationEncryptionConfiguration: KinesisAnalyticsApplicationEncryptionConfiguration | None = None

@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .security_hub_stateless_custom_publish_metric_action_dimension import SecurityHubStatelessCustomPublishMetricActionDimension
+
+
+class SecurityHubStatelessCustomPublishMetricAction(BaseModel):
+    Dimensions: list[SecurityHubStatelessCustomPublishMetricActionDimension] | None = None

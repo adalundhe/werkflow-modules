@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .quick_sight_read_client_credentials_grant_details import QuickSightReadClientCredentialsGrantDetails
+
+
+class QuickSightReadClientCredentialsDetails(BaseModel):
+    ReadClientCredentialsGrantDetails: QuickSightReadClientCredentialsGrantDetails | None = None

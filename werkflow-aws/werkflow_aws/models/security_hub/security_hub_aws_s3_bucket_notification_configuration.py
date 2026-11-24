@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .security_hub_aws_s3_bucket_notification_configuration_detail import SecurityHubAwsS3BucketNotificationConfigurationDetail
+
+
+class SecurityHubAwsS3BucketNotificationConfiguration(BaseModel):
+    Configurations: list[SecurityHubAwsS3BucketNotificationConfigurationDetail] | None = None

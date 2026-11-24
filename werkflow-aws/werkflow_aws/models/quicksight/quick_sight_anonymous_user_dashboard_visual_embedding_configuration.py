@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .quick_sight_dashboard_visual_id import QuickSightDashboardVisualId
+
+
+class QuickSightAnonymousUserDashboardVisualEmbeddingConfiguration(BaseModel):
+    InitialDashboardVisualId: QuickSightDashboardVisualId

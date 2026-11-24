@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .connect_real_time_contact_analysis_transcript_item_with_content import ConnectRealTimeContactAnalysisTranscriptItemWithContent
+
+
+class ConnectRealTimeContactAnalysisIssueDetected(BaseModel):
+    TranscriptItems: list[ConnectRealTimeContactAnalysisTranscriptItemWithContent] | None = None

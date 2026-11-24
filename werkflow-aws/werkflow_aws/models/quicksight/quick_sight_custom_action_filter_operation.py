@@ -1,0 +1,9 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .quick_sight_filter_operation_selected_fields_configuration import QuickSightFilterOperationSelectedFieldsConfiguration
+from .quick_sight_filter_operation_target_visuals_configuration import QuickSightFilterOperationTargetVisualsConfiguration
+
+
+class QuickSightCustomActionFilterOperation(BaseModel):
+    SelectedFieldsConfiguration: QuickSightFilterOperationSelectedFieldsConfiguration | None = None
+    TargetVisualsConfiguration: QuickSightFilterOperationTargetVisualsConfiguration | None = None

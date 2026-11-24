@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .security_hub_aws_ecs_cluster_configuration_execute_command_configuration_details import SecurityHubAwsEcsClusterConfigurationExecuteCommandConfigurationDetails
+
+
+class SecurityHubAwsEcsClusterConfigurationDetails(BaseModel):
+    ExecuteCommandConfiguration: SecurityHubAwsEcsClusterConfigurationExecuteCommandConfigurationDetails | None = None

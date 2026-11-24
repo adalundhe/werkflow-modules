@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .connect_multi_select_question_rule_category_automation import ConnectMultiSelectQuestionRuleCategoryAutomation
+
+
+class ConnectEvaluationFormMultiSelectQuestionAutomationOption(BaseModel):
+    RuleCategory: ConnectMultiSelectQuestionRuleCategoryAutomation | None = None

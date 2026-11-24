@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .fis_report_configuration_cloud_watch_dashboard_input import FISReportConfigurationCloudWatchDashboardInput
+
+
+class FISExperimentTemplateReportConfigurationDataSourcesInput(BaseModel):
+    cloudWatchDashboards: list[FISReportConfigurationCloudWatchDashboardInput] | None = None

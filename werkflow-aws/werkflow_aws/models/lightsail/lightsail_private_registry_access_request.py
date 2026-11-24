@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .lightsail_container_service_ecr_image_puller_role_request import LightsailContainerServiceECRImagePullerRoleRequest
+
+
+class LightsailPrivateRegistryAccessRequest(BaseModel):
+    ecrImagePullerRole: LightsailContainerServiceECRImagePullerRoleRequest | None = None

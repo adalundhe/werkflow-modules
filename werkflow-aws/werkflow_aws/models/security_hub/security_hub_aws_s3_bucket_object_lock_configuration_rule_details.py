@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .security_hub_aws_s3_bucket_object_lock_configuration_rule_default_retention_details import SecurityHubAwsS3BucketObjectLockConfigurationRuleDefaultRetentionDetails
+
+
+class SecurityHubAwsS3BucketObjectLockConfigurationRuleDetails(BaseModel):
+    DefaultRetention: SecurityHubAwsS3BucketObjectLockConfigurationRuleDefaultRetentionDetails | None = None

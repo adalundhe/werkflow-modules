@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .compute_optimizer_lambda_savings_estimation_mode import ComputeOptimizerLambdaSavingsEstimationMode
+
+
+class ComputeOptimizerLambdaEffectiveRecommendationPreferences(BaseModel):
+    savingsEstimationMode: ComputeOptimizerLambdaSavingsEstimationMode | None = None

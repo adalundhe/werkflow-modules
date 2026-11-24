@@ -1,0 +1,9 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .security_hub_aws_events_endpoint_routing_config_failover_config_primary_details import SecurityHubAwsEventsEndpointRoutingConfigFailoverConfigPrimaryDetails
+from .security_hub_aws_events_endpoint_routing_config_failover_config_secondary_details import SecurityHubAwsEventsEndpointRoutingConfigFailoverConfigSecondaryDetails
+
+
+class SecurityHubAwsEventsEndpointRoutingConfigFailoverConfigDetails(BaseModel):
+    Primary: SecurityHubAwsEventsEndpointRoutingConfigFailoverConfigPrimaryDetails | None = None
+    Secondary: SecurityHubAwsEventsEndpointRoutingConfigFailoverConfigSecondaryDetails | None = None

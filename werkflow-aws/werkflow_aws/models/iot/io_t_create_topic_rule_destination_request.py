@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .io_t_topic_rule_destination_configuration import IoTTopicRuleDestinationConfiguration
+
+
+class IoTCreateTopicRuleDestinationRequest(BaseModel):
+    destinationConfiguration: IoTTopicRuleDestinationConfiguration

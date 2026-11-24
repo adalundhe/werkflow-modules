@@ -1,0 +1,13 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .quick_sight_kpi_actual_value_conditional_formatting import QuickSightKPIActualValueConditionalFormatting
+from .quick_sight_kpi_comparison_value_conditional_formatting import QuickSightKPIComparisonValueConditionalFormatting
+from .quick_sight_kpi_primary_value_conditional_formatting import QuickSightKPIPrimaryValueConditionalFormatting
+from .quick_sight_kpi_progress_bar_conditional_formatting import QuickSightKPIProgressBarConditionalFormatting
+
+
+class QuickSightKPIConditionalFormattingOption(BaseModel):
+    PrimaryValue: QuickSightKPIPrimaryValueConditionalFormatting | None = None
+    ProgressBar: QuickSightKPIProgressBarConditionalFormatting | None = None
+    ActualValue: QuickSightKPIActualValueConditionalFormatting | None = None
+    ComparisonValue: QuickSightKPIComparisonValueConditionalFormatting | None = None

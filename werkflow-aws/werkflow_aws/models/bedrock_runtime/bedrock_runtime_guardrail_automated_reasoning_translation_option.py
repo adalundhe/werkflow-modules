@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .bedrock_runtime_guardrail_automated_reasoning_translation import BedrockRuntimeGuardrailAutomatedReasoningTranslation
+
+
+class BedrockRuntimeGuardrailAutomatedReasoningTranslationOption(BaseModel):
+    translations: list[BedrockRuntimeGuardrailAutomatedReasoningTranslation] | None = None

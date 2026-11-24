@@ -1,0 +1,8 @@
+from __future__ import annotations
+from pydantic import BaseModel, StrictStr
+from .wa_fv2_forwarded_ip_config import WAFv2ForwardedIPConfig
+
+
+class WAFv2GeoMatchStatement(BaseModel):
+    CountryCodes: list[StrictStr] | None = None
+    ForwardedIPConfig: WAFv2ForwardedIPConfig | None = None

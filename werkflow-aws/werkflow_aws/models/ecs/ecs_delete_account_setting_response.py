@@ -1,0 +1,9 @@
+from __future__ import annotations
+from typing import Any
+from pydantic import BaseModel
+from .ecs_setting import ECSSetting
+
+
+class ECSDeleteAccountSettingResponse(BaseModel):
+    setting: ECSSetting | None = None
+    ResponseMetadata: dict[str, Any] | None = None

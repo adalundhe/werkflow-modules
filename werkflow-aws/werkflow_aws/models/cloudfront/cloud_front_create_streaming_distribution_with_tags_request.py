@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .cloud_front_streaming_distribution_config_with_tags import CloudFrontStreamingDistributionConfigWithTags
+
+
+class CloudFrontCreateStreamingDistributionWithTagsRequest(BaseModel):
+    StreamingDistributionConfigWithTags: CloudFrontStreamingDistributionConfigWithTags

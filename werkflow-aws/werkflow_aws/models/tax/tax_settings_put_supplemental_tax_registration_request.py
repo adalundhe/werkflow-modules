@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .tax_settings_supplemental_tax_registration_entry import TaxSettingsSupplementalTaxRegistrationEntry
+
+
+class TaxSettingsPutSupplementalTaxRegistrationRequest(BaseModel):
+    taxRegistrationEntry: TaxSettingsSupplementalTaxRegistrationEntry

@@ -1,0 +1,8 @@
+from __future__ import annotations
+from pydantic import BaseModel, StrictStr
+from .security_hub_aws_ec2_launch_template_data_instance_market_options_spot_options_details import SecurityHubAwsEc2LaunchTemplateDataInstanceMarketOptionsSpotOptionsDetails
+
+
+class SecurityHubAwsEc2LaunchTemplateDataInstanceMarketOptionsDetails(BaseModel):
+    MarketType: StrictStr | None = None
+    SpotOptions: SecurityHubAwsEc2LaunchTemplateDataInstanceMarketOptionsSpotOptionsDetails | None = None

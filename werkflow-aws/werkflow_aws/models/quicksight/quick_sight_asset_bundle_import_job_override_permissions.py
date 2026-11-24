@@ -1,0 +1,19 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .quick_sight_asset_bundle_import_job_analysis_override_permissions import QuickSightAssetBundleImportJobAnalysisOverridePermissions
+from .quick_sight_asset_bundle_import_job_dashboard_override_permissions import QuickSightAssetBundleImportJobDashboardOverridePermissions
+from .quick_sight_asset_bundle_import_job_data_set_override_permissions import QuickSightAssetBundleImportJobDataSetOverridePermissions
+from .quick_sight_asset_bundle_import_job_data_source_override_permissions import QuickSightAssetBundleImportJobDataSourceOverridePermissions
+from .quick_sight_asset_bundle_import_job_folder_override_permissions import QuickSightAssetBundleImportJobFolderOverridePermissions
+from .quick_sight_asset_bundle_import_job_theme_override_permissions import QuickSightAssetBundleImportJobThemeOverridePermissions
+from .quick_sight_asset_bundle_import_job_topic_v2_override_permissions import QuickSightAssetBundleImportJobTopicV2OverridePermissions
+
+
+class QuickSightAssetBundleImportJobOverridePermissions(BaseModel):
+    DataSources: list[QuickSightAssetBundleImportJobDataSourceOverridePermissions] | None = None
+    DataSets: list[QuickSightAssetBundleImportJobDataSetOverridePermissions] | None = None
+    Themes: list[QuickSightAssetBundleImportJobThemeOverridePermissions] | None = None
+    Analyses: list[QuickSightAssetBundleImportJobAnalysisOverridePermissions] | None = None
+    Dashboards: list[QuickSightAssetBundleImportJobDashboardOverridePermissions] | None = None
+    Folders: list[QuickSightAssetBundleImportJobFolderOverridePermissions] | None = None
+    TopicsV2: list[QuickSightAssetBundleImportJobTopicV2OverridePermissions] | None = None

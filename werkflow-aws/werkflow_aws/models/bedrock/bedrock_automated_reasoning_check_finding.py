@@ -1,0 +1,19 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .bedrock_automated_reasoning_check_impossible_finding import BedrockAutomatedReasoningCheckImpossibleFinding
+from .bedrock_automated_reasoning_check_invalid_finding import BedrockAutomatedReasoningCheckInvalidFinding
+from .bedrock_automated_reasoning_check_no_translations_finding import BedrockAutomatedReasoningCheckNoTranslationsFinding
+from .bedrock_automated_reasoning_check_satisfiable_finding import BedrockAutomatedReasoningCheckSatisfiableFinding
+from .bedrock_automated_reasoning_check_too_complex_finding import BedrockAutomatedReasoningCheckTooComplexFinding
+from .bedrock_automated_reasoning_check_translation_ambiguous_finding import BedrockAutomatedReasoningCheckTranslationAmbiguousFinding
+from .bedrock_automated_reasoning_check_valid_finding import BedrockAutomatedReasoningCheckValidFinding
+
+
+class BedrockAutomatedReasoningCheckFinding(BaseModel):
+    valid: BedrockAutomatedReasoningCheckValidFinding | None = None
+    invalid: BedrockAutomatedReasoningCheckInvalidFinding | None = None
+    satisfiable: BedrockAutomatedReasoningCheckSatisfiableFinding | None = None
+    impossible: BedrockAutomatedReasoningCheckImpossibleFinding | None = None
+    translationAmbiguous: BedrockAutomatedReasoningCheckTranslationAmbiguousFinding | None = None
+    tooComplex: BedrockAutomatedReasoningCheckTooComplexFinding | None = None
+    noTranslations: BedrockAutomatedReasoningCheckNoTranslationsFinding | None = None

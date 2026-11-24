@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .kinesis_minimum_throughput_billing_commitment_input import KinesisMinimumThroughputBillingCommitmentInput
+
+
+class KinesisUpdateAccountSettingsRequest(BaseModel):
+    MinimumThroughputBillingCommitment: KinesisMinimumThroughputBillingCommitmentInput

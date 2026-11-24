@@ -1,0 +1,15 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .event_bridge_connection_http_parameters import EventBridgeConnectionHttpParameters
+from .event_bridge_connectivity_resource_parameters import EventBridgeConnectivityResourceParameters
+from .event_bridge_update_connection_api_key_auth_request_parameters import EventBridgeUpdateConnectionApiKeyAuthRequestParameters
+from .event_bridge_update_connection_basic_auth_request_parameters import EventBridgeUpdateConnectionBasicAuthRequestParameters
+from .event_bridge_update_connection_o_auth_request_parameters import EventBridgeUpdateConnectionOAuthRequestParameters
+
+
+class EventBridgeUpdateConnectionAuthRequestParameters(BaseModel):
+    BasicAuthParameters: EventBridgeUpdateConnectionBasicAuthRequestParameters | None = None
+    OAuthParameters: EventBridgeUpdateConnectionOAuthRequestParameters | None = None
+    ApiKeyAuthParameters: EventBridgeUpdateConnectionApiKeyAuthRequestParameters | None = None
+    InvocationHttpParameters: EventBridgeConnectionHttpParameters | None = None
+    ConnectivityParameters: EventBridgeConnectivityResourceParameters | None = None

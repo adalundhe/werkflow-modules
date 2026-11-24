@@ -1,0 +1,9 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .health_imaging_copy_destination_image_set import HealthImagingCopyDestinationImageSet
+from .health_imaging_copy_source_image_set_information import HealthImagingCopySourceImageSetInformation
+
+
+class HealthImagingCopyImageSetInformation(BaseModel):
+    sourceImageSet: HealthImagingCopySourceImageSetInformation
+    destinationImageSet: HealthImagingCopyDestinationImageSet | None = None

@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .security_hub_aws_cloud_front_distribution_origin_group_failover import SecurityHubAwsCloudFrontDistributionOriginGroupFailover
+
+
+class SecurityHubAwsCloudFrontDistributionOriginGroup(BaseModel):
+    FailoverCriteria: SecurityHubAwsCloudFrontDistributionOriginGroupFailover | None = None

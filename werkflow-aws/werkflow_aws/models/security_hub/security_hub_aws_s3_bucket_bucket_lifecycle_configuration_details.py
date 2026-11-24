@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .security_hub_aws_s3_bucket_bucket_lifecycle_configuration_rules_details import SecurityHubAwsS3BucketBucketLifecycleConfigurationRulesDetails
+
+
+class SecurityHubAwsS3BucketBucketLifecycleConfigurationDetails(BaseModel):
+    Rules: list[SecurityHubAwsS3BucketBucketLifecycleConfigurationRulesDetails] | None = None

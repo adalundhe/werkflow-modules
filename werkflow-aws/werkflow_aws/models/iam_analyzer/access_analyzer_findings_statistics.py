@@ -1,0 +1,11 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .access_analyzer_external_access_findings_statistics import AccessAnalyzerExternalAccessFindingsStatistics
+from .access_analyzer_internal_access_findings_statistics import AccessAnalyzerInternalAccessFindingsStatistics
+from .access_analyzer_unused_access_findings_statistics import AccessAnalyzerUnusedAccessFindingsStatistics
+
+
+class AccessAnalyzerFindingsStatistics(BaseModel):
+    externalAccessFindingsStatistics: AccessAnalyzerExternalAccessFindingsStatistics | None = None
+    internalAccessFindingsStatistics: AccessAnalyzerInternalAccessFindingsStatistics | None = None
+    unusedAccessFindingsStatistics: AccessAnalyzerUnusedAccessFindingsStatistics | None = None

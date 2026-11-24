@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .security_hub_update_automation_rules_request_item import SecurityHubUpdateAutomationRulesRequestItem
+
+
+class SecurityHubBatchUpdateAutomationRulesRequest(BaseModel):
+    UpdateAutomationRulesRequestItems: list[SecurityHubUpdateAutomationRulesRequestItem]

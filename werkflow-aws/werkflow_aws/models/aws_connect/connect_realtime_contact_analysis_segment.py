@@ -1,0 +1,19 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .connect_real_time_contact_analysis_segment_attachments import ConnectRealTimeContactAnalysisSegmentAttachments
+from .connect_real_time_contact_analysis_segment_categories import ConnectRealTimeContactAnalysisSegmentCategories
+from .connect_real_time_contact_analysis_segment_event import ConnectRealTimeContactAnalysisSegmentEvent
+from .connect_real_time_contact_analysis_segment_extracted_information import ConnectRealTimeContactAnalysisSegmentExtractedInformation
+from .connect_real_time_contact_analysis_segment_issues import ConnectRealTimeContactAnalysisSegmentIssues
+from .connect_real_time_contact_analysis_segment_post_contact_summary import ConnectRealTimeContactAnalysisSegmentPostContactSummary
+from .connect_real_time_contact_analysis_segment_transcript import ConnectRealTimeContactAnalysisSegmentTranscript
+
+
+class ConnectRealtimeContactAnalysisSegment(BaseModel):
+    Transcript: ConnectRealTimeContactAnalysisSegmentTranscript | None = None
+    Categories: ConnectRealTimeContactAnalysisSegmentCategories | None = None
+    Issues: ConnectRealTimeContactAnalysisSegmentIssues | None = None
+    Event: ConnectRealTimeContactAnalysisSegmentEvent | None = None
+    Attachments: ConnectRealTimeContactAnalysisSegmentAttachments | None = None
+    PostContactSummary: ConnectRealTimeContactAnalysisSegmentPostContactSummary | None = None
+    ExtractedInformation: ConnectRealTimeContactAnalysisSegmentExtractedInformation | None = None

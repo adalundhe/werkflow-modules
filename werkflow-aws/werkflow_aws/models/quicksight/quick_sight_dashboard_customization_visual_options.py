@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .quick_sight_visual_customization_fields_configuration import QuickSightVisualCustomizationFieldsConfiguration
+
+
+class QuickSightDashboardCustomizationVisualOptions(BaseModel):
+    FieldsConfiguration: QuickSightVisualCustomizationFieldsConfiguration | None = None

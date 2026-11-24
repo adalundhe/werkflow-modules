@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .managed_blockchain_node_fabric_log_publishing_configuration import ManagedBlockchainNodeFabricLogPublishingConfiguration
+
+
+class ManagedBlockchainNodeLogPublishingConfiguration(BaseModel):
+    Fabric: ManagedBlockchainNodeFabricLogPublishingConfiguration | None = None

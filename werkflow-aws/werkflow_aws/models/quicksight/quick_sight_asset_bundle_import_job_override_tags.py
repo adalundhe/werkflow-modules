@@ -1,0 +1,21 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .quick_sight_asset_bundle_import_job_analysis_override_tags import QuickSightAssetBundleImportJobAnalysisOverrideTags
+from .quick_sight_asset_bundle_import_job_dashboard_override_tags import QuickSightAssetBundleImportJobDashboardOverrideTags
+from .quick_sight_asset_bundle_import_job_data_set_override_tags import QuickSightAssetBundleImportJobDataSetOverrideTags
+from .quick_sight_asset_bundle_import_job_data_source_override_tags import QuickSightAssetBundleImportJobDataSourceOverrideTags
+from .quick_sight_asset_bundle_import_job_folder_override_tags import QuickSightAssetBundleImportJobFolderOverrideTags
+from .quick_sight_asset_bundle_import_job_theme_override_tags import QuickSightAssetBundleImportJobThemeOverrideTags
+from .quick_sight_asset_bundle_import_job_topic_v2_override_tags import QuickSightAssetBundleImportJobTopicV2OverrideTags
+from .quick_sight_asset_bundle_import_job_vpc_connection_override_tags import QuickSightAssetBundleImportJobVPCConnectionOverrideTags
+
+
+class QuickSightAssetBundleImportJobOverrideTags(BaseModel):
+    VPCConnections: list[QuickSightAssetBundleImportJobVPCConnectionOverrideTags] | None = None
+    DataSources: list[QuickSightAssetBundleImportJobDataSourceOverrideTags] | None = None
+    DataSets: list[QuickSightAssetBundleImportJobDataSetOverrideTags] | None = None
+    Themes: list[QuickSightAssetBundleImportJobThemeOverrideTags] | None = None
+    Analyses: list[QuickSightAssetBundleImportJobAnalysisOverrideTags] | None = None
+    Dashboards: list[QuickSightAssetBundleImportJobDashboardOverrideTags] | None = None
+    Folders: list[QuickSightAssetBundleImportJobFolderOverrideTags] | None = None
+    TopicsV2: list[QuickSightAssetBundleImportJobTopicV2OverrideTags] | None = None

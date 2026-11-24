@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .kinesis_analytics_s3_content_base_location_description import KinesisAnalyticsS3ContentBaseLocationDescription
+
+
+class KinesisAnalyticsDeployAsApplicationConfigurationDescription(BaseModel):
+    S3ContentLocationDescription: KinesisAnalyticsS3ContentBaseLocationDescription | None = None

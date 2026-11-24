@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .cloud_front_origin_access_identity_config import CloudFrontOriginAccessIdentityConfig as _CloudFrontOriginAccessIdentityConfigType
+
+
+class CloudFrontCreateCloudFrontOriginAccessIdentityRequest(BaseModel):
+    CloudFrontOriginAccessIdentityConfig: _CloudFrontOriginAccessIdentityConfigType

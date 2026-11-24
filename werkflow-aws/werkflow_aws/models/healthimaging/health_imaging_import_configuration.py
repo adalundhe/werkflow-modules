@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .health_imaging_dicom_json_metadata_import_configuration import HealthImagingDicomJsonMetadataImportConfiguration
+
+
+class HealthImagingImportConfiguration(BaseModel):
+    dicomJsonMetadataImportConfiguration: HealthImagingDicomJsonMetadataImportConfiguration | None = None

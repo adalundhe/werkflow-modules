@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .quick_sight_waterfall_chart_group_color_configuration import QuickSightWaterfallChartGroupColorConfiguration
+
+
+class QuickSightWaterfallChartColorConfiguration(BaseModel):
+    GroupColorConfiguration: QuickSightWaterfallChartGroupColorConfiguration | None = None

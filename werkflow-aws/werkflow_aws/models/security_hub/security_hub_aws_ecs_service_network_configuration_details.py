@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .security_hub_aws_ecs_service_network_configuration_aws_vpc_configuration_details import SecurityHubAwsEcsServiceNetworkConfigurationAwsVpcConfigurationDetails
+
+
+class SecurityHubAwsEcsServiceNetworkConfigurationDetails(BaseModel):
+    AwsVpcConfiguration: SecurityHubAwsEcsServiceNetworkConfigurationAwsVpcConfigurationDetails | None = None

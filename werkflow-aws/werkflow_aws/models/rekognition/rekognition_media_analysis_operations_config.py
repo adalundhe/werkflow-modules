@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .rekognition_media_analysis_detect_moderation_labels_config import RekognitionMediaAnalysisDetectModerationLabelsConfig
+
+
+class RekognitionMediaAnalysisOperationsConfig(BaseModel):
+    DetectModerationLabels: RekognitionMediaAnalysisDetectModerationLabelsConfig | None = None

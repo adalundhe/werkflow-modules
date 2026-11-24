@@ -64,7 +64,7 @@ class HTTP(Module):
                     else str(header_value)
                 )
                 media_type = value_str.split(';', 1)[0].strip().lower()
-                return media_type == 'application/json'
+                return media_type == 'application/json' or media_type.endswith('+json')
 
         return False
 
@@ -213,21 +213,34 @@ class HTTP(Module):
         auth: tuple[str, str] | None = None,
         headers: Headers | None = None,
         params: Params | None = None,
+        data: Data = None,
     ) -> HTTPResponse:
         client = self._get_client()
 
-        Request(
-            url=url,
-            auth=auth,
-            headers=headers,
-            params=params,
-        )
+        if data is not None:
+            RequestWithData(
+                url=url,
+                auth=auth,
+                headers=headers,
+                params=params,
+                data=data,
+            )
+            encoded_data = self._encode_data(headers, data)
+        else:
+            Request(
+                url=url,
+                auth=auth,
+                headers=headers,
+                params=params,
+            )
+            encoded_data = None
 
         return await client.delete(
             url=url,
             auth=auth,
             headers=dict(headers) if headers is not None else None,
             params=dict(params) if params is not None else None,
+            data=encoded_data,
         )
 
     async def options(

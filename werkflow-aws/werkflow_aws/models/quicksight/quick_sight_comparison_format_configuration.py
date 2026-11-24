@@ -1,0 +1,9 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .quick_sight_number_display_format_configuration import QuickSightNumberDisplayFormatConfiguration
+from .quick_sight_percentage_display_format_configuration import QuickSightPercentageDisplayFormatConfiguration
+
+
+class QuickSightComparisonFormatConfiguration(BaseModel):
+    NumberDisplayFormatConfiguration: QuickSightNumberDisplayFormatConfiguration | None = None
+    PercentageDisplayFormatConfiguration: QuickSightPercentageDisplayFormatConfiguration | None = None

@@ -1,0 +1,10 @@
+from __future__ import annotations
+from pydantic import BaseModel, StrictStr
+from .kendra_salesforce_custom_knowledge_article_type_configuration import KendraSalesforceCustomKnowledgeArticleTypeConfiguration
+from .kendra_salesforce_standard_knowledge_article_type_configuration import KendraSalesforceStandardKnowledgeArticleTypeConfiguration
+
+
+class KendraSalesforceKnowledgeArticleConfiguration(BaseModel):
+    IncludedStates: list[StrictStr] | None = None
+    StandardKnowledgeArticleTypeConfiguration: KendraSalesforceStandardKnowledgeArticleTypeConfiguration | None = None
+    CustomKnowledgeArticleTypeConfigurations: list[KendraSalesforceCustomKnowledgeArticleTypeConfiguration] | None = None

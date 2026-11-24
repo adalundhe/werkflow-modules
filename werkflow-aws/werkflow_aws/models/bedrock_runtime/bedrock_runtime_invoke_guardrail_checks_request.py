@@ -1,0 +1,9 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .bedrock_runtime_guardrail_checks_config import BedrockRuntimeGuardrailChecksConfig
+from .bedrock_runtime_guardrail_checks_message import BedrockRuntimeGuardrailChecksMessage
+
+
+class BedrockRuntimeInvokeGuardrailChecksRequest(BaseModel):
+    messages: list[BedrockRuntimeGuardrailChecksMessage]
+    checks: BedrockRuntimeGuardrailChecksConfig

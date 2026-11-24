@@ -220,4 +220,15 @@ from .time_period import TimePeriod as TimePeriod
 from .total import Total as Total
 
 _NAMESPACE = dict(globals())
-CostExplorerExpression.model_rebuild(_types_namespace=_NAMESPACE)
+for _ in range(4):
+    _pending = [
+        _sym
+        for _sym in _NAMESPACE.values()
+        if isinstance(_sym, type)
+        and hasattr(_sym, "model_rebuild")
+        and not getattr(_sym, "__pydantic_complete__", True)
+    ]
+    if not _pending:
+        break
+    for _sym in _pending:
+        _sym.model_rebuild(_types_namespace=_NAMESPACE)

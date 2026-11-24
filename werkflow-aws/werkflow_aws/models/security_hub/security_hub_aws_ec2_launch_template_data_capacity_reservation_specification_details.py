@@ -1,0 +1,8 @@
+from __future__ import annotations
+from pydantic import BaseModel, StrictStr
+from .security_hub_aws_ec2_launch_template_data_capacity_reservation_specification_capacity_reservation_target_details import SecurityHubAwsEc2LaunchTemplateDataCapacityReservationSpecificationCapacityReservationTargetDetails
+
+
+class SecurityHubAwsEc2LaunchTemplateDataCapacityReservationSpecificationDetails(BaseModel):
+    CapacityReservationPreference: StrictStr | None = None
+    CapacityReservationTarget: SecurityHubAwsEc2LaunchTemplateDataCapacityReservationSpecificationCapacityReservationTargetDetails | None = None

@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .quick_sight_default_section_based_layout_configuration import QuickSightDefaultSectionBasedLayoutConfiguration
+
+
+class QuickSightDefaultPaginatedLayoutConfiguration(BaseModel):
+    SectionBased: QuickSightDefaultSectionBasedLayoutConfiguration | None = None

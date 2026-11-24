@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .bedrock_automated_reasoning_policy_annotation import BedrockAutomatedReasoningPolicyAnnotation
+
+
+class BedrockAutomatedReasoningPolicyBuildWorkflowRepairContent(BaseModel):
+    annotations: list[BedrockAutomatedReasoningPolicyAnnotation]

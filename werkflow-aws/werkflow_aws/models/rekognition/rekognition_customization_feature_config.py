@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .rekognition_customization_feature_content_moderation_config import RekognitionCustomizationFeatureContentModerationConfig
+
+
+class RekognitionCustomizationFeatureConfig(BaseModel):
+    ContentModeration: RekognitionCustomizationFeatureContentModerationConfig | None = None

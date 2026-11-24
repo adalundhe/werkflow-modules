@@ -1,0 +1,11 @@
+from __future__ import annotations
+from pydantic import BaseModel, StrictStr
+from .security_hub_aws_s3_bucket_bucket_lifecycle_configuration_rules_filter_predicate_operands_details import SecurityHubAwsS3BucketBucketLifecycleConfigurationRulesFilterPredicateOperandsDetails
+from .security_hub_aws_s3_bucket_bucket_lifecycle_configuration_rules_filter_predicate_tag_details import SecurityHubAwsS3BucketBucketLifecycleConfigurationRulesFilterPredicateTagDetails
+
+
+class SecurityHubAwsS3BucketBucketLifecycleConfigurationRulesFilterPredicateDetails(BaseModel):
+    Operands: list[SecurityHubAwsS3BucketBucketLifecycleConfigurationRulesFilterPredicateOperandsDetails] | None = None
+    Prefix: StrictStr | None = None
+    Tag: SecurityHubAwsS3BucketBucketLifecycleConfigurationRulesFilterPredicateTagDetails | None = None
+    Type: StrictStr | None = None

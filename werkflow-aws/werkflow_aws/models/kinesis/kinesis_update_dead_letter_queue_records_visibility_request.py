@@ -1,0 +1,8 @@
+from __future__ import annotations
+from pydantic import BaseModel, StrictStr
+from .kinesis_update_dead_letter_queue_records_visibility_request_entry import KinesisUpdateDeadLetterQueueRecordsVisibilityRequestEntry
+
+
+class KinesisUpdateDeadLetterQueueRecordsVisibilityRequest(BaseModel):
+    QueueARN: StrictStr
+    Entries: list[KinesisUpdateDeadLetterQueueRecordsVisibilityRequestEntry]

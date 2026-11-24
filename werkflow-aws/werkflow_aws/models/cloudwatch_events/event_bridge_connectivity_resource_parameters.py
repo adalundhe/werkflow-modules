@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .event_bridge_connectivity_resource_configuration_arn import EventBridgeConnectivityResourceConfigurationArn
+
+
+class EventBridgeConnectivityResourceParameters(BaseModel):
+    ResourceParameters: EventBridgeConnectivityResourceConfigurationArn

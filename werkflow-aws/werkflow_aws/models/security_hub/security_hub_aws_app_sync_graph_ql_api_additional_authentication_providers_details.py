@@ -1,0 +1,12 @@
+from __future__ import annotations
+from pydantic import BaseModel, StrictStr
+from .security_hub_aws_app_sync_graph_ql_api_lambda_authorizer_config_details import SecurityHubAwsAppSyncGraphQlApiLambdaAuthorizerConfigDetails
+from .security_hub_aws_app_sync_graph_ql_api_open_id_connect_config_details import SecurityHubAwsAppSyncGraphQlApiOpenIdConnectConfigDetails
+from .security_hub_aws_app_sync_graph_ql_api_user_pool_config_details import SecurityHubAwsAppSyncGraphQlApiUserPoolConfigDetails
+
+
+class SecurityHubAwsAppSyncGraphQlApiAdditionalAuthenticationProvidersDetails(BaseModel):
+    AuthenticationType: StrictStr | None = None
+    LambdaAuthorizerConfig: SecurityHubAwsAppSyncGraphQlApiLambdaAuthorizerConfigDetails | None = None
+    OpenIdConnectConfig: SecurityHubAwsAppSyncGraphQlApiOpenIdConnectConfigDetails | None = None
+    UserPoolConfig: SecurityHubAwsAppSyncGraphQlApiUserPoolConfigDetails | None = None

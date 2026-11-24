@@ -1,0 +1,9 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .security_hub_aws_s3_bucket_website_configuration_routing_rule_condition import SecurityHubAwsS3BucketWebsiteConfigurationRoutingRuleCondition
+from .security_hub_aws_s3_bucket_website_configuration_routing_rule_redirect import SecurityHubAwsS3BucketWebsiteConfigurationRoutingRuleRedirect
+
+
+class SecurityHubAwsS3BucketWebsiteConfigurationRoutingRule(BaseModel):
+    Condition: SecurityHubAwsS3BucketWebsiteConfigurationRoutingRuleCondition | None = None
+    Redirect: SecurityHubAwsS3BucketWebsiteConfigurationRoutingRuleRedirect | None = None

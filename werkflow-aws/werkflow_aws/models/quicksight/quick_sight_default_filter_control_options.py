@@ -1,0 +1,23 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .quick_sight_default_date_time_picker_control_options import QuickSightDefaultDateTimePickerControlOptions
+from .quick_sight_default_filter_drop_down_control_options import QuickSightDefaultFilterDropDownControlOptions
+from .quick_sight_default_filter_list_control_options import QuickSightDefaultFilterListControlOptions
+from .quick_sight_default_hierarchy_filter_drop_down_control_options import QuickSightDefaultHierarchyFilterDropDownControlOptions
+from .quick_sight_default_hierarchy_filter_list_control_options import QuickSightDefaultHierarchyFilterListControlOptions
+from .quick_sight_default_relative_date_time_control_options import QuickSightDefaultRelativeDateTimeControlOptions
+from .quick_sight_default_slider_control_options import QuickSightDefaultSliderControlOptions
+from .quick_sight_default_text_area_control_options import QuickSightDefaultTextAreaControlOptions
+from .quick_sight_default_text_field_control_options import QuickSightDefaultTextFieldControlOptions
+
+
+class QuickSightDefaultFilterControlOptions(BaseModel):
+    DefaultDateTimePickerOptions: QuickSightDefaultDateTimePickerControlOptions | None = None
+    DefaultListOptions: QuickSightDefaultFilterListControlOptions | None = None
+    DefaultDropdownOptions: QuickSightDefaultFilterDropDownControlOptions | None = None
+    DefaultTextFieldOptions: QuickSightDefaultTextFieldControlOptions | None = None
+    DefaultTextAreaOptions: QuickSightDefaultTextAreaControlOptions | None = None
+    DefaultSliderOptions: QuickSightDefaultSliderControlOptions | None = None
+    DefaultRelativeDateTimeOptions: QuickSightDefaultRelativeDateTimeControlOptions | None = None
+    DefaultHierarchyList: QuickSightDefaultHierarchyFilterListControlOptions | None = None
+    DefaultHierarchyDropdown: QuickSightDefaultHierarchyFilterDropDownControlOptions | None = None

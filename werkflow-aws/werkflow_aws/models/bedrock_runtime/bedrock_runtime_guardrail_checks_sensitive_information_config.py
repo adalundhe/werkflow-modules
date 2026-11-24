@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .bedrock_runtime_guardrail_checks_sensitive_information_entity_config import BedrockRuntimeGuardrailChecksSensitiveInformationEntityConfig
+
+
+class BedrockRuntimeGuardrailChecksSensitiveInformationConfig(BaseModel):
+    entities: list[BedrockRuntimeGuardrailChecksSensitiveInformationEntityConfig]

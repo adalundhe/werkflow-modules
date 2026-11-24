@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .security_hub_aws_athena_work_group_configuration_result_configuration_details import SecurityHubAwsAthenaWorkGroupConfigurationResultConfigurationDetails
+
+
+class SecurityHubAwsAthenaWorkGroupConfigurationDetails(BaseModel):
+    ResultConfiguration: SecurityHubAwsAthenaWorkGroupConfigurationResultConfigurationDetails | None = None

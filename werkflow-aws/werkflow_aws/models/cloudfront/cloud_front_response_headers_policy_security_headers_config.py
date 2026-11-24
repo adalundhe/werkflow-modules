@@ -1,0 +1,17 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .cloud_front_response_headers_policy_content_security_policy import CloudFrontResponseHeadersPolicyContentSecurityPolicy
+from .cloud_front_response_headers_policy_content_type_options import CloudFrontResponseHeadersPolicyContentTypeOptions
+from .cloud_front_response_headers_policy_frame_options import CloudFrontResponseHeadersPolicyFrameOptions
+from .cloud_front_response_headers_policy_referrer_policy import CloudFrontResponseHeadersPolicyReferrerPolicy
+from .cloud_front_response_headers_policy_strict_transport_security import CloudFrontResponseHeadersPolicyStrictTransportSecurity
+from .cloud_front_response_headers_policy_xss_protection import CloudFrontResponseHeadersPolicyXSSProtection
+
+
+class CloudFrontResponseHeadersPolicySecurityHeadersConfig(BaseModel):
+    XSSProtection: CloudFrontResponseHeadersPolicyXSSProtection | None = None
+    FrameOptions: CloudFrontResponseHeadersPolicyFrameOptions | None = None
+    ReferrerPolicy: CloudFrontResponseHeadersPolicyReferrerPolicy | None = None
+    ContentSecurityPolicy: CloudFrontResponseHeadersPolicyContentSecurityPolicy | None = None
+    ContentTypeOptions: CloudFrontResponseHeadersPolicyContentTypeOptions | None = None
+    StrictTransportSecurity: CloudFrontResponseHeadersPolicyStrictTransportSecurity | None = None

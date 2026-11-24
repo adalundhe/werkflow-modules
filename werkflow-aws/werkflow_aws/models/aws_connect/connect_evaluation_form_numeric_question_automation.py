@@ -1,0 +1,9 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .connect_evaluation_form_question_automation_answer_source import ConnectEvaluationFormQuestionAutomationAnswerSource
+from .connect_numeric_question_property_value_automation import ConnectNumericQuestionPropertyValueAutomation
+
+
+class ConnectEvaluationFormNumericQuestionAutomation(BaseModel):
+    PropertyValue: ConnectNumericQuestionPropertyValueAutomation | None = None
+    AnswerSource: ConnectEvaluationFormQuestionAutomationAnswerSource | None = None

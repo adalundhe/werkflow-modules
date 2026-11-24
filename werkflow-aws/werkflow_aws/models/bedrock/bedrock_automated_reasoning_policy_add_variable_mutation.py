@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .bedrock_automated_reasoning_policy_definition_variable import BedrockAutomatedReasoningPolicyDefinitionVariable
+
+
+class BedrockAutomatedReasoningPolicyAddVariableMutation(BaseModel):
+    variable: BedrockAutomatedReasoningPolicyDefinitionVariable | None = None

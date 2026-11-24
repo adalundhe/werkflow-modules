@@ -1,0 +1,13 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .bedrock_automated_reasoning_policy_build_workflow_document import BedrockAutomatedReasoningPolicyBuildWorkflowDocument
+from .bedrock_automated_reasoning_policy_build_workflow_repair_content import BedrockAutomatedReasoningPolicyBuildWorkflowRepairContent
+from .bedrock_automated_reasoning_policy_generate_fidelity_report_content import BedrockAutomatedReasoningPolicyGenerateFidelityReportContent
+from .bedrock_automated_reasoning_policy_iterative_refinement_content import BedrockAutomatedReasoningPolicyIterativeRefinementContent
+
+
+class BedrockAutomatedReasoningPolicyWorkflowTypeContent(BaseModel):
+    documents: list[BedrockAutomatedReasoningPolicyBuildWorkflowDocument] | None = None
+    policyRepairAssets: BedrockAutomatedReasoningPolicyBuildWorkflowRepairContent | None = None
+    generateFidelityReportContent: BedrockAutomatedReasoningPolicyGenerateFidelityReportContent | None = None
+    iterativeRefinementContent: BedrockAutomatedReasoningPolicyIterativeRefinementContent | None = None

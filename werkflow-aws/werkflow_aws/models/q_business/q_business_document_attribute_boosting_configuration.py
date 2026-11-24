@@ -1,0 +1,13 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .q_business_date_attribute_boosting_configuration import QBusinessDateAttributeBoostingConfiguration
+from .q_business_number_attribute_boosting_configuration import QBusinessNumberAttributeBoostingConfiguration
+from .q_business_string_attribute_boosting_configuration import QBusinessStringAttributeBoostingConfiguration
+from .q_business_string_list_attribute_boosting_configuration import QBusinessStringListAttributeBoostingConfiguration
+
+
+class QBusinessDocumentAttributeBoostingConfiguration(BaseModel):
+    numberConfiguration: QBusinessNumberAttributeBoostingConfiguration | None = None
+    stringConfiguration: QBusinessStringAttributeBoostingConfiguration | None = None
+    dateConfiguration: QBusinessDateAttributeBoostingConfiguration | None = None
+    stringListConfiguration: QBusinessStringListAttributeBoostingConfiguration | None = None

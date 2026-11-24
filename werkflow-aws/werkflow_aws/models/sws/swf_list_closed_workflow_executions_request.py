@@ -1,0 +1,20 @@
+from __future__ import annotations
+from pydantic import BaseModel, StrictBool, StrictInt, StrictStr
+from .swf_close_status_filter import SWFCloseStatusFilter
+from .swf_execution_time_filter import SWFExecutionTimeFilter
+from .swf_tag_filter import SWFTagFilter
+from .swf_workflow_execution_filter import SWFWorkflowExecutionFilter
+from .swf_workflow_type_filter import SWFWorkflowTypeFilter
+
+
+class SWFListClosedWorkflowExecutionsRequest(BaseModel):
+    domain: StrictStr
+    startTimeFilter: SWFExecutionTimeFilter | None = None
+    closeTimeFilter: SWFExecutionTimeFilter | None = None
+    executionFilter: SWFWorkflowExecutionFilter | None = None
+    closeStatusFilter: SWFCloseStatusFilter | None = None
+    typeFilter: SWFWorkflowTypeFilter | None = None
+    tagFilter: SWFTagFilter | None = None
+    nextPageToken: StrictStr | None = None
+    maximumPageSize: StrictInt | None = None
+    reverseOrder: StrictBool | None = None

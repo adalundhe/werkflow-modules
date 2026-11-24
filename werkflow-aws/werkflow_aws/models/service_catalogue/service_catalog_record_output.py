@@ -1,0 +1,8 @@
+from __future__ import annotations
+from pydantic import BaseModel, StrictStr
+
+
+class ServiceCatalogRecordOutput(BaseModel):
+    OutputKey: StrictStr | None = None
+    OutputValue: StrictStr | None = None
+    Description: StrictStr | None = None

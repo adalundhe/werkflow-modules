@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .guard_duty_organization_kubernetes_audit_logs_configuration_result import GuardDutyOrganizationKubernetesAuditLogsConfigurationResult
+
+
+class GuardDutyOrganizationKubernetesConfigurationResult(BaseModel):
+    AuditLogs: GuardDutyOrganizationKubernetesAuditLogsConfigurationResult | None = None

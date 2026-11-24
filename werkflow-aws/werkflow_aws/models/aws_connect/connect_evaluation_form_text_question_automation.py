@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .connect_evaluation_form_question_automation_answer_source import ConnectEvaluationFormQuestionAutomationAnswerSource
+
+
+class ConnectEvaluationFormTextQuestionAutomation(BaseModel):
+    AnswerSource: ConnectEvaluationFormQuestionAutomationAnswerSource | None = None

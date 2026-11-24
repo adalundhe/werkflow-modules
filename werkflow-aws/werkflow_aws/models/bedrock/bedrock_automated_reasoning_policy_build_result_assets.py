@@ -1,0 +1,21 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .bedrock_automated_reasoning_policy_build_log import BedrockAutomatedReasoningPolicyBuildLog
+from .bedrock_automated_reasoning_policy_build_result_asset_manifest import BedrockAutomatedReasoningPolicyBuildResultAssetManifest
+from .bedrock_automated_reasoning_policy_definition import BedrockAutomatedReasoningPolicyDefinition
+from .bedrock_automated_reasoning_policy_definition_quality_report import BedrockAutomatedReasoningPolicyDefinitionQualityReport
+from .bedrock_automated_reasoning_policy_fidelity_report import BedrockAutomatedReasoningPolicyFidelityReport
+from .bedrock_automated_reasoning_policy_generated_test_cases import BedrockAutomatedReasoningPolicyGeneratedTestCases
+from .bedrock_automated_reasoning_policy_scenarios import BedrockAutomatedReasoningPolicyScenarios
+from .bedrock_automated_reasoning_policy_source_document import BedrockAutomatedReasoningPolicySourceDocument
+
+
+class BedrockAutomatedReasoningPolicyBuildResultAssets(BaseModel):
+    policyDefinition: BedrockAutomatedReasoningPolicyDefinition | None = None
+    qualityReport: BedrockAutomatedReasoningPolicyDefinitionQualityReport | None = None
+    buildLog: BedrockAutomatedReasoningPolicyBuildLog | None = None
+    generatedTestCases: BedrockAutomatedReasoningPolicyGeneratedTestCases | None = None
+    policyScenarios: BedrockAutomatedReasoningPolicyScenarios | None = None
+    assetManifest: BedrockAutomatedReasoningPolicyBuildResultAssetManifest | None = None
+    document: BedrockAutomatedReasoningPolicySourceDocument | None = None
+    fidelityReport: BedrockAutomatedReasoningPolicyFidelityReport | None = None

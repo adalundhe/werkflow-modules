@@ -1,0 +1,9 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .kinesis_analytics_application_restore_configuration import KinesisAnalyticsApplicationRestoreConfiguration
+from .kinesis_analytics_flink_run_configuration import KinesisAnalyticsFlinkRunConfiguration
+
+
+class KinesisAnalyticsRunConfigurationUpdate(BaseModel):
+    FlinkRunConfiguration: KinesisAnalyticsFlinkRunConfiguration | None = None
+    ApplicationRestoreConfiguration: KinesisAnalyticsApplicationRestoreConfiguration | None = None

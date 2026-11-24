@@ -1,0 +1,13 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .bedrock_runtime_guardrail_automated_reasoning_logic_warning import BedrockRuntimeGuardrailAutomatedReasoningLogicWarning
+from .bedrock_runtime_guardrail_automated_reasoning_rule import BedrockRuntimeGuardrailAutomatedReasoningRule
+from .bedrock_runtime_guardrail_automated_reasoning_scenario import BedrockRuntimeGuardrailAutomatedReasoningScenario
+from .bedrock_runtime_guardrail_automated_reasoning_translation import BedrockRuntimeGuardrailAutomatedReasoningTranslation
+
+
+class BedrockRuntimeGuardrailAutomatedReasoningValidFinding(BaseModel):
+    translation: BedrockRuntimeGuardrailAutomatedReasoningTranslation | None = None
+    claimsTrueScenario: BedrockRuntimeGuardrailAutomatedReasoningScenario | None = None
+    supportingRules: list[BedrockRuntimeGuardrailAutomatedReasoningRule] | None = None
+    logicWarning: BedrockRuntimeGuardrailAutomatedReasoningLogicWarning | None = None

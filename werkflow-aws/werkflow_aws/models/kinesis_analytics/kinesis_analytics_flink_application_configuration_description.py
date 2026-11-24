@@ -1,0 +1,12 @@
+from __future__ import annotations
+from pydantic import BaseModel, StrictStr
+from .kinesis_analytics_checkpoint_configuration_description import KinesisAnalyticsCheckpointConfigurationDescription
+from .kinesis_analytics_monitoring_configuration_description import KinesisAnalyticsMonitoringConfigurationDescription
+from .kinesis_analytics_parallelism_configuration_description import KinesisAnalyticsParallelismConfigurationDescription
+
+
+class KinesisAnalyticsFlinkApplicationConfigurationDescription(BaseModel):
+    CheckpointConfigurationDescription: KinesisAnalyticsCheckpointConfigurationDescription | None = None
+    MonitoringConfigurationDescription: KinesisAnalyticsMonitoringConfigurationDescription | None = None
+    ParallelismConfigurationDescription: KinesisAnalyticsParallelismConfigurationDescription | None = None
+    JobPlanDescription: StrictStr | None = None

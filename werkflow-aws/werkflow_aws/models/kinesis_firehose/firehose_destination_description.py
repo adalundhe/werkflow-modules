@@ -1,0 +1,26 @@
+from __future__ import annotations
+from pydantic import BaseModel, StrictStr
+from .firehose_amazon_open_search_serverless_destination_description import FirehoseAmazonOpenSearchServerlessDestinationDescription
+from .firehose_amazonopensearchservice_destination_description import FirehoseAmazonopensearchserviceDestinationDescription
+from .firehose_elasticsearch_destination_description import FirehoseElasticsearchDestinationDescription
+from .firehose_extended_s3_destination_description import FirehoseExtendedS3DestinationDescription
+from .firehose_http_endpoint_destination_description import FirehoseHttpEndpointDestinationDescription
+from .firehose_iceberg_destination_description import FirehoseIcebergDestinationDescription
+from .firehose_redshift_destination_description import FirehoseRedshiftDestinationDescription
+from .firehose_s3_destination_description import FirehoseS3DestinationDescription
+from .firehose_snowflake_destination_description import FirehoseSnowflakeDestinationDescription
+from .firehose_splunk_destination_description import FirehoseSplunkDestinationDescription
+
+
+class FirehoseDestinationDescription(BaseModel):
+    DestinationId: StrictStr | None = None
+    S3DestinationDescription: FirehoseS3DestinationDescription | None = None
+    ExtendedS3DestinationDescription: FirehoseExtendedS3DestinationDescription | None = None
+    RedshiftDestinationDescription: FirehoseRedshiftDestinationDescription | None = None
+    ElasticsearchDestinationDescription: FirehoseElasticsearchDestinationDescription | None = None
+    AmazonopensearchserviceDestinationDescription: FirehoseAmazonopensearchserviceDestinationDescription | None = None
+    SplunkDestinationDescription: FirehoseSplunkDestinationDescription | None = None
+    HttpEndpointDestinationDescription: FirehoseHttpEndpointDestinationDescription | None = None
+    SnowflakeDestinationDescription: FirehoseSnowflakeDestinationDescription | None = None
+    AmazonOpenSearchServerlessDestinationDescription: FirehoseAmazonOpenSearchServerlessDestinationDescription | None = None
+    IcebergDestinationDescription: FirehoseIcebergDestinationDescription | None = None

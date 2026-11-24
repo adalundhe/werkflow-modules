@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .bedrock_automated_reasoning_policy_build_result_asset_manifest_entry import BedrockAutomatedReasoningPolicyBuildResultAssetManifestEntry
+
+
+class BedrockAutomatedReasoningPolicyBuildResultAssetManifest(BaseModel):
+    entries: list[BedrockAutomatedReasoningPolicyBuildResultAssetManifestEntry] | None = None

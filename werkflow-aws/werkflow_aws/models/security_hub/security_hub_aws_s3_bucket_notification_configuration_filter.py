@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .security_hub_aws_s3_bucket_notification_configuration_s3_key_filter import SecurityHubAwsS3BucketNotificationConfigurationS3KeyFilter
+
+
+class SecurityHubAwsS3BucketNotificationConfigurationFilter(BaseModel):
+    S3KeyFilter: SecurityHubAwsS3BucketNotificationConfigurationS3KeyFilter | None = None

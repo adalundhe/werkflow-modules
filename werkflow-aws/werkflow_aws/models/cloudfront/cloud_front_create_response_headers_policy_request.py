@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .cloud_front_response_headers_policy_config import CloudFrontResponseHeadersPolicyConfig
+
+
+class CloudFrontCreateResponseHeadersPolicyRequest(BaseModel):
+    ResponseHeadersPolicyConfig: CloudFrontResponseHeadersPolicyConfig

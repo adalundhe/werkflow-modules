@@ -1,0 +1,9 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .security_hub_aws_iam_access_key_session_context_attributes import SecurityHubAwsIamAccessKeySessionContextAttributes
+from .security_hub_aws_iam_access_key_session_context_session_issuer import SecurityHubAwsIamAccessKeySessionContextSessionIssuer
+
+
+class SecurityHubAwsIamAccessKeySessionContext(BaseModel):
+    Attributes: SecurityHubAwsIamAccessKeySessionContextAttributes | None = None
+    SessionIssuer: SecurityHubAwsIamAccessKeySessionContextSessionIssuer | None = None

@@ -1,0 +1,9 @@
+from __future__ import annotations
+from typing import Any
+from pydantic import BaseModel
+from .memory_db_tag import MemoryDBTag
+
+
+class MemoryDBTagResourceResponse(BaseModel):
+    TagList: list[MemoryDBTag] | None = None
+    ResponseMetadata: dict[str, Any] | None = None

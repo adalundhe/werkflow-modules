@@ -1,0 +1,9 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .verified_permissions_open_id_connect_access_token_configuration_detail import VerifiedPermissionsOpenIdConnectAccessTokenConfigurationDetail
+from .verified_permissions_open_id_connect_identity_token_configuration_detail import VerifiedPermissionsOpenIdConnectIdentityTokenConfigurationDetail
+
+
+class VerifiedPermissionsOpenIdConnectTokenSelectionDetail(BaseModel):
+    accessTokenOnly: VerifiedPermissionsOpenIdConnectAccessTokenConfigurationDetail | None = None
+    identityTokenOnly: VerifiedPermissionsOpenIdConnectIdentityTokenConfigurationDetail | None = None

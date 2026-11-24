@@ -1895,4 +1895,15 @@ from .sage_maker_workspace_settings import SageMakerWorkspaceSettings as SageMak
 from .sage_maker_workteam import SageMakerWorkteam as SageMakerWorkteam
 
 _NAMESPACE = dict(globals())
-SageMakerSearchExpression.model_rebuild(_types_namespace=_NAMESPACE)
+for _ in range(4):
+    _pending = [
+        _sym
+        for _sym in _NAMESPACE.values()
+        if isinstance(_sym, type)
+        and hasattr(_sym, "model_rebuild")
+        and not getattr(_sym, "__pydantic_complete__", True)
+    ]
+    if not _pending:
+        break
+    for _sym in _pending:
+        _sym.model_rebuild(_types_namespace=_NAMESPACE)

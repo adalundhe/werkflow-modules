@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .security_hub_aws_s3_bucket_server_side_encryption_by_default import SecurityHubAwsS3BucketServerSideEncryptionByDefault
+
+
+class SecurityHubAwsS3BucketServerSideEncryptionRule(BaseModel):
+    ApplyServerSideEncryptionByDefault: SecurityHubAwsS3BucketServerSideEncryptionByDefault | None = None

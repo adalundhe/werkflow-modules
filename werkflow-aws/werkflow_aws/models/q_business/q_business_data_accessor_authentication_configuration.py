@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .q_business_data_accessor_idc_trusted_token_issuer_configuration import QBusinessDataAccessorIdcTrustedTokenIssuerConfiguration
+
+
+class QBusinessDataAccessorAuthenticationConfiguration(BaseModel):
+    idcTrustedTokenIssuerConfiguration: QBusinessDataAccessorIdcTrustedTokenIssuerConfiguration | None = None

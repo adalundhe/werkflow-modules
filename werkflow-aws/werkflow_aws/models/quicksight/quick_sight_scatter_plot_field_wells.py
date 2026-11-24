@@ -1,0 +1,9 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .quick_sight_scatter_plot_categorically_aggregated_field_wells import QuickSightScatterPlotCategoricallyAggregatedFieldWells
+from .quick_sight_scatter_plot_unaggregated_field_wells import QuickSightScatterPlotUnaggregatedFieldWells
+
+
+class QuickSightScatterPlotFieldWells(BaseModel):
+    ScatterPlotCategoricallyAggregatedFieldWells: QuickSightScatterPlotCategoricallyAggregatedFieldWells | None = None
+    ScatterPlotUnaggregatedFieldWells: QuickSightScatterPlotUnaggregatedFieldWells | None = None

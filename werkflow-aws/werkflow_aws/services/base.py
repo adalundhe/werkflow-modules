@@ -104,7 +104,7 @@ class AWSBaseService(Generic[ClientT]):
         response_model: type[ResponseT],
     ) -> ResponseT:
         loop = self._get_loop()
-        dumped = request.model_dump(exclude_none=True) if request is not None else {}
+        dumped = request.model_dump(by_alias=True, exclude_none=True) if request is not None else {}
         response = await loop.run_in_executor(
             self._executor,
             functools.partial(method, **dumped),
@@ -117,7 +117,7 @@ class AWSBaseService(Generic[ClientT]):
         request: BaseModel | None = None,
     ) -> Any:
         loop = self._get_loop()
-        dumped = request.model_dump(exclude_none=True) if request is not None else {}
+        dumped = request.model_dump(by_alias=True, exclude_none=True) if request is not None else {}
         return await loop.run_in_executor(
             self._executor,
             functools.partial(method, **dumped),
@@ -131,7 +131,7 @@ class AWSBaseService(Generic[ClientT]):
     ) -> list[ResponseT]:
         client: Any = self._require_client()
         loop = self._get_loop()
-        dumped = request.model_dump(exclude_none=True) if request is not None else {}
+        dumped = request.model_dump(by_alias=True, exclude_none=True) if request is not None else {}
 
         paginator = await loop.run_in_executor(
             self._executor,

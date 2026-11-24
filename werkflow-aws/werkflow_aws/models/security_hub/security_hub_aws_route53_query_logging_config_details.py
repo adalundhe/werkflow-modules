@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .security_hub_cloud_watch_logs_log_group_arn_config_details import SecurityHubCloudWatchLogsLogGroupArnConfigDetails
+
+
+class SecurityHubAwsRoute53QueryLoggingConfigDetails(BaseModel):
+    CloudWatchLogsLogGroupArn: SecurityHubCloudWatchLogsLogGroupArnConfigDetails | None = None

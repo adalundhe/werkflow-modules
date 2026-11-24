@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .quick_sight_free_form_layout_screen_canvas_size_options import QuickSightFreeFormLayoutScreenCanvasSizeOptions
+
+
+class QuickSightFreeFormLayoutCanvasSizeOptions(BaseModel):
+    ScreenCanvasSizeOptions: QuickSightFreeFormLayoutScreenCanvasSizeOptions | None = None

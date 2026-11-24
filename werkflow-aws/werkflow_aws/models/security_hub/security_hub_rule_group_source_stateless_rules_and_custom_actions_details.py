@@ -1,0 +1,9 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .security_hub_rule_group_source_custom_actions_details import SecurityHubRuleGroupSourceCustomActionsDetails
+from .security_hub_rule_group_source_stateless_rules_details import SecurityHubRuleGroupSourceStatelessRulesDetails
+
+
+class SecurityHubRuleGroupSourceStatelessRulesAndCustomActionsDetails(BaseModel):
+    CustomActions: list[SecurityHubRuleGroupSourceCustomActionsDetails] | None = None
+    StatelessRules: list[SecurityHubRuleGroupSourceStatelessRulesDetails] | None = None

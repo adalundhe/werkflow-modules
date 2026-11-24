@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .verified_permissions_batch_get_policy_input_item import VerifiedPermissionsBatchGetPolicyInputItem
+
+
+class VerifiedPermissionsBatchGetPolicyRequest(BaseModel):
+    requests: list[VerifiedPermissionsBatchGetPolicyInputItem]

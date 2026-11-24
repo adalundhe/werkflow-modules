@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel, StrictStr
+
+
+class CodePipelineEncryptionKey(BaseModel):
+    id: StrictStr | None = None
+    type: StrictStr | None = None

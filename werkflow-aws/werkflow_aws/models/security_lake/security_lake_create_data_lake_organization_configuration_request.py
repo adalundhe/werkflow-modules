@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .security_lake_data_lake_auto_enable_new_account_configuration import SecurityLakeDataLakeAutoEnableNewAccountConfiguration
+
+
+class SecurityLakeCreateDataLakeOrganizationConfigurationRequest(BaseModel):
+    autoEnableNewAccount: list[SecurityLakeDataLakeAutoEnableNewAccountConfiguration] | None = None

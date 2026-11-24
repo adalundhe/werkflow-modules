@@ -1,0 +1,8 @@
+from __future__ import annotations
+from pydantic import BaseModel, StrictStr
+from .auto_scaling_scheduled_update_group_action_request import AutoScalingScheduledUpdateGroupActionRequest
+
+
+class AutoScalingBatchPutScheduledUpdateGroupActionRequest(BaseModel):
+    AutoScalingGroupName: StrictStr
+    ScheduledUpdateGroupActions: list[AutoScalingScheduledUpdateGroupActionRequest]

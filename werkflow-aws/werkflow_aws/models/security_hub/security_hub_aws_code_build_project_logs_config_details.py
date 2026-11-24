@@ -1,0 +1,9 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .security_hub_aws_code_build_project_logs_config_cloud_watch_logs_details import SecurityHubAwsCodeBuildProjectLogsConfigCloudWatchLogsDetails
+from .security_hub_aws_code_build_project_logs_config_s3_logs_details import SecurityHubAwsCodeBuildProjectLogsConfigS3LogsDetails
+
+
+class SecurityHubAwsCodeBuildProjectLogsConfigDetails(BaseModel):
+    CloudWatchLogs: SecurityHubAwsCodeBuildProjectLogsConfigCloudWatchLogsDetails | None = None
+    S3Logs: SecurityHubAwsCodeBuildProjectLogsConfigS3LogsDetails | None = None

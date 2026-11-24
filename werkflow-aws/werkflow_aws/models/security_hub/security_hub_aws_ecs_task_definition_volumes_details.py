@@ -1,0 +1,12 @@
+from __future__ import annotations
+from pydantic import BaseModel, StrictStr
+from .security_hub_aws_ecs_task_definition_volumes_docker_volume_configuration_details import SecurityHubAwsEcsTaskDefinitionVolumesDockerVolumeConfigurationDetails
+from .security_hub_aws_ecs_task_definition_volumes_efs_volume_configuration_details import SecurityHubAwsEcsTaskDefinitionVolumesEfsVolumeConfigurationDetails
+from .security_hub_aws_ecs_task_definition_volumes_host_details import SecurityHubAwsEcsTaskDefinitionVolumesHostDetails
+
+
+class SecurityHubAwsEcsTaskDefinitionVolumesDetails(BaseModel):
+    DockerVolumeConfiguration: SecurityHubAwsEcsTaskDefinitionVolumesDockerVolumeConfigurationDetails | None = None
+    EfsVolumeConfiguration: SecurityHubAwsEcsTaskDefinitionVolumesEfsVolumeConfigurationDetails | None = None
+    Host: SecurityHubAwsEcsTaskDefinitionVolumesHostDetails | None = None
+    Name: StrictStr | None = None

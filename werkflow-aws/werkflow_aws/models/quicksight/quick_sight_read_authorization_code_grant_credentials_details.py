@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .quick_sight_read_authorization_code_grant_details import QuickSightReadAuthorizationCodeGrantDetails
+
+
+class QuickSightReadAuthorizationCodeGrantCredentialsDetails(BaseModel):
+    ReadAuthorizationCodeGrantDetails: QuickSightReadAuthorizationCodeGrantDetails | None = None

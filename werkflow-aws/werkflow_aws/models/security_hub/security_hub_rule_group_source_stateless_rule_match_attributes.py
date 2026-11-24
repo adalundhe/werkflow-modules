@@ -1,0 +1,16 @@
+from __future__ import annotations
+from pydantic import BaseModel, StrictInt
+from .security_hub_rule_group_source_stateless_rule_match_attributes_destination_ports import SecurityHubRuleGroupSourceStatelessRuleMatchAttributesDestinationPorts
+from .security_hub_rule_group_source_stateless_rule_match_attributes_destinations import SecurityHubRuleGroupSourceStatelessRuleMatchAttributesDestinations
+from .security_hub_rule_group_source_stateless_rule_match_attributes_source_ports import SecurityHubRuleGroupSourceStatelessRuleMatchAttributesSourcePorts
+from .security_hub_rule_group_source_stateless_rule_match_attributes_sources import SecurityHubRuleGroupSourceStatelessRuleMatchAttributesSources
+from .security_hub_rule_group_source_stateless_rule_match_attributes_tcp_flags import SecurityHubRuleGroupSourceStatelessRuleMatchAttributesTcpFlags
+
+
+class SecurityHubRuleGroupSourceStatelessRuleMatchAttributes(BaseModel):
+    DestinationPorts: list[SecurityHubRuleGroupSourceStatelessRuleMatchAttributesDestinationPorts] | None = None
+    Destinations: list[SecurityHubRuleGroupSourceStatelessRuleMatchAttributesDestinations] | None = None
+    Protocols: list[StrictInt] | None = None
+    SourcePorts: list[SecurityHubRuleGroupSourceStatelessRuleMatchAttributesSourcePorts] | None = None
+    Sources: list[SecurityHubRuleGroupSourceStatelessRuleMatchAttributesSources] | None = None
+    TcpFlags: list[SecurityHubRuleGroupSourceStatelessRuleMatchAttributesTcpFlags] | None = None

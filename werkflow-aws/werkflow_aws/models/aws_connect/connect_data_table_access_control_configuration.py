@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .connect_primary_attribute_access_control_configuration_item import ConnectPrimaryAttributeAccessControlConfigurationItem
+
+
+class ConnectDataTableAccessControlConfiguration(BaseModel):
+    PrimaryAttributeAccessControlConfiguration: ConnectPrimaryAttributeAccessControlConfigurationItem | None = None

@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .security_hub_aws_wafv2_web_acl_captcha_config_immunity_time_property_details import SecurityHubAwsWafv2WebAclCaptchaConfigImmunityTimePropertyDetails
+
+
+class SecurityHubAwsWafv2WebAclCaptchaConfigDetails(BaseModel):
+    ImmunityTimeProperty: SecurityHubAwsWafv2WebAclCaptchaConfigImmunityTimePropertyDetails | None = None

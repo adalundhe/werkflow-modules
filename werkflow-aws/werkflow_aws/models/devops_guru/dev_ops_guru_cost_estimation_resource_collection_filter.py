@@ -1,0 +1,9 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .dev_ops_guru_cloud_formation_cost_estimation_resource_collection_filter import DevOpsGuruCloudFormationCostEstimationResourceCollectionFilter
+from .dev_ops_guru_tag_cost_estimation_resource_collection_filter import DevOpsGuruTagCostEstimationResourceCollectionFilter
+
+
+class DevOpsGuruCostEstimationResourceCollectionFilter(BaseModel):
+    CloudFormation: DevOpsGuruCloudFormationCostEstimationResourceCollectionFilter | None = None
+    Tags: list[DevOpsGuruTagCostEstimationResourceCollectionFilter] | None = None

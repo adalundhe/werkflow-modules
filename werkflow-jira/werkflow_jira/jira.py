@@ -1,7 +1,10 @@
+from __future__ import annotations
+
 import asyncio
 import datetime
+import importlib
 import re
-from typing import Any, Dict, List, Tuple, Type
+from typing import TYPE_CHECKING, Any, Dict, List, Tuple, Type
 
 from werkflow_core import Module
 from werkflow_http import HTTP
@@ -44,14 +47,125 @@ from .models.responses.jira import JiraIssuePriority as JiraIssuePriorityRespons
 from .models.responses.jira import JiraIssueType as JiraIssueTypeResponse
 
 
+if TYPE_CHECKING:
+    from .services.agents import AgentsService
+    from .services.announcement_banner import AnnouncementBannerService
+    from .services.app_data_policies import AppDataPoliciesService
+    from .services.app_migration import AppMigrationService
+    from .services.app_properties import AppPropertiesService
+    from .services.application_roles import ApplicationRolesService
+    from .services.audit_records import AuditRecordsService
+    from .services.avatars import AvatarsService
+    from .services.classification_levels import ClassificationLevelsService
+    from .services.connect_to_forge_migration import ConnectToForgeMigrationService
+    from .services.dashboards import DashboardsService
+    from .services.dynamic_modules import DynamicModulesService
+    from .services.field_schemes import FieldSchemesService
+    from .services.filter_sharing import FilterSharingService
+    from .services.filters import FiltersService
+    from .services.group_and_user_picker import GroupAndUserPickerService
+    from .services.groups import GroupsService
+    from .services.issue_attachments import IssueAttachmentsService
+    from .services.issue_bulk_operations import IssueBulkOperationsService
+    from .services.issue_comment_properties import IssueCommentPropertiesService
+    from .services.issue_comments import IssueCommentsService
+    from .services.issue_custom_field_associations import IssueCustomFieldAssociationsService
+    from .services.issue_custom_field_configuration_apps import IssueCustomFieldConfigurationAppsService
+    from .services.issue_custom_field_contexts import IssueCustomFieldContextsService
+    from .services.issue_custom_field_options import IssueCustomFieldOptionsService
+    from .services.issue_custom_field_options_apps import IssueCustomFieldOptionsAppsService
+    from .services.issue_custom_field_values_apps import IssueCustomFieldValuesAppsService
+    from .services.issue_field_configurations import IssueFieldConfigurationsService
+    from .services.issue_fields import IssueFieldsService
+    from .services.issue_link_types import IssueLinkTypesService
+    from .services.issue_links import IssueLinksService
+    from .services.issue_navigator_settings import IssueNavigatorSettingsService
+    from .services.issue_notification_schemes import IssueNotificationSchemesService
+    from .services.issue_panels import IssuePanelsService
+    from .services.issue_priorities import IssuePrioritiesService
+    from .services.issue_properties import IssuePropertiesService
+    from .services.issue_redaction import IssueRedactionService
+    from .services.issue_remote_links import IssueRemoteLinksService
+    from .services.issue_resolutions import IssueResolutionsService
+    from .services.issue_search import IssueSearchService
+    from .services.issue_security_level import IssueSecurityLevelService
+    from .services.issue_security_schemes import IssueSecuritySchemesService
+    from .services.issue_type_properties import IssueTypePropertiesService
+    from .services.issue_type_schemes import IssueTypeSchemesService
+    from .services.issue_type_screen_schemes import IssueTypeScreenSchemesService
+    from .services.issue_types import IssueTypesService
+    from .services.issue_votes import IssueVotesService
+    from .services.issue_watchers import IssueWatchersService
+    from .services.issue_worklog_properties import IssueWorklogPropertiesService
+    from .services.issue_worklogs import IssueWorklogsService
+    from .services.issues import IssuesService
+    from .services.jira_expressions import JiraExpressionsService
+    from .services.jira_settings import JiraSettingsService
+    from .services.jql import JQLService
+    from .services.jql_functions_apps import JQLFunctionsAppsService
+    from .services.labels import LabelsService
+    from .services.license_metrics import LicenseMetricsService
+    from .services.myself import MyselfService
+    from .services.permission_schemes import PermissionSchemesService
+    from .services.permissions import PermissionsService
+    from .services.plans import PlansService
+    from .services.policies import PoliciesService
+    from .services.priority_schemes import PrioritySchemesService
+    from .services.project_avatars import ProjectAvatarsService
+    from .services.project_categories import ProjectCategoriesService
+    from .services.project_classification_levels import ProjectClassificationLevelsService
+    from .services.project_components import ProjectComponentsService
+    from .services.project_email import ProjectEmailService
+    from .services.project_features import ProjectFeaturesService
+    from .services.project_key_and_name_validation import ProjectKeyAndNameValidationService
+    from .services.project_permission_schemes import ProjectPermissionSchemesService
+    from .services.project_properties import ProjectPropertiesService
+    from .services.project_role_actors import ProjectRoleActorsService
+    from .services.project_roles import ProjectRolesService
+    from .services.project_templates import ProjectTemplatesService
+    from .services.project_types import ProjectTypesService
+    from .services.project_versions import ProjectVersionsService
+    from .services.projects import ProjectsService
+    from .services.screen_schemes import ScreenSchemesService
+    from .services.screen_tab_fields import ScreenTabFieldsService
+    from .services.screen_tabs import ScreenTabsService
+    from .services.screens import ScreensService
+    from .services.server_info import ServerInfoService
+    from .services.service_registry import ServiceRegistryService
+    from .services.status import StatusService
+    from .services.tasks import TasksService
+    from .services.teams_in_plan import TeamsInPlanService
+    from .services.time_tracking import TimeTrackingService
+    from .services.ui_modifications_apps import UIModificationsAppsService
+    from .services.user_properties import UserPropertiesService
+    from .services.user_search import UserSearchService
+    from .services.users import UsersService
+    from .services.webhooks import WebhooksService
+    from .services.workflow_scheme_drafts import WorkflowSchemeDraftsService
+    from .services.workflow_scheme_project_associations import WorkflowSchemeProjectAssociationsService
+    from .services.workflow_schemes import WorkflowSchemesService
+    from .services.workflow_status_categories import WorkflowStatusCategoriesService
+    from .services.workflow_statuses import WorkflowStatusesService
+    from .services.workflow_transition_rules import WorkflowTransitionRulesService
+    from .services.workflows import WorkflowsService
+
 class Jira(Module):
     module_enabled = True
     dependencies = ["werkflow-http", "pydantic"]
 
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        organization: str | None = None,
+        email: str | None = None,
+        api_token: str | None = None,
+    ) -> None:
         super().__init__()
 
         self.client = HTTP()
+        self._organization: str | None = organization
+        self._email: str | None = email
+        self._api_token: str | None = api_token
+        self._services: dict[str, Any] = {}
 
         self._errors_map: Dict[Tuple[int, int], Type[Exception]] = {
             (401, 403): UnauthorizedRequestError,
@@ -566,3 +680,432 @@ class Jira(Module):
 
     def abort(self) -> None:
         self.client.abort()
+
+    def configure(
+        self,
+        organization: str,
+        email: str,
+        api_token: str,
+    ) -> Jira:
+        """Configure default Jira Cloud credentials used by all API v3 services."""
+        self._organization = organization
+        self._email = email
+        self._api_token = api_token
+        return self
+
+    def _get_default_credentials(self) -> tuple[str | None, str | None, str | None]:
+        return (self._organization, self._email, self._api_token)
+
+    def _get_service(self, attr: str, module_name: str, class_name: str) -> Any:
+        service = self._services.get(attr)
+        if service is None:
+            module = importlib.import_module(f".services.{module_name}", __package__)
+            cls = getattr(module, class_name)
+            service = cls(
+                self.client,
+                self.check_response,
+                self._get_default_credentials,
+            )
+            self._services[attr] = service
+        return service
+
+    # --- Jira Cloud REST API v3 service properties (auto-generated) ---
+    @property
+    def agents(self) -> AgentsService:
+        return self._get_service('agents', 'agents', 'AgentsService')
+
+    @property
+    def announcement_banner(self) -> AnnouncementBannerService:
+        return self._get_service('announcement_banner', 'announcement_banner', 'AnnouncementBannerService')
+
+    @property
+    def app_data_policies(self) -> AppDataPoliciesService:
+        return self._get_service('app_data_policies', 'app_data_policies', 'AppDataPoliciesService')
+
+    @property
+    def app_migration(self) -> AppMigrationService:
+        return self._get_service('app_migration', 'app_migration', 'AppMigrationService')
+
+    @property
+    def app_properties(self) -> AppPropertiesService:
+        return self._get_service('app_properties', 'app_properties', 'AppPropertiesService')
+
+    @property
+    def application_roles(self) -> ApplicationRolesService:
+        return self._get_service('application_roles', 'application_roles', 'ApplicationRolesService')
+
+    @property
+    def audit_records(self) -> AuditRecordsService:
+        return self._get_service('audit_records', 'audit_records', 'AuditRecordsService')
+
+    @property
+    def avatars(self) -> AvatarsService:
+        return self._get_service('avatars', 'avatars', 'AvatarsService')
+
+    @property
+    def classification_levels(self) -> ClassificationLevelsService:
+        return self._get_service('classification_levels', 'classification_levels', 'ClassificationLevelsService')
+
+    @property
+    def connect_to_forge_migration(self) -> ConnectToForgeMigrationService:
+        return self._get_service('connect_to_forge_migration', 'connect_to_forge_migration', 'ConnectToForgeMigrationService')
+
+    @property
+    def dashboards(self) -> DashboardsService:
+        return self._get_service('dashboards', 'dashboards', 'DashboardsService')
+
+    @property
+    def dynamic_modules(self) -> DynamicModulesService:
+        return self._get_service('dynamic_modules', 'dynamic_modules', 'DynamicModulesService')
+
+    @property
+    def field_schemes(self) -> FieldSchemesService:
+        return self._get_service('field_schemes', 'field_schemes', 'FieldSchemesService')
+
+    @property
+    def filter_sharing(self) -> FilterSharingService:
+        return self._get_service('filter_sharing', 'filter_sharing', 'FilterSharingService')
+
+    @property
+    def filters(self) -> FiltersService:
+        return self._get_service('filters', 'filters', 'FiltersService')
+
+    @property
+    def group_and_user_picker(self) -> GroupAndUserPickerService:
+        return self._get_service('group_and_user_picker', 'group_and_user_picker', 'GroupAndUserPickerService')
+
+    @property
+    def groups(self) -> GroupsService:
+        return self._get_service('groups', 'groups', 'GroupsService')
+
+    @property
+    def issue_attachments(self) -> IssueAttachmentsService:
+        return self._get_service('issue_attachments', 'issue_attachments', 'IssueAttachmentsService')
+
+    @property
+    def issue_bulk_operations(self) -> IssueBulkOperationsService:
+        return self._get_service('issue_bulk_operations', 'issue_bulk_operations', 'IssueBulkOperationsService')
+
+    @property
+    def issue_comment_properties(self) -> IssueCommentPropertiesService:
+        return self._get_service('issue_comment_properties', 'issue_comment_properties', 'IssueCommentPropertiesService')
+
+    @property
+    def issue_comments(self) -> IssueCommentsService:
+        return self._get_service('issue_comments', 'issue_comments', 'IssueCommentsService')
+
+    @property
+    def issue_custom_field_associations(self) -> IssueCustomFieldAssociationsService:
+        return self._get_service('issue_custom_field_associations', 'issue_custom_field_associations', 'IssueCustomFieldAssociationsService')
+
+    @property
+    def issue_custom_field_configuration_apps(self) -> IssueCustomFieldConfigurationAppsService:
+        return self._get_service('issue_custom_field_configuration_apps', 'issue_custom_field_configuration_apps', 'IssueCustomFieldConfigurationAppsService')
+
+    @property
+    def issue_custom_field_contexts(self) -> IssueCustomFieldContextsService:
+        return self._get_service('issue_custom_field_contexts', 'issue_custom_field_contexts', 'IssueCustomFieldContextsService')
+
+    @property
+    def issue_custom_field_options(self) -> IssueCustomFieldOptionsService:
+        return self._get_service('issue_custom_field_options', 'issue_custom_field_options', 'IssueCustomFieldOptionsService')
+
+    @property
+    def issue_custom_field_options_apps(self) -> IssueCustomFieldOptionsAppsService:
+        return self._get_service('issue_custom_field_options_apps', 'issue_custom_field_options_apps', 'IssueCustomFieldOptionsAppsService')
+
+    @property
+    def issue_custom_field_values_apps(self) -> IssueCustomFieldValuesAppsService:
+        return self._get_service('issue_custom_field_values_apps', 'issue_custom_field_values_apps', 'IssueCustomFieldValuesAppsService')
+
+    @property
+    def issue_field_configurations(self) -> IssueFieldConfigurationsService:
+        return self._get_service('issue_field_configurations', 'issue_field_configurations', 'IssueFieldConfigurationsService')
+
+    @property
+    def issue_fields(self) -> IssueFieldsService:
+        return self._get_service('issue_fields', 'issue_fields', 'IssueFieldsService')
+
+    @property
+    def issue_link_types(self) -> IssueLinkTypesService:
+        return self._get_service('issue_link_types', 'issue_link_types', 'IssueLinkTypesService')
+
+    @property
+    def issue_links(self) -> IssueLinksService:
+        return self._get_service('issue_links', 'issue_links', 'IssueLinksService')
+
+    @property
+    def issue_navigator_settings(self) -> IssueNavigatorSettingsService:
+        return self._get_service('issue_navigator_settings', 'issue_navigator_settings', 'IssueNavigatorSettingsService')
+
+    @property
+    def issue_notification_schemes(self) -> IssueNotificationSchemesService:
+        return self._get_service('issue_notification_schemes', 'issue_notification_schemes', 'IssueNotificationSchemesService')
+
+    @property
+    def issue_panels(self) -> IssuePanelsService:
+        return self._get_service('issue_panels', 'issue_panels', 'IssuePanelsService')
+
+    @property
+    def issue_priorities(self) -> IssuePrioritiesService:
+        return self._get_service('issue_priorities', 'issue_priorities', 'IssuePrioritiesService')
+
+    @property
+    def issue_properties(self) -> IssuePropertiesService:
+        return self._get_service('issue_properties', 'issue_properties', 'IssuePropertiesService')
+
+    @property
+    def issue_redaction(self) -> IssueRedactionService:
+        return self._get_service('issue_redaction', 'issue_redaction', 'IssueRedactionService')
+
+    @property
+    def issue_remote_links(self) -> IssueRemoteLinksService:
+        return self._get_service('issue_remote_links', 'issue_remote_links', 'IssueRemoteLinksService')
+
+    @property
+    def issue_resolutions(self) -> IssueResolutionsService:
+        return self._get_service('issue_resolutions', 'issue_resolutions', 'IssueResolutionsService')
+
+    @property
+    def issue_search(self) -> IssueSearchService:
+        return self._get_service('issue_search', 'issue_search', 'IssueSearchService')
+
+    @property
+    def issue_security_level(self) -> IssueSecurityLevelService:
+        return self._get_service('issue_security_level', 'issue_security_level', 'IssueSecurityLevelService')
+
+    @property
+    def issue_security_schemes(self) -> IssueSecuritySchemesService:
+        return self._get_service('issue_security_schemes', 'issue_security_schemes', 'IssueSecuritySchemesService')
+
+    @property
+    def issue_type_properties(self) -> IssueTypePropertiesService:
+        return self._get_service('issue_type_properties', 'issue_type_properties', 'IssueTypePropertiesService')
+
+    @property
+    def issue_type_schemes(self) -> IssueTypeSchemesService:
+        return self._get_service('issue_type_schemes', 'issue_type_schemes', 'IssueTypeSchemesService')
+
+    @property
+    def issue_type_screen_schemes(self) -> IssueTypeScreenSchemesService:
+        return self._get_service('issue_type_screen_schemes', 'issue_type_screen_schemes', 'IssueTypeScreenSchemesService')
+
+    @property
+    def issue_types(self) -> IssueTypesService:
+        return self._get_service('issue_types', 'issue_types', 'IssueTypesService')
+
+    @property
+    def issue_votes(self) -> IssueVotesService:
+        return self._get_service('issue_votes', 'issue_votes', 'IssueVotesService')
+
+    @property
+    def issue_watchers(self) -> IssueWatchersService:
+        return self._get_service('issue_watchers', 'issue_watchers', 'IssueWatchersService')
+
+    @property
+    def issue_worklog_properties(self) -> IssueWorklogPropertiesService:
+        return self._get_service('issue_worklog_properties', 'issue_worklog_properties', 'IssueWorklogPropertiesService')
+
+    @property
+    def issue_worklogs(self) -> IssueWorklogsService:
+        return self._get_service('issue_worklogs', 'issue_worklogs', 'IssueWorklogsService')
+
+    @property
+    def issues(self) -> IssuesService:
+        return self._get_service('issues', 'issues', 'IssuesService')
+
+    @property
+    def jira_expressions(self) -> JiraExpressionsService:
+        return self._get_service('jira_expressions', 'jira_expressions', 'JiraExpressionsService')
+
+    @property
+    def jira_settings(self) -> JiraSettingsService:
+        return self._get_service('jira_settings', 'jira_settings', 'JiraSettingsService')
+
+    @property
+    def jql(self) -> JQLService:
+        return self._get_service('jql', 'jql', 'JQLService')
+
+    @property
+    def jql_functions_apps(self) -> JQLFunctionsAppsService:
+        return self._get_service('jql_functions_apps', 'jql_functions_apps', 'JQLFunctionsAppsService')
+
+    @property
+    def labels(self) -> LabelsService:
+        return self._get_service('labels', 'labels', 'LabelsService')
+
+    @property
+    def license_metrics(self) -> LicenseMetricsService:
+        return self._get_service('license_metrics', 'license_metrics', 'LicenseMetricsService')
+
+    @property
+    def myself(self) -> MyselfService:
+        return self._get_service('myself', 'myself', 'MyselfService')
+
+    @property
+    def permission_schemes(self) -> PermissionSchemesService:
+        return self._get_service('permission_schemes', 'permission_schemes', 'PermissionSchemesService')
+
+    @property
+    def permissions(self) -> PermissionsService:
+        return self._get_service('permissions', 'permissions', 'PermissionsService')
+
+    @property
+    def plans(self) -> PlansService:
+        return self._get_service('plans', 'plans', 'PlansService')
+
+    @property
+    def policies(self) -> PoliciesService:
+        return self._get_service('policies', 'policies', 'PoliciesService')
+
+    @property
+    def priority_schemes(self) -> PrioritySchemesService:
+        return self._get_service('priority_schemes', 'priority_schemes', 'PrioritySchemesService')
+
+    @property
+    def project_avatars(self) -> ProjectAvatarsService:
+        return self._get_service('project_avatars', 'project_avatars', 'ProjectAvatarsService')
+
+    @property
+    def project_categories(self) -> ProjectCategoriesService:
+        return self._get_service('project_categories', 'project_categories', 'ProjectCategoriesService')
+
+    @property
+    def project_classification_levels(self) -> ProjectClassificationLevelsService:
+        return self._get_service('project_classification_levels', 'project_classification_levels', 'ProjectClassificationLevelsService')
+
+    @property
+    def project_components(self) -> ProjectComponentsService:
+        return self._get_service('project_components', 'project_components', 'ProjectComponentsService')
+
+    @property
+    def project_email(self) -> ProjectEmailService:
+        return self._get_service('project_email', 'project_email', 'ProjectEmailService')
+
+    @property
+    def project_features(self) -> ProjectFeaturesService:
+        return self._get_service('project_features', 'project_features', 'ProjectFeaturesService')
+
+    @property
+    def project_key_and_name_validation(self) -> ProjectKeyAndNameValidationService:
+        return self._get_service('project_key_and_name_validation', 'project_key_and_name_validation', 'ProjectKeyAndNameValidationService')
+
+    @property
+    def project_permission_schemes(self) -> ProjectPermissionSchemesService:
+        return self._get_service('project_permission_schemes', 'project_permission_schemes', 'ProjectPermissionSchemesService')
+
+    @property
+    def project_properties(self) -> ProjectPropertiesService:
+        return self._get_service('project_properties', 'project_properties', 'ProjectPropertiesService')
+
+    @property
+    def project_role_actors(self) -> ProjectRoleActorsService:
+        return self._get_service('project_role_actors', 'project_role_actors', 'ProjectRoleActorsService')
+
+    @property
+    def project_roles(self) -> ProjectRolesService:
+        return self._get_service('project_roles', 'project_roles', 'ProjectRolesService')
+
+    @property
+    def project_templates(self) -> ProjectTemplatesService:
+        return self._get_service('project_templates', 'project_templates', 'ProjectTemplatesService')
+
+    @property
+    def project_types(self) -> ProjectTypesService:
+        return self._get_service('project_types', 'project_types', 'ProjectTypesService')
+
+    @property
+    def project_versions(self) -> ProjectVersionsService:
+        return self._get_service('project_versions', 'project_versions', 'ProjectVersionsService')
+
+    @property
+    def projects(self) -> ProjectsService:
+        return self._get_service('projects', 'projects', 'ProjectsService')
+
+    @property
+    def screen_schemes(self) -> ScreenSchemesService:
+        return self._get_service('screen_schemes', 'screen_schemes', 'ScreenSchemesService')
+
+    @property
+    def screen_tab_fields(self) -> ScreenTabFieldsService:
+        return self._get_service('screen_tab_fields', 'screen_tab_fields', 'ScreenTabFieldsService')
+
+    @property
+    def screen_tabs(self) -> ScreenTabsService:
+        return self._get_service('screen_tabs', 'screen_tabs', 'ScreenTabsService')
+
+    @property
+    def screens(self) -> ScreensService:
+        return self._get_service('screens', 'screens', 'ScreensService')
+
+    @property
+    def server_info(self) -> ServerInfoService:
+        return self._get_service('server_info', 'server_info', 'ServerInfoService')
+
+    @property
+    def service_registry(self) -> ServiceRegistryService:
+        return self._get_service('service_registry', 'service_registry', 'ServiceRegistryService')
+
+    @property
+    def status(self) -> StatusService:
+        return self._get_service('status', 'status', 'StatusService')
+
+    @property
+    def tasks(self) -> TasksService:
+        return self._get_service('tasks', 'tasks', 'TasksService')
+
+    @property
+    def teams_in_plan(self) -> TeamsInPlanService:
+        return self._get_service('teams_in_plan', 'teams_in_plan', 'TeamsInPlanService')
+
+    @property
+    def time_tracking(self) -> TimeTrackingService:
+        return self._get_service('time_tracking', 'time_tracking', 'TimeTrackingService')
+
+    @property
+    def ui_modifications_apps(self) -> UIModificationsAppsService:
+        return self._get_service('ui_modifications_apps', 'ui_modifications_apps', 'UIModificationsAppsService')
+
+    @property
+    def user_properties(self) -> UserPropertiesService:
+        return self._get_service('user_properties', 'user_properties', 'UserPropertiesService')
+
+    @property
+    def user_search(self) -> UserSearchService:
+        return self._get_service('user_search', 'user_search', 'UserSearchService')
+
+    @property
+    def users(self) -> UsersService:
+        return self._get_service('users', 'users', 'UsersService')
+
+    @property
+    def webhooks(self) -> WebhooksService:
+        return self._get_service('webhooks', 'webhooks', 'WebhooksService')
+
+    @property
+    def workflow_scheme_drafts(self) -> WorkflowSchemeDraftsService:
+        return self._get_service('workflow_scheme_drafts', 'workflow_scheme_drafts', 'WorkflowSchemeDraftsService')
+
+    @property
+    def workflow_scheme_project_associations(self) -> WorkflowSchemeProjectAssociationsService:
+        return self._get_service('workflow_scheme_project_associations', 'workflow_scheme_project_associations', 'WorkflowSchemeProjectAssociationsService')
+
+    @property
+    def workflow_schemes(self) -> WorkflowSchemesService:
+        return self._get_service('workflow_schemes', 'workflow_schemes', 'WorkflowSchemesService')
+
+    @property
+    def workflow_status_categories(self) -> WorkflowStatusCategoriesService:
+        return self._get_service('workflow_status_categories', 'workflow_status_categories', 'WorkflowStatusCategoriesService')
+
+    @property
+    def workflow_statuses(self) -> WorkflowStatusesService:
+        return self._get_service('workflow_statuses', 'workflow_statuses', 'WorkflowStatusesService')
+
+    @property
+    def workflow_transition_rules(self) -> WorkflowTransitionRulesService:
+        return self._get_service('workflow_transition_rules', 'workflow_transition_rules', 'WorkflowTransitionRulesService')
+
+    @property
+    def workflows(self) -> WorkflowsService:
+        return self._get_service('workflows', 'workflows', 'WorkflowsService')

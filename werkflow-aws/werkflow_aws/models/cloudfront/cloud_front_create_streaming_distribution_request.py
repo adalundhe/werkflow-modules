@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .cloud_front_streaming_distribution_config import CloudFrontStreamingDistributionConfig
+
+
+class CloudFrontCreateStreamingDistributionRequest(BaseModel):
+    StreamingDistributionConfig: CloudFrontStreamingDistributionConfig

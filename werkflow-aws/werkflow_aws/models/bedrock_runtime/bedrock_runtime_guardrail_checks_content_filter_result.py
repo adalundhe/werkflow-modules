@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .bedrock_runtime_guardrail_checks_content_filter_result_entry import BedrockRuntimeGuardrailChecksContentFilterResultEntry
+
+
+class BedrockRuntimeGuardrailChecksContentFilterResult(BaseModel):
+    results: list[BedrockRuntimeGuardrailChecksContentFilterResultEntry] | None = None

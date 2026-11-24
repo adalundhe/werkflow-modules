@@ -5,6 +5,7 @@ from typing import Literal
 ServiceName = Literal[
     "amplify",
     "api-gateway",
+    "api-gateway-v2",
     "app-stream",
     "athena",
     "app-sync",
@@ -12,8 +13,11 @@ ServiceName = Literal[
     "app-studio",
     "app-runner",
     "audit-manager",
+    "autoscaling",
     "backup",
+    "batch",
     "bedrock",
+    "bedrock-runtime",
     "cert-manager",
     "codeartifact",
     "cloud-trail",
@@ -25,6 +29,7 @@ ServiceName = Literal[
     "cloudtrail",
     "cloudwatch",
     "cloudwatch-events",
+    "cloudwatch-logs",
     "codebuild",
     "codecatalyst",
     "codecommit",
@@ -81,6 +86,7 @@ ServiceName = Literal[
     "kinesis-analytics",
     "kinesis-firehose",
     "kinesis-vs",
+    "kms",
     "lake-formation",
     "lambda",
     "lex",
@@ -116,6 +122,7 @@ ServiceName = Literal[
     "route53-arc",
     "s3",
     "sagemaker",
+    "scheduler",
     "secrets-manager",
     "security-hub",
     "security-lake",
@@ -132,6 +139,7 @@ ServiceName = Literal[
     "tax",
     "textract",
     "timestream",
+    "timestream-query",
     "transcribe",
     "transfer-family",
     "translate",
@@ -147,6 +155,7 @@ ServiceName = Literal[
 MappedServiceNames = Literal[
     'AWS Amplify',
     'Amazon API Gateway',
+    'Amazon API Gateway v2',
     'Amazon AppStream',
     'Amazon Athena',
     'AWS AppSync',
@@ -154,8 +163,11 @@ MappedServiceNames = Literal[
     'AWS App Studio',
     'AWS App Runner',
     'AWS Audit Manager',
+    'AWS Auto Scaling',
     'AWS Backup',
+    'AWS Batch',
     'Amazon Bedrock',
+    'Amazon Bedrock Runtime',
     'AWS Certificate Manager',
     'AWS CodeArtifact',
     'AWS CloudTrail',
@@ -167,6 +179,7 @@ MappedServiceNames = Literal[
     'AWS CloudTrail',
     'AmazonCloudWatch',
     'CloudWatch Events',
+    'Amazon CloudWatch Logs',
     'CodeBuild',
     'CodeCatalyst',
     'AWS CodeCommit',
@@ -222,6 +235,7 @@ MappedServiceNames = Literal[
     'Amazon Kinesis Analytics',
     'Amazon Kinesis Firehose',
     'Amazon Kinesis Video Streams',
+    'AWS Key Management Service',
     'AWS Lake Formation',
     'AWS Lambda',
     'Amazon Lex',
@@ -256,6 +270,7 @@ MappedServiceNames = Literal[
     'AWS Route 53 Application Recovery Controller',
     'Amazon Simple Storage Service',
     'Amazon SageMaker',
+    'Amazon EventBridge Scheduler',
     'AWS Secrets Manager',
     'AWS Security Hub',
     'Amazon Security Lake',
@@ -272,6 +287,7 @@ MappedServiceNames = Literal[
     'Tax',
     'Amazon Textract',
     'Amazon Timestream',
+    'Amazon Timestream Query',
     'Amazon Transcribe',
     'AWS Transfer Family',
     'Amazon Translate',
@@ -288,6 +304,7 @@ MappedServiceNames = Literal[
 class AWSServices(Enum):
     AMPLIFY='AWS Amplify'
     API_GATEWAY="Amazon API Gateway"
+    API_GATEWAY_V2="Amazon API Gateway v2"
     APP_STREAM="Amazon AppStream"
     ATHENA="Amazon Athena"
     APP_SYNC="AWS AppSync"
@@ -295,8 +312,11 @@ class AWSServices(Enum):
     APP_STUDIO="AWS App Studio"
     APP_RUNNER="AWS App Runner"
     AUDIT_MANAGER="AWS Audit Manager"
+    AUTOSCALING="AWS Auto Scaling"
     BACKUP="AWS Backup"
+    BATCH="AWS Batch"
     BEDROCK="Amazon Bedrock"
+    BEDROCK_RUNTIME="Amazon Bedrock Runtime"
     CERT_MANAGER="AWS Certificate Manager"
     CODEARTIFACT="AWS CodeArtifact"
     CLOUD_TRAIL="AWS CloudTrail"
@@ -308,6 +328,7 @@ class AWSServices(Enum):
     CLOUDTRAIL="AWS CloudTrail"
     CLOUDWATCH="AmazonCloudWatch"
     CLOUDWATCH_EVENTS="CloudWatch Events"
+    CLOUDWATCH_LOGS="Amazon CloudWatch Logs"
     CODEBUILD="CodeBuild"
     CODECATALYST="CodeCatalyst"
     CODECOMMIT="AWS CodeCommit"
@@ -363,6 +384,7 @@ class AWSServices(Enum):
     KINESIS_ANALYTICS='Amazon Kinesis Analytics'
     KINESIS_FIREHOSE='Amazon Kinesis Firehose'
     KINESIS_VS='Amazon Kinesis Video Streams'
+    KMS='AWS Key Management Service'
     LAKE_FORMATION='AWS Lake Formation'
     LAMBDA='AWS Lambda'
     LEX='Amazon Lex'
@@ -398,6 +420,7 @@ class AWSServices(Enum):
     ROUTE53_ARC='AWS Route 53 Application Recovery Controller'
     S3='Amazon Simple Storage Service'
     SAGEMAKER='Amazon SageMaker'
+    SCHEDULER='Amazon EventBridge Scheduler'
     SECRETS_MANAGER='AWS Secrets Manager'
     SECURITY_HUB='AWS Security Hub'
     SECURITY_LAKE='Amazon Security Lake'
@@ -414,6 +437,7 @@ class AWSServices(Enum):
     TAX='Tax'
     TEXTRACT='Amazon Textract'
     TIMESTREAM='Amazon Timestream'
+    TIMESTREAM_QUERY='Amazon Timestream Query'
     TRANSCRIBE='Amazon Transcribe'
     TRANSFER_FAMILY='AWS Transfer Family'
     TRANSLATE='Amazon Translate'

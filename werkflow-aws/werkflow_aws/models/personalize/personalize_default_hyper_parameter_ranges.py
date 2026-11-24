@@ -1,0 +1,11 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .personalize_default_categorical_hyper_parameter_range import PersonalizeDefaultCategoricalHyperParameterRange
+from .personalize_default_continuous_hyper_parameter_range import PersonalizeDefaultContinuousHyperParameterRange
+from .personalize_default_integer_hyper_parameter_range import PersonalizeDefaultIntegerHyperParameterRange
+
+
+class PersonalizeDefaultHyperParameterRanges(BaseModel):
+    integerHyperParameterRanges: list[PersonalizeDefaultIntegerHyperParameterRange] | None = None
+    continuousHyperParameterRanges: list[PersonalizeDefaultContinuousHyperParameterRange] | None = None
+    categoricalHyperParameterRanges: list[PersonalizeDefaultCategoricalHyperParameterRange] | None = None

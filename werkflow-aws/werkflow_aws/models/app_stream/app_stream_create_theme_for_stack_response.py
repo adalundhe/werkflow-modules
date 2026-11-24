@@ -1,0 +1,9 @@
+from __future__ import annotations
+from typing import Any
+from pydantic import BaseModel
+from .app_stream_theme import AppStreamTheme
+
+
+class AppStreamCreateThemeForStackResponse(BaseModel):
+    Theme: AppStreamTheme | None = None
+    ResponseMetadata: dict[str, Any] | None = None

@@ -1,0 +1,15 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .security_hub_aws_elb_load_balancer_access_log import SecurityHubAwsElbLoadBalancerAccessLog
+from .security_hub_aws_elb_load_balancer_additional_attribute import SecurityHubAwsElbLoadBalancerAdditionalAttribute
+from .security_hub_aws_elb_load_balancer_connection_draining import SecurityHubAwsElbLoadBalancerConnectionDraining
+from .security_hub_aws_elb_load_balancer_connection_settings import SecurityHubAwsElbLoadBalancerConnectionSettings
+from .security_hub_aws_elb_load_balancer_cross_zone_load_balancing import SecurityHubAwsElbLoadBalancerCrossZoneLoadBalancing
+
+
+class SecurityHubAwsElbLoadBalancerAttributes(BaseModel):
+    AccessLog: SecurityHubAwsElbLoadBalancerAccessLog | None = None
+    ConnectionDraining: SecurityHubAwsElbLoadBalancerConnectionDraining | None = None
+    ConnectionSettings: SecurityHubAwsElbLoadBalancerConnectionSettings | None = None
+    CrossZoneLoadBalancing: SecurityHubAwsElbLoadBalancerCrossZoneLoadBalancing | None = None
+    AdditionalAttributes: list[SecurityHubAwsElbLoadBalancerAdditionalAttribute] | None = None

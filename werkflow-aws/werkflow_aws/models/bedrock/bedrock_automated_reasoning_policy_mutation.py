@@ -1,0 +1,23 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .bedrock_automated_reasoning_policy_add_rule_mutation import BedrockAutomatedReasoningPolicyAddRuleMutation
+from .bedrock_automated_reasoning_policy_add_type_mutation import BedrockAutomatedReasoningPolicyAddTypeMutation
+from .bedrock_automated_reasoning_policy_add_variable_mutation import BedrockAutomatedReasoningPolicyAddVariableMutation
+from .bedrock_automated_reasoning_policy_delete_rule_mutation import BedrockAutomatedReasoningPolicyDeleteRuleMutation
+from .bedrock_automated_reasoning_policy_delete_type_mutation import BedrockAutomatedReasoningPolicyDeleteTypeMutation
+from .bedrock_automated_reasoning_policy_delete_variable_mutation import BedrockAutomatedReasoningPolicyDeleteVariableMutation
+from .bedrock_automated_reasoning_policy_update_rule_mutation import BedrockAutomatedReasoningPolicyUpdateRuleMutation
+from .bedrock_automated_reasoning_policy_update_type_mutation import BedrockAutomatedReasoningPolicyUpdateTypeMutation
+from .bedrock_automated_reasoning_policy_update_variable_mutation import BedrockAutomatedReasoningPolicyUpdateVariableMutation
+
+
+class BedrockAutomatedReasoningPolicyMutation(BaseModel):
+    addType: BedrockAutomatedReasoningPolicyAddTypeMutation | None = None
+    updateType: BedrockAutomatedReasoningPolicyUpdateTypeMutation | None = None
+    deleteType: BedrockAutomatedReasoningPolicyDeleteTypeMutation | None = None
+    addVariable: BedrockAutomatedReasoningPolicyAddVariableMutation | None = None
+    updateVariable: BedrockAutomatedReasoningPolicyUpdateVariableMutation | None = None
+    deleteVariable: BedrockAutomatedReasoningPolicyDeleteVariableMutation | None = None
+    addRule: BedrockAutomatedReasoningPolicyAddRuleMutation | None = None
+    updateRule: BedrockAutomatedReasoningPolicyUpdateRuleMutation | None = None
+    deleteRule: BedrockAutomatedReasoningPolicyDeleteRuleMutation | None = None

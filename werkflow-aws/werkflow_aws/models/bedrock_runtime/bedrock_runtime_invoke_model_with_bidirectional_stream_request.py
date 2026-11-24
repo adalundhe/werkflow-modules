@@ -1,0 +1,8 @@
+from __future__ import annotations
+from pydantic import BaseModel, StrictStr
+from .bedrock_runtime_invoke_model_with_bidirectional_stream_input import BedrockRuntimeInvokeModelWithBidirectionalStreamInput
+
+
+class BedrockRuntimeInvokeModelWithBidirectionalStreamRequest(BaseModel):
+    modelId: StrictStr
+    body: BedrockRuntimeInvokeModelWithBidirectionalStreamInput

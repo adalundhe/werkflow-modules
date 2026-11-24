@@ -1,0 +1,21 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .bedrock_runtime_applied_guardrail_details import BedrockRuntimeAppliedGuardrailDetails
+from .bedrock_runtime_guardrail_automated_reasoning_policy_assessment import BedrockRuntimeGuardrailAutomatedReasoningPolicyAssessment
+from .bedrock_runtime_guardrail_content_policy_assessment import BedrockRuntimeGuardrailContentPolicyAssessment
+from .bedrock_runtime_guardrail_contextual_grounding_policy_assessment import BedrockRuntimeGuardrailContextualGroundingPolicyAssessment
+from .bedrock_runtime_guardrail_invocation_metrics import BedrockRuntimeGuardrailInvocationMetrics
+from .bedrock_runtime_guardrail_sensitive_information_policy_assessment import BedrockRuntimeGuardrailSensitiveInformationPolicyAssessment
+from .bedrock_runtime_guardrail_topic_policy_assessment import BedrockRuntimeGuardrailTopicPolicyAssessment
+from .bedrock_runtime_guardrail_word_policy_assessment import BedrockRuntimeGuardrailWordPolicyAssessment
+
+
+class BedrockRuntimeGuardrailAssessment(BaseModel):
+    topicPolicy: BedrockRuntimeGuardrailTopicPolicyAssessment | None = None
+    contentPolicy: BedrockRuntimeGuardrailContentPolicyAssessment | None = None
+    wordPolicy: BedrockRuntimeGuardrailWordPolicyAssessment | None = None
+    sensitiveInformationPolicy: BedrockRuntimeGuardrailSensitiveInformationPolicyAssessment | None = None
+    contextualGroundingPolicy: BedrockRuntimeGuardrailContextualGroundingPolicyAssessment | None = None
+    automatedReasoningPolicy: BedrockRuntimeGuardrailAutomatedReasoningPolicyAssessment | None = None
+    invocationMetrics: BedrockRuntimeGuardrailInvocationMetrics | None = None
+    appliedGuardrailDetails: BedrockRuntimeAppliedGuardrailDetails | None = None

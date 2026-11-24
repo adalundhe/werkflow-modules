@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .emr_block_public_access_configuration import EMRBlockPublicAccessConfiguration
+
+
+class EMRPutBlockPublicAccessConfigurationRequest(BaseModel):
+    BlockPublicAccessConfiguration: EMRBlockPublicAccessConfiguration

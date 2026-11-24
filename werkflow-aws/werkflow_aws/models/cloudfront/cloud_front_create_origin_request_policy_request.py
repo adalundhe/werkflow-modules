@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .cloud_front_origin_request_policy_config import CloudFrontOriginRequestPolicyConfig
+
+
+class CloudFrontCreateOriginRequestPolicyRequest(BaseModel):
+    OriginRequestPolicyConfig: CloudFrontOriginRequestPolicyConfig

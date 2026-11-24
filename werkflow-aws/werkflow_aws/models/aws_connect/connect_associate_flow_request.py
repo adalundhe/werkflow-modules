@@ -1,0 +1,10 @@
+from __future__ import annotations
+from typing import Literal
+from pydantic import BaseModel, StrictStr
+
+
+class ConnectAssociateFlowRequest(BaseModel):
+    InstanceId: StrictStr
+    ResourceId: StrictStr
+    FlowId: StrictStr
+    ResourceType: Literal['SMS_PHONE_NUMBER', 'INBOUND_EMAIL', 'OUTBOUND_EMAIL', 'ANALYTICS_CONNECTOR', 'WHATSAPP_MESSAGING_PHONE_NUMBER']

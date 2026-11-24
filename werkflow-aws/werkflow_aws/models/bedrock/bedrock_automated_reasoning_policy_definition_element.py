@@ -1,0 +1,11 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .bedrock_automated_reasoning_policy_definition_rule import BedrockAutomatedReasoningPolicyDefinitionRule
+from .bedrock_automated_reasoning_policy_definition_type import BedrockAutomatedReasoningPolicyDefinitionType
+from .bedrock_automated_reasoning_policy_definition_variable import BedrockAutomatedReasoningPolicyDefinitionVariable
+
+
+class BedrockAutomatedReasoningPolicyDefinitionElement(BaseModel):
+    policyDefinitionVariable: BedrockAutomatedReasoningPolicyDefinitionVariable | None = None
+    policyDefinitionType: BedrockAutomatedReasoningPolicyDefinitionType | None = None
+    policyDefinitionRule: BedrockAutomatedReasoningPolicyDefinitionRule | None = None

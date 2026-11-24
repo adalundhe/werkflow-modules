@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .quick_sight_section_based_layout_paper_canvas_size_options import QuickSightSectionBasedLayoutPaperCanvasSizeOptions
+
+
+class QuickSightSectionBasedLayoutCanvasSizeOptions(BaseModel):
+    PaperCanvasSizeOptions: QuickSightSectionBasedLayoutPaperCanvasSizeOptions | None = None

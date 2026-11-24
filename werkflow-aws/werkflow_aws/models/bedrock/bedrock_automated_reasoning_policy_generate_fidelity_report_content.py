@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .bedrock_automated_reasoning_policy_build_workflow_document import BedrockAutomatedReasoningPolicyBuildWorkflowDocument
+
+
+class BedrockAutomatedReasoningPolicyGenerateFidelityReportContent(BaseModel):
+    documents: list[BedrockAutomatedReasoningPolicyBuildWorkflowDocument] | None = None

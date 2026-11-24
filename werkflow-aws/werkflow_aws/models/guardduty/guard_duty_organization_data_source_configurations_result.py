@@ -1,0 +1,11 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .guard_duty_organization_kubernetes_configuration_result import GuardDutyOrganizationKubernetesConfigurationResult
+from .guard_duty_organization_malware_protection_configuration_result import GuardDutyOrganizationMalwareProtectionConfigurationResult
+from .guard_duty_organization_s3_logs_configuration_result import GuardDutyOrganizationS3LogsConfigurationResult
+
+
+class GuardDutyOrganizationDataSourceConfigurationsResult(BaseModel):
+    S3Logs: GuardDutyOrganizationS3LogsConfigurationResult | None = None
+    Kubernetes: GuardDutyOrganizationKubernetesConfigurationResult | None = None
+    MalwareProtection: GuardDutyOrganizationMalwareProtectionConfigurationResult | None = None

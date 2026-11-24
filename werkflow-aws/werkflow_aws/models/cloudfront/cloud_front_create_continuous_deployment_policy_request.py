@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .cloud_front_continuous_deployment_policy_config import CloudFrontContinuousDeploymentPolicyConfig
+
+
+class CloudFrontCreateContinuousDeploymentPolicyRequest(BaseModel):
+    ContinuousDeploymentPolicyConfig: CloudFrontContinuousDeploymentPolicyConfig

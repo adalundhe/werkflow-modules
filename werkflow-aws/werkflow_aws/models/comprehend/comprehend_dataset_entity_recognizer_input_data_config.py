@@ -1,0 +1,11 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .comprehend_dataset_entity_recognizer_annotations import ComprehendDatasetEntityRecognizerAnnotations
+from .comprehend_dataset_entity_recognizer_documents import ComprehendDatasetEntityRecognizerDocuments
+from .comprehend_dataset_entity_recognizer_entity_list import ComprehendDatasetEntityRecognizerEntityList
+
+
+class ComprehendDatasetEntityRecognizerInputDataConfig(BaseModel):
+    Documents: ComprehendDatasetEntityRecognizerDocuments
+    Annotations: ComprehendDatasetEntityRecognizerAnnotations | None = None
+    EntityList: ComprehendDatasetEntityRecognizerEntityList | None = None

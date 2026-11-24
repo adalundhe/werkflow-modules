@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .cloud_front_field_level_encryption_config import CloudFrontFieldLevelEncryptionConfig
+
+
+class CloudFrontCreateFieldLevelEncryptionConfigRequest(BaseModel):
+    FieldLevelEncryptionConfig: CloudFrontFieldLevelEncryptionConfig

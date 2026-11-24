@@ -1,0 +1,9 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .bedrock_automated_reasoning_policy_definition import BedrockAutomatedReasoningPolicyDefinition
+from .bedrock_automated_reasoning_policy_workflow_type_content import BedrockAutomatedReasoningPolicyWorkflowTypeContent
+
+
+class BedrockAutomatedReasoningPolicyBuildWorkflowSource(BaseModel):
+    policyDefinition: BedrockAutomatedReasoningPolicyDefinition | None = None
+    workflowContent: BedrockAutomatedReasoningPolicyWorkflowTypeContent | None = None

@@ -1,0 +1,15 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .connect_language_configuration import ConnectLanguageConfiguration
+from .connect_redaction_configuration import ConnectRedactionConfiguration
+from .connect_rules_configuration import ConnectRulesConfiguration
+from .connect_sentiment_configuration import ConnectSentimentConfiguration
+from .connect_summary_configuration import ConnectSummaryConfiguration
+
+
+class ConnectAnalyticsConfiguration(BaseModel):
+    LanguageConfiguration: ConnectLanguageConfiguration
+    RedactionConfiguration: ConnectRedactionConfiguration
+    SentimentConfiguration: ConnectSentimentConfiguration
+    SummaryConfiguration: ConnectSummaryConfiguration
+    RulesConfiguration: ConnectRulesConfiguration

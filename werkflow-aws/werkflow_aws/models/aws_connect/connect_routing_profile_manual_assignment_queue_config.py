@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .connect_routing_profile_queue_reference import ConnectRoutingProfileQueueReference
+
+
+class ConnectRoutingProfileManualAssignmentQueueConfig(BaseModel):
+    QueueReference: ConnectRoutingProfileQueueReference

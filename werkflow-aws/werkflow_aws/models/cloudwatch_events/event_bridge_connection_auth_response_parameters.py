@@ -1,0 +1,15 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .event_bridge_connection_api_key_auth_response_parameters import EventBridgeConnectionApiKeyAuthResponseParameters
+from .event_bridge_connection_basic_auth_response_parameters import EventBridgeConnectionBasicAuthResponseParameters
+from .event_bridge_connection_http_parameters import EventBridgeConnectionHttpParameters
+from .event_bridge_connection_o_auth_response_parameters import EventBridgeConnectionOAuthResponseParameters
+from .event_bridge_describe_connection_connectivity_parameters import EventBridgeDescribeConnectionConnectivityParameters
+
+
+class EventBridgeConnectionAuthResponseParameters(BaseModel):
+    BasicAuthParameters: EventBridgeConnectionBasicAuthResponseParameters | None = None
+    OAuthParameters: EventBridgeConnectionOAuthResponseParameters | None = None
+    ApiKeyAuthParameters: EventBridgeConnectionApiKeyAuthResponseParameters | None = None
+    InvocationHttpParameters: EventBridgeConnectionHttpParameters | None = None
+    ConnectivityParameters: EventBridgeDescribeConnectionConnectivityParameters | None = None

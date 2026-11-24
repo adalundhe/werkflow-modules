@@ -250,5 +250,15 @@ from .athena_work_group_configuration_updates import AthenaWorkGroupConfiguratio
 from .athena_work_group_summary import AthenaWorkGroupSummary as AthenaWorkGroupSummary
 
 _NAMESPACE = dict(globals())
-AthenaQueryStage.model_rebuild(_types_namespace=_NAMESPACE)
-AthenaQueryStagePlanNode.model_rebuild(_types_namespace=_NAMESPACE)
+for _ in range(4):
+    _pending = [
+        _sym
+        for _sym in _NAMESPACE.values()
+        if isinstance(_sym, type)
+        and hasattr(_sym, "model_rebuild")
+        and not getattr(_sym, "__pydantic_complete__", True)
+    ]
+    if not _pending:
+        break
+    for _sym in _pending:
+        _sym.model_rebuild(_types_namespace=_NAMESPACE)

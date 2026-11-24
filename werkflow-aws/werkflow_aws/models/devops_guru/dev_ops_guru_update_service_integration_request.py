@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .dev_ops_guru_update_service_integration_config import DevOpsGuruUpdateServiceIntegrationConfig
+
+
+class DevOpsGuruUpdateServiceIntegrationRequest(BaseModel):
+    ServiceIntegration: DevOpsGuruUpdateServiceIntegrationConfig

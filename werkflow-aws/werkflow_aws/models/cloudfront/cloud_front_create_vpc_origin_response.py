@@ -1,0 +1,11 @@
+from __future__ import annotations
+from typing import Any
+from pydantic import BaseModel, StrictStr
+from .cloud_front_vpc_origin import CloudFrontVpcOrigin
+
+
+class CloudFrontCreateVpcOriginResponse(BaseModel):
+    VpcOrigin: CloudFrontVpcOrigin | None = None
+    Location: StrictStr | None = None
+    ETag: StrictStr | None = None
+    ResponseMetadata: dict[str, Any] | None = None

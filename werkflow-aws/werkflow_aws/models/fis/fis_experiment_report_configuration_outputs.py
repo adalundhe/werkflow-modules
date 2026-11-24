@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .fis_experiment_report_configuration_outputs_s3_configuration import FISExperimentReportConfigurationOutputsS3Configuration
+
+
+class FISExperimentReportConfigurationOutputs(BaseModel):
+    s3Configuration: FISExperimentReportConfigurationOutputsS3Configuration | None = None

@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .security_hub_configuration_policy_association import SecurityHubConfigurationPolicyAssociation
+
+
+class SecurityHubBatchGetConfigurationPolicyAssociationsRequest(BaseModel):
+    ConfigurationPolicyAssociationIdentifiers: list[SecurityHubConfigurationPolicyAssociation]

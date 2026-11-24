@@ -1,0 +1,9 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .quick_sight_external_idp_confidential_auth_code_authorizing_config_update_input import QuickSightExternalIdpConfidentialAuthCodeAuthorizingConfigUpdateInput
+from .quick_sight_external_idp_public_auth_code_authorizing_config import QuickSightExternalIdpPublicAuthCodeAuthorizingConfig
+
+
+class QuickSightIdpAuthorizingConfigurationDetailUpdateInput(BaseModel):
+    ExternalIdpPublicAuthCode: QuickSightExternalIdpPublicAuthCodeAuthorizingConfig | None = None
+    ExternalIdpConfidentialAuthCode: QuickSightExternalIdpConfidentialAuthCodeAuthorizingConfigUpdateInput | None = None

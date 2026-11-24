@@ -1,0 +1,13 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .quick_sight_anonymous_user_dashboard_embedding_configuration import QuickSightAnonymousUserDashboardEmbeddingConfiguration
+from .quick_sight_anonymous_user_dashboard_visual_embedding_configuration import QuickSightAnonymousUserDashboardVisualEmbeddingConfiguration
+from .quick_sight_anonymous_user_generative_qn_a_embedding_configuration import QuickSightAnonymousUserGenerativeQnAEmbeddingConfiguration
+from .quick_sight_anonymous_user_q_search_bar_embedding_configuration import QuickSightAnonymousUserQSearchBarEmbeddingConfiguration
+
+
+class QuickSightAnonymousUserEmbeddingExperienceConfiguration(BaseModel):
+    Dashboard: QuickSightAnonymousUserDashboardEmbeddingConfiguration | None = None
+    DashboardVisual: QuickSightAnonymousUserDashboardVisualEmbeddingConfiguration | None = None
+    QSearchBar: QuickSightAnonymousUserQSearchBarEmbeddingConfiguration | None = None
+    GenerativeQnA: QuickSightAnonymousUserGenerativeQnAEmbeddingConfiguration | None = None

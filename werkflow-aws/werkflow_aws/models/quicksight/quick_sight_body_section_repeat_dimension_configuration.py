@@ -1,0 +1,9 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .quick_sight_body_section_dynamic_category_dimension_configuration import QuickSightBodySectionDynamicCategoryDimensionConfiguration
+from .quick_sight_body_section_dynamic_numeric_dimension_configuration import QuickSightBodySectionDynamicNumericDimensionConfiguration
+
+
+class QuickSightBodySectionRepeatDimensionConfiguration(BaseModel):
+    DynamicCategoryDimensionConfiguration: QuickSightBodySectionDynamicCategoryDimensionConfiguration | None = None
+    DynamicNumericDimensionConfiguration: QuickSightBodySectionDynamicNumericDimensionConfiguration | None = None

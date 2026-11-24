@@ -1,0 +1,9 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .bedrock_guardrail_contextual_grounding_filter_config import BedrockGuardrailContextualGroundingFilterConfig
+from .bedrock_guardrail_contextual_grounding_tier_config import BedrockGuardrailContextualGroundingTierConfig
+
+
+class BedrockGuardrailContextualGroundingPolicyConfig(BaseModel):
+    filtersConfig: list[BedrockGuardrailContextualGroundingFilterConfig]
+    tierConfig: BedrockGuardrailContextualGroundingTierConfig | None = None

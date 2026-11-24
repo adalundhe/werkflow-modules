@@ -1,0 +1,18 @@
+from __future__ import annotations
+from pydantic import BaseModel, StrictFloat, StrictInt
+from .auto_scaling_predictive_scaling_customized_capacity_metric import AutoScalingPredictiveScalingCustomizedCapacityMetric
+from .auto_scaling_predictive_scaling_customized_load_metric import AutoScalingPredictiveScalingCustomizedLoadMetric
+from .auto_scaling_predictive_scaling_customized_scaling_metric import AutoScalingPredictiveScalingCustomizedScalingMetric
+from .auto_scaling_predictive_scaling_predefined_load_metric import AutoScalingPredictiveScalingPredefinedLoadMetric
+from .auto_scaling_predictive_scaling_predefined_metric_pair import AutoScalingPredictiveScalingPredefinedMetricPair
+from .auto_scaling_predictive_scaling_predefined_scaling_metric import AutoScalingPredictiveScalingPredefinedScalingMetric
+
+
+class AutoScalingPredictiveScalingMetricSpecification(BaseModel):
+    TargetValue: StrictFloat | StrictInt | None = None
+    PredefinedMetricPairSpecification: AutoScalingPredictiveScalingPredefinedMetricPair | None = None
+    PredefinedScalingMetricSpecification: AutoScalingPredictiveScalingPredefinedScalingMetric | None = None
+    PredefinedLoadMetricSpecification: AutoScalingPredictiveScalingPredefinedLoadMetric | None = None
+    CustomizedScalingMetricSpecification: AutoScalingPredictiveScalingCustomizedScalingMetric | None = None
+    CustomizedLoadMetricSpecification: AutoScalingPredictiveScalingCustomizedLoadMetric | None = None
+    CustomizedCapacityMetricSpecification: AutoScalingPredictiveScalingCustomizedCapacityMetric | None = None

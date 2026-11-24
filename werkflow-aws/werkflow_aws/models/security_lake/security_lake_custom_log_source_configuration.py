@@ -1,0 +1,9 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .security_lake_aws_identity import SecurityLakeAwsIdentity
+from .security_lake_custom_log_source_crawler_configuration import SecurityLakeCustomLogSourceCrawlerConfiguration
+
+
+class SecurityLakeCustomLogSourceConfiguration(BaseModel):
+    crawlerConfiguration: SecurityLakeCustomLogSourceCrawlerConfiguration
+    providerIdentity: SecurityLakeAwsIdentity

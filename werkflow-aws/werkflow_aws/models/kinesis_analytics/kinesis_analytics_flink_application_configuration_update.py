@@ -1,0 +1,11 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .kinesis_analytics_checkpoint_configuration_update import KinesisAnalyticsCheckpointConfigurationUpdate
+from .kinesis_analytics_monitoring_configuration_update import KinesisAnalyticsMonitoringConfigurationUpdate
+from .kinesis_analytics_parallelism_configuration_update import KinesisAnalyticsParallelismConfigurationUpdate
+
+
+class KinesisAnalyticsFlinkApplicationConfigurationUpdate(BaseModel):
+    CheckpointConfigurationUpdate: KinesisAnalyticsCheckpointConfigurationUpdate | None = None
+    MonitoringConfigurationUpdate: KinesisAnalyticsMonitoringConfigurationUpdate | None = None
+    ParallelismConfigurationUpdate: KinesisAnalyticsParallelismConfigurationUpdate | None = None

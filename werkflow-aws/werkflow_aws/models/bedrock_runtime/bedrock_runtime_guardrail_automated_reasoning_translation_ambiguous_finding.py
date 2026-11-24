@@ -1,0 +1,9 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .bedrock_runtime_guardrail_automated_reasoning_scenario import BedrockRuntimeGuardrailAutomatedReasoningScenario
+from .bedrock_runtime_guardrail_automated_reasoning_translation_option import BedrockRuntimeGuardrailAutomatedReasoningTranslationOption
+
+
+class BedrockRuntimeGuardrailAutomatedReasoningTranslationAmbiguousFinding(BaseModel):
+    options: list[BedrockRuntimeGuardrailAutomatedReasoningTranslationOption] | None = None
+    differenceScenarios: list[BedrockRuntimeGuardrailAutomatedReasoningScenario] | None = None

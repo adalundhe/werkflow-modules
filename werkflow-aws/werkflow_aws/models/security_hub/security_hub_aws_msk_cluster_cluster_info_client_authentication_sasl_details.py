@@ -1,0 +1,9 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .security_hub_aws_msk_cluster_cluster_info_client_authentication_sasl_iam_details import SecurityHubAwsMskClusterClusterInfoClientAuthenticationSaslIamDetails
+from .security_hub_aws_msk_cluster_cluster_info_client_authentication_sasl_scram_details import SecurityHubAwsMskClusterClusterInfoClientAuthenticationSaslScramDetails
+
+
+class SecurityHubAwsMskClusterClusterInfoClientAuthenticationSaslDetails(BaseModel):
+    Iam: SecurityHubAwsMskClusterClusterInfoClientAuthenticationSaslIamDetails | None = None
+    Scram: SecurityHubAwsMskClusterClusterInfoClientAuthenticationSaslScramDetails | None = None

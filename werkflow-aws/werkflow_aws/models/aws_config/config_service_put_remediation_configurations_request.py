@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .config_service_remediation_configuration import ConfigServiceRemediationConfiguration
+
+
+class ConfigServicePutRemediationConfigurationsRequest(BaseModel):
+    RemediationConfigurations: list[ConfigServiceRemediationConfiguration]

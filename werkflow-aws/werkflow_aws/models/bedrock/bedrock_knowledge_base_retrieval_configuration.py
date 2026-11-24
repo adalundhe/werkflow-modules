@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .bedrock_knowledge_base_vector_search_configuration import BedrockKnowledgeBaseVectorSearchConfiguration
+
+
+class BedrockKnowledgeBaseRetrievalConfiguration(BaseModel):
+    vectorSearchConfiguration: BedrockKnowledgeBaseVectorSearchConfiguration | None = None

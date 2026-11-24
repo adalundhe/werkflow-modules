@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .kinesis_analytics_glue_data_catalog_configuration_description import KinesisAnalyticsGlueDataCatalogConfigurationDescription
+
+
+class KinesisAnalyticsCatalogConfigurationDescription(BaseModel):
+    GlueDataCatalogConfigurationDescription: KinesisAnalyticsGlueDataCatalogConfigurationDescription | None = None

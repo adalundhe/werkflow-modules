@@ -1,0 +1,11 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .bedrock_automated_reasoning_policy_add_type_value import BedrockAutomatedReasoningPolicyAddTypeValue
+from .bedrock_automated_reasoning_policy_delete_type_value import BedrockAutomatedReasoningPolicyDeleteTypeValue
+from .bedrock_automated_reasoning_policy_update_type_value import BedrockAutomatedReasoningPolicyUpdateTypeValue
+
+
+class BedrockAutomatedReasoningPolicyTypeValueAnnotation(BaseModel):
+    addTypeValue: BedrockAutomatedReasoningPolicyAddTypeValue | None = None
+    updateTypeValue: BedrockAutomatedReasoningPolicyUpdateTypeValue | None = None
+    deleteTypeValue: BedrockAutomatedReasoningPolicyDeleteTypeValue | None = None

@@ -1,0 +1,9 @@
+from __future__ import annotations
+from typing import Any
+from pydantic import BaseModel
+from .dms_certificate import DMSCertificate
+
+
+class DMSImportCertificateResponse(BaseModel):
+    Certificate: DMSCertificate | None = None
+    ResponseMetadata: dict[str, Any] | None = None

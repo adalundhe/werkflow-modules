@@ -1,0 +1,53 @@
+from __future__ import annotations
+from pydantic import BaseModel, StrictBool, StrictStr
+from .security_hub_aws_ec2_launch_template_data_block_device_mapping_set_details import SecurityHubAwsEc2LaunchTemplateDataBlockDeviceMappingSetDetails
+from .security_hub_aws_ec2_launch_template_data_capacity_reservation_specification_details import SecurityHubAwsEc2LaunchTemplateDataCapacityReservationSpecificationDetails
+from .security_hub_aws_ec2_launch_template_data_cpu_options_details import SecurityHubAwsEc2LaunchTemplateDataCpuOptionsDetails
+from .security_hub_aws_ec2_launch_template_data_credit_specification_details import SecurityHubAwsEc2LaunchTemplateDataCreditSpecificationDetails
+from .security_hub_aws_ec2_launch_template_data_elastic_gpu_specification_set_details import SecurityHubAwsEc2LaunchTemplateDataElasticGpuSpecificationSetDetails
+from .security_hub_aws_ec2_launch_template_data_elastic_inference_accelerator_set_details import SecurityHubAwsEc2LaunchTemplateDataElasticInferenceAcceleratorSetDetails
+from .security_hub_aws_ec2_launch_template_data_enclave_options_details import SecurityHubAwsEc2LaunchTemplateDataEnclaveOptionsDetails
+from .security_hub_aws_ec2_launch_template_data_hibernation_options_details import SecurityHubAwsEc2LaunchTemplateDataHibernationOptionsDetails
+from .security_hub_aws_ec2_launch_template_data_iam_instance_profile_details import SecurityHubAwsEc2LaunchTemplateDataIamInstanceProfileDetails
+from .security_hub_aws_ec2_launch_template_data_instance_market_options_details import SecurityHubAwsEc2LaunchTemplateDataInstanceMarketOptionsDetails
+from .security_hub_aws_ec2_launch_template_data_instance_requirements_details import SecurityHubAwsEc2LaunchTemplateDataInstanceRequirementsDetails
+from .security_hub_aws_ec2_launch_template_data_license_set_details import SecurityHubAwsEc2LaunchTemplateDataLicenseSetDetails
+from .security_hub_aws_ec2_launch_template_data_maintenance_options_details import SecurityHubAwsEc2LaunchTemplateDataMaintenanceOptionsDetails
+from .security_hub_aws_ec2_launch_template_data_metadata_options_details import SecurityHubAwsEc2LaunchTemplateDataMetadataOptionsDetails
+from .security_hub_aws_ec2_launch_template_data_monitoring_details import SecurityHubAwsEc2LaunchTemplateDataMonitoringDetails
+from .security_hub_aws_ec2_launch_template_data_network_interface_set_details import SecurityHubAwsEc2LaunchTemplateDataNetworkInterfaceSetDetails
+from .security_hub_aws_ec2_launch_template_data_placement_details import SecurityHubAwsEc2LaunchTemplateDataPlacementDetails
+from .security_hub_aws_ec2_launch_template_data_private_dns_name_options_details import SecurityHubAwsEc2LaunchTemplateDataPrivateDnsNameOptionsDetails
+
+
+class SecurityHubAwsEc2LaunchTemplateDataDetails(BaseModel):
+    BlockDeviceMappingSet: list[SecurityHubAwsEc2LaunchTemplateDataBlockDeviceMappingSetDetails] | None = None
+    CapacityReservationSpecification: SecurityHubAwsEc2LaunchTemplateDataCapacityReservationSpecificationDetails | None = None
+    CpuOptions: SecurityHubAwsEc2LaunchTemplateDataCpuOptionsDetails | None = None
+    CreditSpecification: SecurityHubAwsEc2LaunchTemplateDataCreditSpecificationDetails | None = None
+    DisableApiStop: StrictBool | None = None
+    DisableApiTermination: StrictBool | None = None
+    EbsOptimized: StrictBool | None = None
+    ElasticGpuSpecificationSet: list[SecurityHubAwsEc2LaunchTemplateDataElasticGpuSpecificationSetDetails] | None = None
+    ElasticInferenceAcceleratorSet: list[SecurityHubAwsEc2LaunchTemplateDataElasticInferenceAcceleratorSetDetails] | None = None
+    EnclaveOptions: SecurityHubAwsEc2LaunchTemplateDataEnclaveOptionsDetails | None = None
+    HibernationOptions: SecurityHubAwsEc2LaunchTemplateDataHibernationOptionsDetails | None = None
+    IamInstanceProfile: SecurityHubAwsEc2LaunchTemplateDataIamInstanceProfileDetails | None = None
+    ImageId: StrictStr | None = None
+    InstanceInitiatedShutdownBehavior: StrictStr | None = None
+    InstanceMarketOptions: SecurityHubAwsEc2LaunchTemplateDataInstanceMarketOptionsDetails | None = None
+    InstanceRequirements: SecurityHubAwsEc2LaunchTemplateDataInstanceRequirementsDetails | None = None
+    InstanceType: StrictStr | None = None
+    KernelId: StrictStr | None = None
+    KeyName: StrictStr | None = None
+    LicenseSet: list[SecurityHubAwsEc2LaunchTemplateDataLicenseSetDetails] | None = None
+    MaintenanceOptions: SecurityHubAwsEc2LaunchTemplateDataMaintenanceOptionsDetails | None = None
+    MetadataOptions: SecurityHubAwsEc2LaunchTemplateDataMetadataOptionsDetails | None = None
+    Monitoring: SecurityHubAwsEc2LaunchTemplateDataMonitoringDetails | None = None
+    NetworkInterfaceSet: list[SecurityHubAwsEc2LaunchTemplateDataNetworkInterfaceSetDetails] | None = None
+    Placement: SecurityHubAwsEc2LaunchTemplateDataPlacementDetails | None = None
+    PrivateDnsNameOptions: SecurityHubAwsEc2LaunchTemplateDataPrivateDnsNameOptionsDetails | None = None
+    RamDiskId: StrictStr | None = None
+    SecurityGroupIdSet: list[StrictStr] | None = None
+    SecurityGroupSet: list[StrictStr] | None = None
+    UserData: StrictStr | None = None

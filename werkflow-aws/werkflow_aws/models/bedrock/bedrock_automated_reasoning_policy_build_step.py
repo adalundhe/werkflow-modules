@@ -1,0 +1,11 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .bedrock_automated_reasoning_policy_build_step_context import BedrockAutomatedReasoningPolicyBuildStepContext
+from .bedrock_automated_reasoning_policy_build_step_message import BedrockAutomatedReasoningPolicyBuildStepMessage
+from .bedrock_automated_reasoning_policy_definition_element import BedrockAutomatedReasoningPolicyDefinitionElement
+
+
+class BedrockAutomatedReasoningPolicyBuildStep(BaseModel):
+    context: BedrockAutomatedReasoningPolicyBuildStepContext | None = None
+    priorElement: BedrockAutomatedReasoningPolicyDefinitionElement | None = None
+    messages: list[BedrockAutomatedReasoningPolicyBuildStepMessage] | None = None

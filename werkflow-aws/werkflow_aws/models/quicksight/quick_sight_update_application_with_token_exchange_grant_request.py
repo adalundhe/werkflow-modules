@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel, StrictStr
+
+
+class QuickSightUpdateApplicationWithTokenExchangeGrantRequest(BaseModel):
+    AwsAccountId: StrictStr
+    Namespace: StrictStr

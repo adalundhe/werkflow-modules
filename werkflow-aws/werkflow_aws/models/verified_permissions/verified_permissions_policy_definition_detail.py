@@ -1,0 +1,9 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .verified_permissions_static_policy_definition_detail import VerifiedPermissionsStaticPolicyDefinitionDetail
+from .verified_permissions_template_linked_policy_definition_detail import VerifiedPermissionsTemplateLinkedPolicyDefinitionDetail
+
+
+class VerifiedPermissionsPolicyDefinitionDetail(BaseModel):
+    static: VerifiedPermissionsStaticPolicyDefinitionDetail | None = None
+    templateLinked: VerifiedPermissionsTemplateLinkedPolicyDefinitionDetail | None = None

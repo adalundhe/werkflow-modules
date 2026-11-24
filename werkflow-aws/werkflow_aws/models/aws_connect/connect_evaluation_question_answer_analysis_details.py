@@ -1,0 +1,9 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .connect_evaluation_contact_lens_answer_analysis_details import ConnectEvaluationContactLensAnswerAnalysisDetails
+from .connect_evaluation_gen_ai_answer_analysis_details import ConnectEvaluationGenAIAnswerAnalysisDetails
+
+
+class ConnectEvaluationQuestionAnswerAnalysisDetails(BaseModel):
+    GenAI: ConnectEvaluationGenAIAnswerAnalysisDetails | None = None
+    ContactLens: ConnectEvaluationContactLensAnswerAnalysisDetails | None = None

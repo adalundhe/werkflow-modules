@@ -1,0 +1,9 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .connect_single_select_question_automation_rule import ConnectSingleSelectQuestionAutomationRule
+from .connect_single_select_question_rule_category_automation import ConnectSingleSelectQuestionRuleCategoryAutomation
+
+
+class ConnectEvaluationFormSingleSelectQuestionAutomationOption(BaseModel):
+    RuleCategory: ConnectSingleSelectQuestionRuleCategoryAutomation | None = None
+    AutomationRule: ConnectSingleSelectQuestionAutomationRule | None = None

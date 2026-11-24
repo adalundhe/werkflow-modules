@@ -1,0 +1,9 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .dev_ops_guru_performance_insights_reference_metric import DevOpsGuruPerformanceInsightsReferenceMetric
+from .dev_ops_guru_performance_insights_reference_scalar import DevOpsGuruPerformanceInsightsReferenceScalar
+
+
+class DevOpsGuruPerformanceInsightsReferenceComparisonValues(BaseModel):
+    ReferenceScalar: DevOpsGuruPerformanceInsightsReferenceScalar | None = None
+    ReferenceMetric: DevOpsGuruPerformanceInsightsReferenceMetric | None = None

@@ -1,0 +1,16 @@
+from __future__ import annotations
+import datetime
+from typing import Any
+from pydantic import BaseModel, StrictBool, StrictStr
+from .end_user_messaging_event_destination import EndUserMessagingEventDestination
+
+
+class EndUserMessagingDeleteConfigurationSetResponse(BaseModel):
+    ConfigurationSetArn: StrictStr | None = None
+    ConfigurationSetName: StrictStr | None = None
+    EventDestinations: list[EndUserMessagingEventDestination] | None = None
+    DefaultMessageType: StrictStr | None = None
+    DefaultSenderId: StrictStr | None = None
+    DefaultMessageFeedbackEnabled: StrictBool | None = None
+    CreatedTimestamp: datetime.datetime | StrictStr | None = None
+    ResponseMetadata: dict[str, Any] | None = None

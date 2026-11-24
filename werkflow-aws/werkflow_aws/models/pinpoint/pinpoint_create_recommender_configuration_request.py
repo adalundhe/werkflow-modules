@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .pinpoint_create_recommender_configuration import PinpointCreateRecommenderConfiguration
+
+
+class PinpointCreateRecommenderConfigurationRequest(BaseModel):
+    CreateRecommenderConfiguration: PinpointCreateRecommenderConfiguration

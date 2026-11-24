@@ -167,4 +167,15 @@ from .organizations_update_responsibility_transfer_request import OrganizationsU
 from .organizations_update_responsibility_transfer_response import OrganizationsUpdateResponsibilityTransferResponse as OrganizationsUpdateResponsibilityTransferResponse
 
 _NAMESPACE = dict(globals())
-OrganizationsHandshakeResource.model_rebuild(_types_namespace=_NAMESPACE)
+for _ in range(4):
+    _pending = [
+        _sym
+        for _sym in _NAMESPACE.values()
+        if isinstance(_sym, type)
+        and hasattr(_sym, "model_rebuild")
+        and not getattr(_sym, "__pydantic_complete__", True)
+    ]
+    if not _pending:
+        break
+    for _sym in _pending:
+        _sym.model_rebuild(_types_namespace=_NAMESPACE)

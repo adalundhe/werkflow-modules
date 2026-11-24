@@ -1,0 +1,11 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .quick_sight_currency_display_format_configuration import QuickSightCurrencyDisplayFormatConfiguration
+from .quick_sight_number_display_format_configuration import QuickSightNumberDisplayFormatConfiguration
+from .quick_sight_percentage_display_format_configuration import QuickSightPercentageDisplayFormatConfiguration
+
+
+class QuickSightNumericFormatConfiguration(BaseModel):
+    NumberDisplayFormatConfiguration: QuickSightNumberDisplayFormatConfiguration | None = None
+    CurrencyDisplayFormatConfiguration: QuickSightCurrencyDisplayFormatConfiguration | None = None
+    PercentageDisplayFormatConfiguration: QuickSightPercentageDisplayFormatConfiguration | None = None

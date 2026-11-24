@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .dev_ops_guru_recommendation_related_cloud_watch_metrics_source_detail import DevOpsGuruRecommendationRelatedCloudWatchMetricsSourceDetail
+
+
+class DevOpsGuruRecommendationRelatedAnomalySourceDetail(BaseModel):
+    CloudWatchMetrics: list[DevOpsGuruRecommendationRelatedCloudWatchMetricsSourceDetail] | None = None

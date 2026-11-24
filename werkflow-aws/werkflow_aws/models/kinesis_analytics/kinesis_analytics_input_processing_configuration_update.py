@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .kinesis_analytics_input_lambda_processor_update import KinesisAnalyticsInputLambdaProcessorUpdate
+
+
+class KinesisAnalyticsInputProcessingConfigurationUpdate(BaseModel):
+    InputLambdaProcessorUpdate: KinesisAnalyticsInputLambdaProcessorUpdate

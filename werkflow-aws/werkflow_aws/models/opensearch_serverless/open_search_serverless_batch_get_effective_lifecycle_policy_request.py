@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .open_search_serverless_lifecycle_policy_resource_identifier import OpenSearchServerlessLifecyclePolicyResourceIdentifier
+
+
+class OpenSearchServerlessBatchGetEffectiveLifecyclePolicyRequest(BaseModel):
+    resourceIdentifiers: list[OpenSearchServerlessLifecyclePolicyResourceIdentifier]

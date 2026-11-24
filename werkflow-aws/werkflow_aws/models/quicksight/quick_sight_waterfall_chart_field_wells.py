@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .quick_sight_waterfall_chart_aggregated_field_wells import QuickSightWaterfallChartAggregatedFieldWells
+
+
+class QuickSightWaterfallChartFieldWells(BaseModel):
+    WaterfallChartAggregatedFieldWells: QuickSightWaterfallChartAggregatedFieldWells | None = None
