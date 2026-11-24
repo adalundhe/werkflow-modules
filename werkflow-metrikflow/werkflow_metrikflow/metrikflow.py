@@ -41,6 +41,7 @@ MetricUnit = Literal[
 class Metrik(Module):
     module_enabled = module_enabled
     dependencies = [
+        'datadog-api-client',
         'metrikflow',
         'werkflow-shell',
     ]

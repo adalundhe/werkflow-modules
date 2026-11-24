@@ -18,11 +18,11 @@ Every module subclasses `werkflow_core.Module`, is zero-argument constructible f
 | [`werkflow-secrets`](./werkflow-secrets/README.md) | `0.3.0` | `werkflow_secrets` | Encrypted secret storage and retrieval for environment variables, files, and JSON |
 | [`werkflow-http`](./werkflow-http/README.md) | `0.8.0` | `werkflow_http` | Async HTTP/1.1 client with DNS caching, TLS verification, cookies, redirects, JSON-Patch, and multipart uploads |
 | [`werkflow-aws`](./werkflow-aws/README.md) | `0.8.0` | `werkflow_aws` | Strictly-typed async AWS SDK wrapper covering 136 AWS services (10,654 boto3 ops + 1,797 paginators) |
-| [`werkflow-docker`](./werkflow-docker/README.md) | `0.4.0` | `werkflow_docker` | Async Docker SDK client, CLI build options, and fluent Dockerfile `Image` builder |
+| [`werkflow-docker`](./werkflow-docker/README.md) | `0.4.1` | `werkflow_docker` | Async Docker SDK client, CLI build options, and fluent Dockerfile `Image` builder |
 | [`werkflow-github`](./werkflow-github/README.md) | `0.3.0` | `werkflow_github` | Async GitHub REST API client for repos, PRs, Actions workflows, secrets, and variables |
 | [`werkflow-jira`](./werkflow-jira/README.md) | `0.5.0` | `werkflow_jira` | Strictly-typed async Jira Cloud REST API v3 client (100 services, 630 endpoints) + ADF content builders |
 | [`werkflow-appito`](./werkflow-appito/README.md) | `0.2.0` | `werkflow_appito` | Async Apptio Frontdoor authentication and `.csv`/`.csv.gz` dataset upload client |
-| [`werkflow-metrikflow`](./werkflow-metrikflow/README.md) | `0.3.0` | `werkflow_metrikflow` | Optional Metrikflow metrics sender/loader integration for Werkflow workflows |
+| [`werkflow-metrikflow`](./werkflow-metrikflow/README.md) | `0.3.1` | `werkflow_metrikflow` | Optional Metrikflow metrics sender/loader integration for Werkflow workflows |
 
 ## Installation
 
