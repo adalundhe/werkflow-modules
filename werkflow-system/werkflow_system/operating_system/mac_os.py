@@ -17,9 +17,9 @@ class MacOS(OperatingSystem):
         self.supported_architectures = {
             ArchitectureType.ARM_64: 'arm64',
             ArchitectureType.x86_64: 'x86_64',
+            ArchitectureType.AMD_64: 'AMD64',
             ArchitectureType.AARCH64: 'aarch64',
         }
-    
+
         mac_os_version, _, _ = platform.mac_ver()
-        
-        self.version = mac_os_version
+        self.version = mac_os_version or platform.release()

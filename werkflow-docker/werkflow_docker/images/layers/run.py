@@ -1,41 +1,34 @@
 import re
+from typing import Any, Dict, Literal, Optional, Type, cast
+
 from pydantic import BaseModel, StrictStr
-from typing import Optional, Literal, Union, Dict
+
 from .mount_types import (
     BindMount,
     CacheMount,
-    SecretMount,
     SSHMount,
-    TMPFSMount
+    SecretMount,
+    TMPFSMount,
+)
+
+MountType = BindMount | CacheMount | SecretMount | SSHMount | TMPFSMount
+MountClassType = (
+    Type[BindMount]
+    | Type[CacheMount]
+    | Type[SecretMount]
+    | Type[SSHMount]
+    | Type[TMPFSMount]
 )
 
 
 class Run(BaseModel):
-    layer_type: Literal["run"]="run"
+    layer_type: Literal['run'] = 'run'
     command: StrictStr
-    mount: Optional[
-        BindMount | 
-        CacheMount |
-        SecretMount |
-        SSHMount |
-        TMPFSMount
-    ]=None
-    network: Optional[
-        Literal[
-            "default", 
-            "host", 
-            "none"
-        ]
-    ]=None
-    security: Optional[
-        Literal[
-            "insecure", 
-            "sandbox"
-        ]
-    ]=None
+    mount: Optional[MountType] = None
+    network: Optional[Literal['default', 'host', 'none']] = None
+    security: Optional[Literal['insecure', 'sandbox']] = None
 
     def to_string(self) -> str:
-
         run_string = 'RUN'
 
         if self.mount:
@@ -49,144 +42,59 @@ class Run(BaseModel):
             run_string = f'{run_string} --security={self.security}'
 
         return f'{run_string} {self.command}'
-    
-    @classmethod
-    def parse(
-        cls,
-        line: str
-    ):
-        
-        line = re.sub('RUN ', '', line, count=1)
-        tokens = line.strip('\n').split(' ')
 
-        options: Dict[str, str | bool | int] = {}
-        remainders = []
+    @classmethod
+    def parse(cls, line: str) -> 'Run':
+        stripped = re.sub(r'^RUN\s+', '', line.strip(), count=1, flags=re.IGNORECASE).strip()
+        tokens = stripped.split()
+
+        options: Dict[str, Any] = {}
 
         for token in tokens:
-
-            if mount := re.search(
-                r'--mount=(.*)',
-                token
-            ):
-                
-                mount_token = re.sub(
-                    r'--mount=',
-                    '',
-                    mount.group(0)
-                )
-
+            if token.startswith('--mount='):
+                mount_token = token[len('--mount='):]
                 options['mount'] = cls._parse_mount(mount_token)
-                line = re.sub(
-                    mount.group(0),
-                    '',
-                    line
-                )
+                stripped = re.sub(re.escape(token), '', stripped, count=1).strip()
+            elif token.startswith('--network='):
+                options['network'] = cls._parse_network(token)
+                stripped = re.sub(re.escape(token), '', stripped, count=1).strip()
+            elif token.startswith('--security='):
+                options['security'] = cls._parse_security(token)
+                stripped = re.sub(re.escape(token), '', stripped, count=1).strip()
+            else:
+                break
 
-            elif network := re.search(
-                r'--network=(.*)',
-                token
-            ):
-                options['network'] = cls._parse_network(
-                    network.group(0)
-                )
-
-                line = re.sub(
-                    network.group(0),
-                    '',
-                    line
-                )
-
-            elif security := re.search(
-                r'--security=(.*)',
-                token
-            ):
-                options['security'] = cls._parse_security(
-                    security.group(0)
-                )
-
-                line = re.sub(
-                    security.group(0),
-                    '',
-                    line
-                )
-
-        return Run(
-            command=line,
-            **options
+        return cls(
+            command=stripped.strip(),
+            **options,
         )
 
     @classmethod
-    def _parse_mount(
-        cls,
-        token: str
-    ):
+    def _parse_mount(cls, token: str) -> MountType:
         mount_type = 'bind'
 
-        mount_types: Dict[
-            Literal[
-                'bind',
-                'cache',
-                'secret',
-                'ssh',
-                'tmpfs'
-            ],
-            BindMount |
-            CacheMount |
-            SecretMount |
-            SSHMount |
-            TMPFSMount
-        ] = {
+        mount_types: Dict[str, MountClassType] = {
             'bind': BindMount,
             'cache': CacheMount,
             'secret': SecretMount,
             'ssh': SSHMount,
-            'tmpfs': TMPFSMount
+            'tmpfs': TMPFSMount,
         }
 
-
-        if mount_match := re.search(
-            r'type=(bind|cache|secret|ssh|tmpfs)',
-            token
-        ):
-            mount_type = re.sub(
-                r'type=',
-                '',
-                mount_match.group(0)
-            )
-
-            token = re.sub(
-                r'type=(bind|cache|secret|ssh|tmpfs)',
-                '',
-                token
-            )
+        if mount_match := re.search(r'type=(bind|cache|secret|ssh|tmpfs)', token):
+            mount_type = mount_match.group(1)
+            token = re.sub(r'type=(bind|cache|secret|ssh|tmpfs),?', '', token, count=1)
 
         return mount_types[mount_type].parse(token)
-    
-    @classmethod
-    def _parse_network(
-        cls,
-        token: str
-    ) -> Literal['default', 'host', 'none']:
-        if network := re.search(
-            r'default|host|none',
-            token
-        ):
-            return network.group(0)
-        
-        return 'none'
-    
-    @classmethod
-    def _parse_security(
-        cls,
-        token: str
-    ) -> Literal['insecure', 'sandbox']:
-        if security := re.search(
-            r'insecure|sandbox',
-            token
-        ):
-            return security.group(0)
-        
-        return 'insecure'
 
-        
-        
+    @classmethod
+    def _parse_network(cls, token: str) -> Literal['default', 'host', 'none']:
+        if network := re.search(r'default|host|none', token):
+            return cast(Literal['default', 'host', 'none'], network.group(0))
+        return 'none'
+
+    @classmethod
+    def _parse_security(cls, token: str) -> Literal['insecure', 'sandbox']:
+        if security := re.search(r'insecure|sandbox', token):
+            return cast(Literal['insecure', 'sandbox'], security.group(0))
+        return 'insecure'

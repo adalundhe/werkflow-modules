@@ -1,0 +1,8 @@
+from __future__ import annotations
+from pydantic import BaseModel, StrictStr
+from .dynamo_db_auto_scaling_target_tracking_scaling_policy_configuration_update import DynamoDBAutoScalingTargetTrackingScalingPolicyConfigurationUpdate
+
+
+class DynamoDBAutoScalingPolicyUpdate(BaseModel):
+    TargetTrackingScalingPolicyConfiguration: DynamoDBAutoScalingTargetTrackingScalingPolicyConfigurationUpdate
+    PolicyName: StrictStr | None = None

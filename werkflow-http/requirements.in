@@ -2,7 +2,3 @@ aiodns
 orjson
 pydantic
 werkflow-core
-werkflow-file
-werkflow-secrets
-werkflow-shell
-werkflow-system

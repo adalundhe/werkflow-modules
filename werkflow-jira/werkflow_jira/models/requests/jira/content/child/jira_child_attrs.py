@@ -1,13 +1,13 @@
 from __future__ import annotations
 
-from typing import Literal
+from typing import Annotated, List, Literal
 
 from pydantic import (
+    AliasChoices,
     BaseModel,
+    Field,
     StrictInt,
     StrictStr,
-    conint,
-    conlist,
 )
 
 
@@ -17,19 +17,22 @@ class MediaAttrs(BaseModel):
     width: StrictInt | None = None
     height: StrictInt | None = None
     collection: StrictStr
-    occurenceKey: StrictStr | None = None
+    occurrenceKey: StrictStr | None = Field(
+        default=None,
+        validation_alias=AliasChoices("occurrenceKey", "occurenceKey"),
+    )
     alt: StrictStr | None = None
 
 
 class TableCellAttrs(BaseModel):
     background: StrictStr
-    colspan: conint(ge=1) = 1
-    colwidth: conlist(conint(ge=1)) | None = None
-    rowspan: conint(ge=1) = 1
+    colspan: Annotated[int, Field(ge=1)] = 1
+    colwidth: List[Annotated[int, Field(ge=1)]] | None = None
+    rowspan: Annotated[int, Field(ge=1)] = 1
 
 
 class TableHeaderAttrs(BaseModel):
     background: StrictStr
-    colspan: conint(ge=1) = 1
-    colwidth: conlist(conint(ge=1)) | None = None
-    rowspan: conint(ge=1) = 1
+    colspan: Annotated[int, Field(ge=1)] = 1
+    colwidth: List[Annotated[int, Field(ge=1)]] | None = None
+    rowspan: Annotated[int, Field(ge=1)] = 1

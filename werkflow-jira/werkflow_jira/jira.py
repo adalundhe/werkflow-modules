@@ -1,9 +1,9 @@
 import asyncio
 import datetime
 import re
+from typing import Any, Dict, List, Tuple, Type
 
 from werkflow_core import Module
-from werkflow_encryption import Encryption
 from werkflow_http import HTTP
 from werkflow_http.connections.http.models.http import HTTPResponse
 
@@ -46,17 +46,14 @@ from .models.responses.jira import JiraIssueType as JiraIssueTypeResponse
 
 class Jira(Module):
     module_enabled = True
-    dependencies = ["werkflow-http", "werkflow-encryption"]
+    dependencies = ["werkflow-http", "pydantic"]
 
     def __init__(self) -> None:
         super().__init__()
 
-        self._loop: asyncio.AbstractEventLoop = None
-
         self.client = HTTP()
-        self.user: str = None
 
-        self._errors_map = {
+        self._errors_map: Dict[Tuple[int, int], Type[Exception]] = {
             (401, 403): UnauthorizedRequestError,
             (400, 400): BadRequestError,
             (404, 404): ResourceNotFoundError,
@@ -67,21 +64,32 @@ class Jira(Module):
 
         self._slug_pattern = re.compile(r"[^0-9a-zA-Z]+")
         self._duplicate_dash_pattern = re.compile(r"[-]+")
-        self.project_slug: str = None
-        self.encryption = Encryption()
 
     def check_response(self, response: HTTPResponse) -> HTTPResponse:
-        if response.status < 200 or response.status >= 400:
-            for error_code_range, error in self._errors_map.items():
-                min_error_code, max_error_code = error_code_range
+        status = response.status
+        url_str = str(response.url)
+        method_str = str(response.method or "")
 
-                if (
-                    response.status >= min_error_code
-                    and response.status <= max_error_code
-                ):
-                    raise error(response.url, response.method, response.status)
+        if status is None:
+            raise ServerFailedError(url_str, method_str, 0)
+
+        if status < 200 or status >= 400:
+            for (min_error_code, max_error_code), error in self._errors_map.items():
+                if min_error_code <= status <= max_error_code:
+                    raise error(url_str, method_str, status)
+
+            if status >= 500:
+                raise ServerFailedError(url_str, method_str, status)
+
+            raise BadRequestError(url_str, method_str, status)
 
         return response
+
+    def _parse_json(self, response: HTTPResponse) -> Any:
+        payload = response.json()
+        if isinstance(payload, Exception):
+            raise payload
+        return payload
 
     def slugify(self, project_name: str) -> str:
         project_slug = (
@@ -109,23 +117,23 @@ class Jira(Module):
         jira_issue_priority: str,
         jira_issue_project: str,
         jira_issue_assignee: str | None = None,
-        jira_issue_due_date: datetime.datetime | None = None,
+        jira_issue_due_date: datetime.datetime | datetime.date | str | None = None,
         jira_issue_labels: list[str] | None = None,
         jira_issue_reporter: str | None = None,
         jira_parent_issue: str | None = None,
-    ):
+    ) -> JiraIssueResponse:
         issue_priority = await self.get_matching_priority(
             jira_issue_priority,
             jira_email,
             jira_api_token,
-            organization=jira_organization,
+            jira_organization=jira_organization,
         )
 
         issue_project = await self.get_jira_project(
             jira_issue_project,
             jira_email,
             jira_api_token,
-            organization=jira_organization,
+            jira_organization=jira_organization,
         )
 
         issue_type = await self.get_matching_project_issue_type(
@@ -133,7 +141,7 @@ class Jira(Module):
             issue_project.id,
             jira_email,
             jira_api_token,
-            organization=jira_organization,
+            jira_organization=jira_organization,
         )
 
         issue_reporter: JiraIssueReporter | None = None
@@ -142,11 +150,10 @@ class Jira(Module):
                 jira_issue_reporter,
                 jira_email,
                 jira_api_token,
-                organization=jira_organization,
+                jira_organization=jira_organization,
             )
 
             issue_reporter = JiraIssueReporter(id=matching_user.accountId)
-
 
         issue_assignee: JiraIssueAssignee | None = None
         if jira_issue_assignee:
@@ -154,14 +161,14 @@ class Jira(Module):
                 jira_issue_assignee,
                 jira_email,
                 jira_api_token,
-                organization=jira_organization,
+                jira_organization=jira_organization,
             )
             issue_assignee = JiraIssueAssignee(id=issue_assignee_user.accountId)
 
         data = JiraIssue(
             fields=JiraIssueFields(
                 assignee=issue_assignee,
-                description=JiraIssueDescription(content=jira_issue_description),
+                description=JiraIssueDescription(content=list(jira_issue_description)),
                 issuetype=JiraIssueType(id=issue_type.id),
                 duedate=jira_issue_due_date,
                 labels=jira_issue_labels,
@@ -185,13 +192,13 @@ class Jira(Module):
                 jira_api_token,
             ),
             data=data.model_dump(
+                mode="json",
                 exclude_none=True,
             ),
         )
 
         checked_response = self.check_response(response)
-
-        return JiraIssueResponse(**checked_response.json())
+        return JiraIssueResponse(**self._parse_json(checked_response))
 
     async def get_issue(
         self,
@@ -199,7 +206,7 @@ class Jira(Module):
         jira_email: str,
         jira_api_token: str,
         jira_organization: str,
-    ):
+    ) -> HTTPResponse:
         response = await self.client.get(
             f"https://{jira_organization}.atlassian.net/rest/api/3/issue/{issue_id}",
             auth=(
@@ -216,17 +223,19 @@ class Jira(Module):
         jira_email: str,
         jira_api_token: str,
         jira_organization: str,
-    ):
-        created_jira_issues = await asyncio.gather(
-            *[
-                self._convert_jira_issue_dict_to_request(
-                    issue_dict, 
-                    jira_email,
-                    jira_api_token,
-                    organization=jira_organization,
-                )
-                for issue_dict in jira_issues
-            ]
+    ) -> List[JiraIssueResponse]:
+        created_jira_issues = list(
+            await asyncio.gather(
+                *[
+                    self._convert_jira_issue_dict_to_request(
+                        issue_dict,
+                        jira_email,
+                        jira_api_token,
+                        jira_organization=jira_organization,
+                    )
+                    for issue_dict in jira_issues
+                ]
+            )
         )
 
         data = JiraIssueBatch(issueUpdates=created_jira_issues)
@@ -240,12 +249,14 @@ class Jira(Module):
             headers={
                 "Content-Type": "application/json",
             },
-            data=data.model_dump(exclude_none=True),
+            data=data.model_dump(mode="json", exclude_none=True),
         )
 
         checked_response = self.check_response(response)
+        payload = self._parse_json(checked_response)
+        issues = payload.get("issues", []) if isinstance(payload, dict) else payload
 
-        return [JiraIssueResponse(**issue) for issue in checked_response.json()]
+        return [JiraIssueResponse(**issue) for issue in issues]
 
     async def _convert_jira_issue_dict_to_request(
         self,
@@ -253,20 +264,19 @@ class Jira(Module):
         jira_email: str,
         jira_api_token: str,
         jira_organization: str,
-    ):
-
+    ) -> JiraIssue:
         issue_priority = await self.get_matching_priority(
             jira_issue.priority,
             jira_email,
             jira_api_token,
-            organization=jira_organization,
+            jira_organization=jira_organization,
         )
 
         issue_project = await self.get_jira_project(
             jira_issue.project,
             jira_email,
             jira_api_token,
-            organization=jira_organization,
+            jira_organization=jira_organization,
         )
 
         issue_type = await self.get_matching_project_issue_type(
@@ -274,7 +284,7 @@ class Jira(Module):
             issue_project.id,
             jira_email,
             jira_api_token,
-            organization=jira_organization,
+            jira_organization=jira_organization,
         )
 
         issue_reporter: JiraIssueReporter | None = None
@@ -283,7 +293,7 @@ class Jira(Module):
                 jira_issue.reporter,
                 jira_email,
                 jira_api_token,
-                organization=jira_organization,
+                jira_organization=jira_organization,
             )
 
             issue_reporter = JiraIssueReporter(id=matching_user.accountId)
@@ -294,14 +304,14 @@ class Jira(Module):
                 jira_issue.assignee,
                 jira_email,
                 jira_api_token,
-                organization=jira_organization,
+                jira_organization=jira_organization,
             )
             issue_assignee = JiraIssueAssignee(id=issue_assignee_user.accountId)
 
-        issue = JiraIssue(
+        return JiraIssue(
             fields=JiraIssueFields(
                 assignee=issue_assignee,
-                description=JiraIssueDescription(content=jira_issue.description),
+                description=JiraIssueDescription(content=list(jira_issue.description)),
                 duedate=jira_issue.due_date,
                 labels=jira_issue.labels,
                 parent=JiraIssueParent(key=jira_issue.parent_issue)
@@ -315,15 +325,13 @@ class Jira(Module):
             )
         )
 
-        return issue
-
     async def get_matching_user_by_email(
         self,
         jira_user_email: str,
         jira_email: str,
         jira_api_token: str,
         jira_organization: str,
-    ):
+    ) -> JiraUser:
         response = await self.client.get(
             f"https://{jira_organization}.atlassian.net/rest/api/3/user/search?query={jira_user_email}",
             auth=(
@@ -333,11 +341,13 @@ class Jira(Module):
         )
 
         checked_response = self.check_response(response)
-
-        jira_users = [JiraUser(**user) for user in checked_response.json()]
+        jira_users = [JiraUser(**user) for user in self._parse_json(checked_response)]
 
         matching_users = [
-            user for user in jira_users if user.emailAddress == jira_user_email
+            user
+            for user in jira_users
+            if user.emailAddress is not None
+            and user.emailAddress.lower() == jira_user_email.lower()
         ]
 
         assert (
@@ -351,7 +361,7 @@ class Jira(Module):
         jira_email: str,
         jira_api_token: str,
         jira_organization: str,
-    ):
+    ) -> List[JiraIssuePriorityResponse]:
         response = await self.client.get(
             f"https://{jira_organization}.atlassian.net/rest/api/3/priority",
             auth=(
@@ -364,7 +374,7 @@ class Jira(Module):
 
         return [
             JiraIssuePriorityResponse(**priority)
-            for priority in checked_response.json()
+            for priority in self._parse_json(checked_response)
         ]
 
     async def get_matching_priority(
@@ -373,11 +383,11 @@ class Jira(Module):
         jira_email: str,
         jira_api_token: str,
         jira_organization: str,
-    ):
+    ) -> JiraIssuePriorityResponse:
         priorities = await self.list_priorities(
             jira_email,
             jira_api_token,
-            organization=jira_organization,
+            jira_organization=jira_organization,
         )
 
         matching_priorities = [
@@ -390,9 +400,7 @@ class Jira(Module):
             len(matching_priorities) > 0
         ), f"No matching priority found for priority - {jira_priority}"
 
-        matching_priority = matching_priorities[0]
-
-        return matching_priority
+        return matching_priorities[0]
 
     async def get_jira_project(
         self,
@@ -400,7 +408,7 @@ class Jira(Module):
         jira_email: str,
         jira_api_token: str,
         jira_organization: str,
-    ):
+    ) -> JiraProject:
         response = await self.client.get(
             f"https://{jira_organization}.atlassian.net/rest/api/3/project/{jira_project_name_or_id}",
             auth=(
@@ -411,7 +419,7 @@ class Jira(Module):
 
         checked_response = self.check_response(response)
 
-        return JiraProject(**checked_response.json())
+        return JiraProject(**self._parse_json(checked_response))
 
     async def get_project_issue_types(
         self,
@@ -419,7 +427,7 @@ class Jira(Module):
         jira_email: str,
         jira_api_token: str,
         jira_organization: str,
-    ):
+    ) -> List[JiraIssueTypeResponse]:
         response = await self.client.get(
             f"https://{jira_organization}.atlassian.net/rest/api/3/issuetype/project?projectId={project_id}",
             auth=(
@@ -432,7 +440,7 @@ class Jira(Module):
 
         return [
             JiraIssueTypeResponse(**issue_type)
-            for issue_type in checked_response.json()
+            for issue_type in self._parse_json(checked_response)
         ]
 
     async def get_matching_project_issue_type(
@@ -442,12 +450,12 @@ class Jira(Module):
         jira_email: str,
         jira_api_token: str,
         jira_organization: str,
-    ):
+    ) -> JiraIssueTypeResponse:
         jira_issue_types = await self.get_project_issue_types(
             project_id,
             jira_email,
             jira_api_token,
-            organization=jira_organization,
+            jira_organization=jira_organization,
         )
 
         matching_issue_types = [
@@ -467,8 +475,7 @@ class Jira(Module):
         jira_email: str,
         jira_api_token: str,
         jira_organization: str,
-    ):
-        # issueLinkType
+    ) -> JiraIssueLinkTypes:
         response = await self.client.get(
             f"https://{jira_organization}.atlassian.net/rest/api/3/issueLinkType",
             auth=(
@@ -479,7 +486,7 @@ class Jira(Module):
 
         checked_response = self.check_response(response)
 
-        return JiraIssueLinkTypes(**checked_response.json())
+        return JiraIssueLinkTypes(**self._parse_json(checked_response))
 
     async def get_matching_issue_link_type(
         self,
@@ -489,18 +496,19 @@ class Jira(Module):
         jira_organization: str,
     ) -> JiraIssueLinkType:
         link_types = await self.get_issue_link_types(
-            jira_email, 
-            jira_api_token, 
-            organization=jira_organization,
+            jira_email,
+            jira_api_token,
+            jira_organization=jira_organization,
         )
 
         issue_link_types: list[JiraIssueLinkType] = link_types.issueLinkTypes
+        target = jira_issue_link_type.lower()
 
         matching_link_types = [
             link_type
             for link_type in issue_link_types
-            if link_type.inward.lower() == jira_issue_link_type.lower()
-            or link_type.outward.lower() == jira_issue_link_type
+            if link_type.inward.lower() == target
+            or link_type.outward.lower() == target
         ]
 
         assert (
@@ -518,12 +526,12 @@ class Jira(Module):
         jira_email: str,
         jira_api_token: str,
         jira_organization: str,
-    ):
+    ) -> HTTPResponse:
         jira_link_type = await self.get_matching_issue_link_type(
             jira_issue_link_type,
             jira_email,
             jira_api_token,
-            organization=jira_organization,
+            jira_organization=jira_organization,
         )
 
         data = JiraIssueLink(
@@ -541,12 +549,20 @@ class Jira(Module):
             type=JiraIssueLinkRefType(name=jira_link_type.name),
         )
 
-        return await self.client.post(
+        response = await self.client.post(
             f"https://{jira_organization}.atlassian.net/rest/api/3/issueLink",
             auth=(
                 jira_email,
                 jira_api_token,
             ),
             headers={"Content-Type": "application/json"},
-            data=data.model_dump(exclude_none=True),
+            data=data.model_dump(mode="json", exclude_none=True),
         )
+
+        return self.check_response(response)
+
+    async def close(self) -> None:
+        await self.client.close()
+
+    def abort(self) -> None:
+        self.client.abort()

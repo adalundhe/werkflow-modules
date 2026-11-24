@@ -1,67 +1,127 @@
 import asyncio
-from typing import Dict
+from collections.abc import Sequence
+from typing import Any, Dict
 
 import orjson
+from pydantic import BaseModel
 from werkflow_core import Module
 
 from .connections.http import MercurySyncHTTPConnection
-from .connections.http.models.http import File as HTTPFile
+from .connections.http.models.http import (
+    File as HTTPFile,
+    HTTPResponse,
+)
 from .request import (
     Data,
+    File,
     Headers,
     Params,
     Request,
     RequestWithData,
-    File,
 )
 
 
 class HTTP(Module):
-    dependencies=[
+    module_enabled = True
+    dependencies = [
         'aiodns',
         'orjson',
         'pydantic',
     ]
 
-    def __init__(self) -> None:
+    def __init__(self, verify_ssl: bool = True) -> None:
         super().__init__()
-        self._client: MercurySyncHTTPConnection = None
+        self._verify_ssl = verify_ssl
+        self._client: MercurySyncHTTPConnection | None = None
+
+    def _get_client(self) -> MercurySyncHTTPConnection:
+        if self._client is None:
+            self._client = MercurySyncHTTPConnection(verify_ssl=self._verify_ssl)
+        return self._client
+
+    @staticmethod
+    def _normalize_files(
+        files: Sequence[File | str | Dict[str, Any]] | None,
+    ) -> list[File | str] | None:
+        if not files:
+            return None
+
+        return [
+            HTTPFile(**file) if isinstance(file, dict) else file
+            for file in files
+        ]
+
+    @staticmethod
+    def _is_json_content_type(headers: Headers | None) -> bool:
+        if not headers:
+            return False
+
+        for header_key, header_value in headers.items():
+            if header_key.lower() == 'content-type' and header_value is not None:
+                value_str = (
+                    header_value.decode('utf-8', errors='replace')
+                    if isinstance(header_value, bytes)
+                    else str(header_value)
+                )
+                media_type = value_str.split(';', 1)[0].strip().lower()
+                return media_type == 'application/json'
+
+        return False
+
+    @classmethod
+    def _encode_data(
+        cls,
+        headers: Headers | None,
+        data: Data,
+    ) -> Data:
+        if data is None:
+            return None
+
+        if cls._is_json_content_type(headers):
+            if isinstance(data, bytes):
+                return data
+            if isinstance(data, str):
+                return data.encode('utf-8')
+            if isinstance(data, BaseModel):
+                return orjson.dumps(data.model_dump(mode='json', exclude_none=True))
+            return orjson.dumps(data)
+
+        return data
 
     async def get(
         self,
         url: str,
         auth: tuple[str, str] | None = None,
-        headers: Headers=None,
-        params: Params=None
-    ):
-        if self._client is None:
-            self._client = MercurySyncHTTPConnection()
+        headers: Headers | None = None,
+        params: Params | None = None,
+    ) -> HTTPResponse:
+        client = self._get_client()
 
         Request(
             url=url,
             auth=auth,
             headers=headers,
-            params=params
+            params=params,
         )
 
-        return await self._client.get(
+        return await client.get(
             url,
             auth=auth,
-            headers=headers,
-            params=params
+            headers=dict(headers) if headers is not None else None,
+            params=dict(params) if params is not None else None,
         )
-    
+
     async def post(
         self,
         url: str,
         auth: tuple[str, str] | None = None,
-        headers: Headers=None,
-        params: Params=None,
-        data: Data=None,
-        files: list[File | str] | None = None,
-    ):
-        if self._client is None:
-            self._client = MercurySyncHTTPConnection()
+        headers: Headers | None = None,
+        params: Params | None = None,
+        data: Data = None,
+        files: Sequence[File | str | Dict[str, Any]] | None = None,
+    ) -> HTTPResponse:
+        client = self._get_client()
+        normalized_files = self._normalize_files(files)
 
         RequestWithData(
             url=url,
@@ -69,52 +129,31 @@ class HTTP(Module):
             headers=headers,
             params=params,
             data=data,
-            files=[
-                HTTPFile(
-                    **file
-                ) if isinstance(
-                    file,
-                    dict,
-                ) else file for file in files
-            ],
+            files=normalized_files,
         )
 
-        lowered_headers: Dict[str, str] | None = None
-        if headers:
-            lowered_headers = {
-                header_key.lower(): header_value for header_key, header_value in headers.items()
-            }
+        encoded_data = self._encode_data(headers, data)
 
-        if lowered_headers and lowered_headers.get('content-type') == 'application/json':
-            data = orjson.dumps(data)
-
-        return await self._client.post(
+        return await client.post(
             url,
             auth=auth,
-            headers=headers,
-            params=params,
-            data=data,
-            files=[
-                HTTPFile(
-                    **file
-                ) if isinstance(
-                    file,
-                    dict,
-                ) else file for file in files
-            ],
+            headers=dict(headers) if headers is not None else None,
+            params=dict(params) if params is not None else None,
+            data=encoded_data,
+            files=normalized_files,
         )
-    
+
     async def put(
         self,
         url: str,
         auth: tuple[str, str] | None = None,
-        headers: Headers=None,
-        params: Params=None,
-        data: Data=None,
-        files: list[File | str] | None = None,
-    ):
-        if self._client is None:
-            self._client = MercurySyncHTTPConnection()
+        headers: Headers | None = None,
+        params: Params | None = None,
+        data: Data = None,
+        files: Sequence[File | str | Dict[str, Any]] | None = None,
+    ) -> HTTPResponse:
+        client = self._get_client()
+        normalized_files = self._normalize_files(files)
 
         RequestWithData(
             url=url,
@@ -122,156 +161,134 @@ class HTTP(Module):
             headers=headers,
             params=params,
             data=data,
-            files=files,
+            files=normalized_files,
         )
 
-        lowered_headers: Dict[str, str] | None = None
-        if headers:
-            lowered_headers = {
-                header_key.lower(): header_value for header_key, header_value in headers.items()
-            }
+        encoded_data = self._encode_data(headers, data)
 
-        if lowered_headers and lowered_headers.get('content-type') == 'application/json':
-            data = orjson.dumps(data).decode()
-
-        return await self._client.put(
+        return await client.put(
             url,
             auth=auth,
-            headers=headers,
-            params=params,
-            data=data,
-            files=[
-                HTTPFile(
-                    **file
-                ) if isinstance(
-                    file,
-                    dict,
-                ) else file for file in files
-            ],
+            headers=dict(headers) if headers is not None else None,
+            params=dict(params) if params is not None else None,
+            data=encoded_data,
+            files=normalized_files,
         )
-    
+
     async def patch(
         self,
         url: str,
         auth: tuple[str, str] | None = None,
-        headers: Headers=None,
-        params: Params=None,
-        data: Data=None,
-        files: list[File | str] | None = None,
-    ):
-        if self._client is None:
-            self._client = MercurySyncHTTPConnection()
+        headers: Headers | None = None,
+        params: Params | None = None,
+        data: Data = None,
+        files: Sequence[File | str | Dict[str, Any]] | None = None,
+    ) -> HTTPResponse:
+        client = self._get_client()
+        normalized_files = self._normalize_files(files)
 
         RequestWithData(
-            url,
+            url=url,
             auth=auth,
             headers=headers,
             params=params,
             data=data,
-            files=files,
+            files=normalized_files,
         )
 
-        lowered_headers: Dict[str, str] | None = None
-        if headers:
-            lowered_headers = {
-                header_key.lower(): header_value for header_key, header_value in headers.items()
-            }
+        encoded_data = self._encode_data(headers, data)
 
-        if lowered_headers and lowered_headers.get('content-type') == 'application/json':
-            data = orjson.dumps(data).decode()
-
-        return await self._client.patch(
+        return await client.patch(
             url,
             auth=auth,
-            headers=headers,
-            params=params,
-            data=data,
-            files=[
-                HTTPFile(
-                    **file
-                ) if isinstance(
-                    file,
-                    dict,
-                ) else file for file in files
-            ],
+            headers=dict(headers) if headers is not None else None,
+            params=dict(params) if params is not None else None,
+            data=encoded_data,
+            files=normalized_files,
         )
-    
+
     async def delete(
         self,
         url: str,
         auth: tuple[str, str] | None = None,
-        headers: Headers=None,
-        params: Params=None
-    ):
-        if self._client is None:
-            self._client = MercurySyncHTTPConnection()
+        headers: Headers | None = None,
+        params: Params | None = None,
+    ) -> HTTPResponse:
+        client = self._get_client()
 
         Request(
             url=url,
             auth=auth,
             headers=headers,
-            params=params
+            params=params,
         )
 
-        return await self._client.delete(
+        return await client.delete(
             url=url,
             auth=auth,
-            headers=headers,
-            params=params
+            headers=dict(headers) if headers is not None else None,
+            params=dict(params) if params is not None else None,
         )
-    
+
     async def options(
         self,
         url: str,
         auth: tuple[str, str] | None = None,
-        headers: Headers=None,
-        params: Params=None
-    ):
-        if self._client is None:
-            self._client = MercurySyncHTTPConnection()
+        headers: Headers | None = None,
+        params: Params | None = None,
+    ) -> HTTPResponse:
+        client = self._get_client()
 
         Request(
             url=url,
             auth=auth,
             headers=headers,
-            params=params
+            params=params,
         )
 
-        return await self._client.options(
+        return await client.options(
             url,
             auth=auth,
-            headers=headers,
-            params=params
+            headers=dict(headers) if headers is not None else None,
+            params=dict(params) if params is not None else None,
         )
-    
+
     async def head(
         self,
         url: str,
         auth: tuple[str, str] | None = None,
-        headers: Headers=None,
-        params: Params=None
-    ):
-        if self._client is None:
-            self._client = MercurySyncHTTPConnection()
+        headers: Headers | None = None,
+        params: Params | None = None,
+    ) -> HTTPResponse:
+        client = self._get_client()
 
         Request(
-            url,
+            url=url,
             auth=auth,
             headers=headers,
-            params=params
+            params=params,
         )
 
-        return await self._client.head(
+        return await client.head(
             url,
             auth=auth,
-            headers=headers,
-            params=params
+            headers=dict(headers) if headers is not None else None,
+            params=dict(params) if params is not None else None,
         )
-    
-    async def close(self):
-        if self._client:
-            await self._client.close()
 
-    def abort(self):
-        if self._client:
-            asyncio.create_task(self._client.close())
+    async def close(self) -> None:
+        if self._client is not None:
+            client = self._client
+            self._client = None
+            await client.close()
+
+    def abort(self) -> None:
+        if self._client is not None:
+            client = self._client
+            self._client = None
+            try:
+                loop = asyncio.get_running_loop()
+            except RuntimeError:
+                client.abort()
+                return
+            loop.create_task(client.close())

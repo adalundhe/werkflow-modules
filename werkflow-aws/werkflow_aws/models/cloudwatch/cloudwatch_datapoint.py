@@ -1,6 +1,6 @@
 import datetime
 from pydantic import BaseModel, StrictFloat, StrictStr
-from .cloudwatch_statistics import CloudWatchStatistics
+from .cloudwatch_unit import CloudWatchUnit
 
 
 class CloudWatchDatapoint(BaseModel):
@@ -10,5 +10,5 @@ class CloudWatchDatapoint(BaseModel):
     Sum: StrictFloat | None = None
     Minimum: StrictFloat | None = None
     Maximum: StrictFloat | None = None
-    Unit: CloudWatchStatistics | None = None
+    Unit: CloudWatchUnit | None = None
     ExtendedStatistics: dict[StrictStr, StrictFloat] | None = None

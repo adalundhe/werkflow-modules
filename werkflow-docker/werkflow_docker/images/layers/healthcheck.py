@@ -1,118 +1,69 @@
 import re
-from pydantic import (
-    BaseModel,
-    StrictInt,
-    StrictFloat
-)
-from typing import Literal, Dict, Optional, List
+from typing import Any, Dict, List, Literal, Optional, Union
+
+from pydantic import BaseModel, StrictFloat, StrictInt
+
 from .cmd import Cmd
 
 
+def _parse_number(raw: str) -> Union[int, float]:
+    return float(raw) if '.' in raw else int(raw)
+
+
 class Healthcheck(BaseModel):
-    layer_type: Literal["healthcheck"]="healthcheck"
-    interval: Optional[StrictInt | StrictFloat]=None
-    timeout: Optional[StrictInt| StrictFloat]=None
-    start_period: Optional[StrictInt | StrictFloat]=None
-    retries: Optional[StrictInt | StrictFloat]=None
+    layer_type: Literal['healthcheck'] = 'healthcheck'
+    interval: Optional[StrictInt | StrictFloat] = None
+    timeout: Optional[StrictInt | StrictFloat] = None
+    start_period: Optional[StrictInt | StrictFloat] = None
+    retries: Optional[StrictInt | StrictFloat] = None
     command: Cmd
 
     def to_string(self) -> str:
-        command = self.command.to_string()
-        timings: List[str] = []
+        parts: List[str] = ['HEALTHCHECK']
 
-        if self.interval:
-            timings.append(
-                f'--interval={self.interval}s'
-            )
-        
-        if self.timeout:
-            timings.append(
-                f'--timeout={self.timeout}s'
-            )
+        if self.interval is not None:
+            parts.append(f'--interval={self.interval}s')
 
-        if self.start_period:
-            timings.append(
-                f'--start-period={self.start_period}s'
-            )
+        if self.timeout is not None:
+            parts.append(f'--timeout={self.timeout}s')
 
-        timings = ' '.join(timings)
+        if self.start_period is not None:
+            parts.append(f'--start-period={self.start_period}s')
 
-        return f'HEALTHCHECK {timings} --retries={self.retries} {command}'
-    
+        if self.retries is not None:
+            parts.append(f'--retries={self.retries}')
+
+        parts.append(self.command.to_string())
+        return ' '.join(parts)
+
     @classmethod
-    def parse(
-        cls,
-        line: str
-    ):
-        line = re.sub('ADD ', '', line, count=1)
+    def parse(cls, line: str) -> 'Healthcheck':
+        stripped = re.sub(
+            r'^HEALTHCHECK\s+',
+            '',
+            line.strip(),
+            count=1,
+            flags=re.IGNORECASE,
+        ).strip()
 
-        options: Dict[str, int | Cmd] = {}
+        options: Dict[str, Any] = {}
 
-        if command := re.search(
-            r'CMD(.*)',
-            line
-        ):
-            command_string = command.group(0)
+        if command_match := re.search(r'CMD\b.*', stripped):
+            command_string = command_match.group(0)
             options['command'] = Cmd.parse(command_string)
-            
-            line = re.sub(command_string, '', line)
+            stripped = re.sub(re.escape(command_string), '', stripped, count=1).strip()
 
-        tokens = line.strip('\n').split(' ')
-        
-        for token in tokens:
-            if interval := re.search(
-                r'--interval=[0-9]*s',
-                token
+        for token in stripped.split():
+            if interval := re.fullmatch(r'--interval=([0-9]+(?:\.[0-9]+)?)s?', token):
+                options['interval'] = _parse_number(interval.group(1))
+            elif timeout := re.fullmatch(r'--timeout=([0-9]+(?:\.[0-9]+)?)s?', token):
+                options['timeout'] = _parse_number(timeout.group(1))
+            elif start_period := re.fullmatch(
+                r'--start-period=([0-9]+(?:\.[0-9]+)?)s?',
+                token,
             ):
-                interval_amount = int(re.sub(
-                    r'[^0-9]',
-                    '', 
-                    interval.group(0)
-                ))
+                options['start_period'] = _parse_number(start_period.group(1))
+            elif retries := re.fullmatch(r'--retries=([0-9]+)', token):
+                options['retries'] = int(retries.group(1))
 
-                options['interval'] = interval_amount
-
-            elif timeout := re.search(
-                r'--timeout=[0-9]*s',
-                token
-            ):
-                timeout_amount = int(re.sub(
-                    r'[^0-9]',
-                    '', 
-                    timeout.group(0)
-                ))
-
-                options['timeout'] = timeout_amount
-                
-
-            elif start_period := re.search(
-                r'--timeout=[0-9]*s',
-                token
-            ):
-                start_period_amount = int(re.sub(
-                    r'[^0-9]',
-                    '', 
-                    start_period.group(0)
-                ))
-
-                options['start_period'] = start_period_amount
-
-            elif retries := re.search(
-                r'--retries=[0-9]*',
-                token
-            ):
-                
-                retries_amount = int(re.sub(
-                    r'[^0-9]',
-                    '', 
-                    retries.group(0)
-                ))
-
-                options['retries'] = retries_amount
-
-        return Healthcheck(
-            **options
-        )
-                
-                
-
+        return cls(**options)

@@ -1,148 +1,89 @@
 import re
+from typing import Annotated, Any, Dict, List, Literal, Optional, Tuple, Union
+
 from pydantic import (
     BaseModel,
-    FilePath,
     DirectoryPath,
-    StrictStr,
+    FilePath,
     StrictBool,
-    constr
+    StrictStr,
+    StringConstraints,
 )
-
-from typing import Union, Optional, Literal, Dict
 
 
 class Copy(BaseModel):
-    layer_type: Literal["copy"]="copy"
+    layer_type: Literal['copy'] = 'copy'
     source: Union[FilePath, DirectoryPath, StrictStr]
     destination: StrictStr
-    user_id: Optional[StrictStr]=None
-    group_id: Optional[StrictStr]=None
-    permissions: Optional[constr(max_length=4, pattern=r'^[0-9]*$')]=None
-    from_source: Optional[StrictStr]=None
-    link: StrictBool=False
+    user_id: Optional[StrictStr] = None
+    group_id: Optional[StrictStr] = None
+    permissions: Optional[
+        Annotated[StrictStr, StringConstraints(max_length=4, pattern=r'^[0-7]*$')]
+    ] = None
+    from_source: Optional[StrictStr] = None
+    link: StrictBool = False
 
     def to_string(self) -> str:
         copy_string = 'COPY'
 
         if self.user_id and self.group_id:
             copy_string = f'{copy_string} --chown={self.user_id}:{self.group_id}'
-        
         elif self.user_id:
             copy_string = f'{copy_string} --chown={self.user_id}'
 
         if self.permissions:
             copy_string = f'{copy_string} --chmod={self.permissions}'
-        
+
         if self.from_source:
             copy_string = f'{copy_string} --from={self.from_source}'
 
         if self.link:
             copy_string = f'{copy_string} --link'
 
-        return f'{copy_string} ./{self.source} {self.destination}'
-    
-    @classmethod
-    def parse(
-        cls,
-        line: str,
-    ):
-        
-        line = re.sub('COPY ', '', line, count=1).strip()
-        tokens = line.strip('\n').split(' ')
+        source_str = str(self.source)
+        if not source_str.startswith(('/', './', '../')) and not self.from_source:
+            source_str = f'./{source_str}'
 
-        options: Dict[str, str | bool | int] = {}
-        remainders = []
+        return f'{copy_string} {source_str} {self.destination}'
+
+    @classmethod
+    def parse(cls, line: str) -> 'Copy':
+        stripped = re.sub(r'^COPY\s+', '', line.strip(), count=1, flags=re.IGNORECASE).strip()
+        tokens = stripped.split()
+
+        options: Dict[str, Any] = {}
+        remainders: List[str] = []
 
         for token in tokens:
-            if re.search(
-                '--link',
-                token
-            ):
+            if token == '--link':
                 options['link'] = True
-
-            elif re.search(
-                '--checksum',
-                token
-            ):
-                options['checksum'] = re.sub(
-                    '--checksum=',
-                    '',
-                    token
-                )
-
-            elif re.search(
-                '--from',
-                token
-            ):
-                options['from_source'] = re.sub(
-                    '--from=',
-                    '',
-                    token
-                )
-
-            elif re.search(
-                '--chown',
-                token
-            ):
-                token = re.sub(
-                    '--checksum=',
-                    '',
-                    token
-                )
-                
-                (
-                    user_id,
-                    group_id,
-                    permissions
-                ) = cls._match_permissions(token)
-
+            elif token.startswith('--from='):
+                options['from_source'] = token[len('--from='):]
+            elif token.startswith('--chmod='):
+                options['permissions'] = token[len('--chmod='):]
+            elif token.startswith('--chown='):
+                chown_value = token[len('--chown='):]
+                user_id, group_id = cls._match_ownership(chown_value)
                 options['user_id'] = user_id
                 options['group_id'] = group_id
-                options['permissions'] = permissions
-
             else:
                 remainders.append(token)
 
-        if len(remainders) > 2:
-            destination = remainders.pop()
-            source = ' '.join(remainders)
+        if len(remainders) < 2:
+            raise ValueError(f'Invalid COPY instruction: {line!r}')
 
-        else:
-            source, destination = remainders[0], remainders[1]
+        destination = remainders[-1]
+        source = ' '.join(remainders[:-1])
 
-        return Copy(
+        return cls(
             source=source,
             destination=destination,
-            **options
+            **options,
         )
 
     @classmethod
-    def _match_permissions(
-        cls,
-        token: str
-    ):
-        if permissions := re.search(
-            r'[0-7]{4}|[0-7]{3}',
-            token
-        ):
-            return (
-                None,
-                None,
-                permissions.group(0)
-            )
-        
-        elif ':' in token:
-            user_id, group_id = token.split(':')
-
-            return (
-                user_id,
-                group_id,
-                None
-            )
-        
-        else:
-            return (
-                token,
-                None,
-                None
-            )
+    def _match_ownership(cls, token: str) -> Tuple[str, Optional[str]]:
+        if ':' in token:
+            user_id, group_id = token.split(':', 1)
+            return user_id, group_id
+        return token, None

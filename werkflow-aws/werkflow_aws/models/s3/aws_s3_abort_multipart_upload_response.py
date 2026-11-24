@@ -3,4 +3,4 @@ from typing import Dict, Any
 
 
 class AWSs3AbortMultipartUploadResponse(BaseModel):
-    ResponseMetadata: Dict[StrictStr, Any]
+    ResponseMetadata: Dict[StrictStr, Any] | None = None

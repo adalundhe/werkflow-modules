@@ -1,8 +1,3 @@
+pydantic
 werkflow-core
-werkflow-file
-werkflow-secrets
-werkflow-shell
-werkflow-system
 werkflow-http
-werkflow-encryption
-pydantic[email]

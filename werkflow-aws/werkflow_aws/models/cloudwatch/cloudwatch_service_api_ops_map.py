@@ -1,0 +1,3 @@
+from .cloud_service_api_ops_map import CloudServiceAPIOpsMap as CloudServiceAPIOpsMap
+
+CloudWatchServiceAPIOpsMap = CloudServiceAPIOpsMap

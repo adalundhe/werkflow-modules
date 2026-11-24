@@ -1,6 +1,9 @@
-from pydantic import BaseModel, StrictInt, StrictBool
+from pydantic import BaseModel, StrictBool, StrictInt
 
 
-class MSKEBSPRovisionedThroughtput(BaseModel):
-    Enabled: StrictBool = False
-    VolumeSize: StrictInt = 0
+class MSKEBSProvisionedThroughput(BaseModel):
+    Enabled: StrictBool | None = None
+    VolumeThroughput: StrictInt | None = None
+
+
+MSKEBSPRovisionedThroughtput = MSKEBSProvisionedThroughput

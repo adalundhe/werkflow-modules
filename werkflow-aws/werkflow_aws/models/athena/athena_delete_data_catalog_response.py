@@ -3,4 +3,4 @@ from .athena_data_catalog import AthenaDataCatalog
 
 
 class AthenaDeleteDataCatalogResponse(BaseModel):
-    DataCatalog: AthenaDataCatalog
+    DataCatalog: AthenaDataCatalog | None = None

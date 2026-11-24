@@ -1,27 +1,17 @@
 import re
-from pydantic import (
-    BaseModel,
-    StrictStr
-)
 from typing import Literal
+
+from pydantic import BaseModel, StrictStr
 
 
 class Maintainer(BaseModel):
-    layer_type: Literal['maintainer']='maintainer'
+    layer_type: Literal['maintainer'] = 'maintainer'
     author: StrictStr
 
-    def to_string(self):
+    def to_string(self) -> str:
         return f'MAINTAINER {self.author}'
-    
-    @classmethod
-    def parse(
-        cls,
-        line: str
-    ):
-        
-        line = re.sub('MAINTAINER ', '', line, count=1)
-        author = line.strip()
 
-        return Maintainer(
-            author=author
-        )
+    @classmethod
+    def parse(cls, line: str) -> 'Maintainer':
+        author = re.sub(r'^MAINTAINER\s+', '', line.strip(), count=1, flags=re.IGNORECASE).strip()
+        return cls(author=author)

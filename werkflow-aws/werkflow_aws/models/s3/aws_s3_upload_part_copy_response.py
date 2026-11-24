@@ -4,8 +4,5 @@ from typing import Dict, Any, Literal
 
 
 class AWSs3UploadPartCopyResponse(BaseModel):
-    CopyPartResult: Dict[
-        Literal['ETag', 'LastModified'],
-        StrictStr | datetime.datetime
-    ]
-    ResponseMetadata: Dict[StrictStr, Any]
+    CopyPartResult: Dict[Literal['ETag', 'LastModified'], StrictStr | datetime.datetime] | None = None
+    ResponseMetadata: Dict[StrictStr, Any] | None = None

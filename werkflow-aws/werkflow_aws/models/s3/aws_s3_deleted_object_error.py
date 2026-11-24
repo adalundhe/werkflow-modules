@@ -1,11 +1,11 @@
 from pydantic import (
     BaseModel,
-    StrictStr
+    StrictStr,
 )
 
 
 class AWSs3DeleteObjectError(BaseModel):
-    Key: StrictStr
-    VersionId: StrictStr
-    Code: StrictStr
-    Message: StrictStr
+    Key: StrictStr | None = None
+    VersionId: StrictStr | None = None
+    Code: StrictStr | None = None
+    Message: StrictStr | None = None

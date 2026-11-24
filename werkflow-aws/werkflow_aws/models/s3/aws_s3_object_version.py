@@ -1,43 +1,21 @@
 import datetime
-from pydantic import (
-    BaseModel,
-    StrictStr,
-    StrictInt,
-    StrictBool
-)
-from werkflow_aws.models.base import AWSBoto3Base
-from typing import Literal, Dict, List
+from typing import Dict, List, Literal
+from pydantic import BaseModel, Field, StrictBool, StrictInt, StrictStr
 
 
-class AWSs3ObjectVersion(AWSBoto3Base):
-    e_tag: StrictStr
-    checksum_algorithm: List[
-        Literal[
-            'CRC32',
-            'CRC32C',
-            'SHA1',
-            'SHA256'
-        ]
-    ]=[]
-    size: StrictInt
-    storage_class: Literal[
-        'STANDARD'
-    ]
-    key: StrictStr
-    version_id: StrictStr
-    is_latest: StrictBool
-    last_modified: datetime.datetime
-    owner: Dict[
-        Literal[
-            'DisplayName',
-            'ID'
-        ],
-        StrictStr
-    ]
-    restore_status: Dict[
-        Literal[
-            'IsRestoreInProgress',
-            'RestoreExpiryDate'
-        ],
-        StrictStr
-    ]
+class AWSs3ObjectVersion(BaseModel):
+    ETag: StrictStr | None = None
+    ChecksumAlgorithm: List[Literal['CRC32', 'CRC32C', 'SHA1', 'SHA256']] = Field(
+        default_factory=list
+    )
+    Size: StrictInt | None = None
+    StorageClass: StrictStr | None = None
+    Key: StrictStr | None = None
+    VersionId: StrictStr | None = None
+    IsLatest: StrictBool | None = None
+    LastModified: datetime.datetime | None = None
+    Owner: Dict[Literal['DisplayName', 'ID'], StrictStr] | None = None
+    RestoreStatus: Dict[
+        Literal['IsRestoreInProgress', 'RestoreExpiryDate'],
+        StrictBool | datetime.datetime,
+    ] | None = None

@@ -1,5 +1,5 @@
 import datetime
-from pydantic import BaseModel, StrictStr, StrictBool
+from pydantic import BaseModel, StrictBool, StrictStr
 from typing import Literal
 
 
@@ -11,12 +11,13 @@ EC2AttachmentState = Literal[
     "busy",
 ]
 
+
 class EC2Attachment(BaseModel):
-    DeleteOnTermination: StrictBool = False
-    AssociatedResource: StrictStr
-    InstanceOwningService: StrictStr
-    VolumeId: StrictStr
-    InstanceId: StrictStr
-    Device: StrictStr
-    State: EC2AttachmentState
-    AttachTime: datetime.datetime
+    DeleteOnTermination: StrictBool | None = None
+    AssociatedResource: StrictStr | None = None
+    InstanceOwningService: StrictStr | None = None
+    VolumeId: StrictStr | None = None
+    InstanceId: StrictStr | None = None
+    Device: StrictStr | None = None
+    State: EC2AttachmentState | None = None
+    AttachTime: datetime.datetime | None = None

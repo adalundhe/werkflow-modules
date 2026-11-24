@@ -9,6 +9,7 @@ DiskStats = List[Dict[str, Union[str, int, float]]]
 
 ConfigurationSummaryDict = Dict[str, Union[CPUStats, MemoryStats, DiskStats]]
 
+
 class ConfigurationSummary:
 
     def __init__(
@@ -17,16 +18,15 @@ class ConfigurationSummary:
         drives: DriveGroup,
         memory: Memory
     ) -> None:
-        
         cpu.update()
-        self.cpu = {
+        self.cpu: CPUStats = {
             'cpu_physical': cpu.physical,
             'cpu_total': cpu.total,
             'cpu_percentage_used': cpu.percentage_used
         }
 
         memory.update()
-        self.memory = {
+        self.memory: MemoryStats = {
             'memory_total_mb': memory.total.mb,
             'memory_used_mb': memory.used.mb,
             'memory_available_mb': memory.available.mb,
@@ -34,7 +34,7 @@ class ConfigurationSummary:
         }
 
         drives.update()
-        self.drives = [
+        self.drives: DiskStats = [
             {
                 'drive_name': drive.name,
                 'drive_path': drive.path,
@@ -43,7 +43,6 @@ class ConfigurationSummary:
                 'drive_used_mb': drive.used.mb,
                 'drive_available_mb': drive.available.mb,
                 'drive_percentage_used': drive.percentage_used
-
             } for drive in drives
         ]
 

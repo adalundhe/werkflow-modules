@@ -1,0 +1,6 @@
+from __future__ import annotations
+from .lambda_event_source_mapping_configuration import LambdaEventSourceMappingConfiguration
+
+
+class LambdaDeleteEventSourceMappingResponse(LambdaEventSourceMappingConfiguration):
+    pass

@@ -5,4 +5,4 @@ from pydantic import (
 
 
 class AthenaStartQueryExecutionResponse(BaseModel):
-    QueryExecutionId: StrictStr
+    QueryExecutionId: StrictStr | None = None

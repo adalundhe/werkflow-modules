@@ -1,5 +1,8 @@
 from __future__ import annotations
-from dcrx.layers import (
+
+from typing import Any, Iterator, List, Optional, Tuple
+
+from ..layers import (
     Add,
     Arg,
     Cmd,
@@ -17,73 +20,45 @@ from dcrx.layers import (
     StopSignal,
     User,
     Volume,
-    Workdir
+    Workdir,
 )
-from typing import List, Any, Tuple
+
+LayerType = (
+    Add
+    | Arg
+    | Cmd
+    | Copy
+    | Entrypoint
+    | Env
+    | Expose
+    | Healthcheck
+    | Label
+    | Maintainer
+    | OnBuild
+    | Run
+    | Shell
+    | Stage
+    | StopSignal
+    | User
+    | Volume
+    | Workdir
+)
 
 
 class LayerQuery:
 
-    def __init__(
-        self,
-        layers: List[
-            Add |
-            Arg |
-            Cmd |
-            Copy |
-            Entrypoint |
-            Env |
-            Expose |
-            Healthcheck |
-            Label |
-            Maintainer |
-            OnBuild |
-            Run |
-            Shell |
-            Stage |
-            StopSignal |
-            User |
-            Volume | 
-            Workdir
-        ]
-    ) -> None:
+    def __init__(self, layers: List[LayerType]) -> None:
         self._layers = layers
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[LayerType]:
         for layer in self._layers:
             yield layer
 
     def get(
         self,
-        attributes: (
-            Tuple[str, Any] |
-            List[
-                Tuple[str, Any]
-            ]
-        )
+        attributes: Tuple[str, Any] | List[Tuple[str, Any]],
     ) -> LayerQuery:
-        layers: (
-            List[
-                Add |
-                Arg |
-                Cmd |
-                Copy |
-                Entrypoint |
-                Env |
-                Expose |
-                Healthcheck |
-                Label |
-                Maintainer |
-                OnBuild |
-                Run |
-                Shell |
-                Stage |
-                StopSignal |
-                User |
-                Volume | 
-                Workdir
-            ]
-        ) = []
+        layers: List[LayerType] = []
 
         if not isinstance(attributes, list):
             attributes = [attributes]
@@ -96,22 +71,19 @@ class LayerQuery:
 
                 if isinstance(layer_attribute, list) and value in layer_attribute:
                     layers.append(layer)
-                
-                elif (
-                    isinstance(layer_attribute, dict) and (
-                        value in layer_attribute or value in list(layer_attribute.values()))
-                    ):
+                elif isinstance(layer_attribute, dict) and (
+                    value in layer_attribute or value in list(layer_attribute.values())
+                ):
                     layers.append(layer)
-
                 elif layer_attribute == value:
                     layers.append(layer)
 
         return LayerQuery(layers)
-    
-    def results(self):
+
+    def results(self) -> List[LayerType]:
         return self._layers
-    
-    def one(self):
+
+    def one(self) -> Optional[LayerType]:
         if len(self._layers) > 0:
             return self._layers.pop()
-        
+        return None

@@ -1,22 +1,15 @@
 import datetime
+from typing import Dict, Literal
 from pydantic import (
     BaseModel,
+    StrictBool,
     StrictStr,
-    StrictBool
 )
-from werkflow_aws.models.base import AWSBoto3Base
-from typing import Dict, Literal
 
 
-class AWSs3DeleteMarker(AWSBoto3Base):
-    Owner: Dict[
-        Literal[
-            'DisplayName',
-            'ID'
-        ],
-        StrictStr
-    ]
-    Key: StrictStr
-    VersionId: StrictStr
-    IsLatest: StrictBool
-    LastModified: datetime.datetime
+class AWSs3DeleteMarker(BaseModel):
+    Owner: Dict[Literal['DisplayName', 'ID'], StrictStr] | None = None
+    Key: StrictStr | None = None
+    VersionId: StrictStr | None = None
+    IsLatest: StrictBool | None = None
+    LastModified: datetime.datetime | None = None

@@ -2,6 +2,7 @@ from .child import JiraChildBlock as JiraChildBlock
 from .child import MediaAttrs as MediaAttrs
 from .child import TableCellAttrs as TableCellAttrs
 from .child import TableHeaderAttrs as TableHeaderAttrs
+from .inline import EmojiAttrs as EmojiAttrs
 from .inline import EmojirAttrs as EmojirAttrs
 from .inline import HardBreakAttrs as HardBreakAttrs
 from .inline import InlineCardAttrs as InlineCardAttrs

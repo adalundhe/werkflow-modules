@@ -1,48 +1,16 @@
+from __future__ import annotations
 import datetime
-from pydantic import BaseModel, StrictStr, StrictInt, StrictBool
-from typing import Literal
+from pydantic import BaseModel, StrictBool, StrictInt, StrictStr
+from .elasticache_automatic_failover import ElasticacheAutomaticFailover
+from .elasticache_cluster_mode import ElasticacheClusterMode
+from .elasticache_data_tiering import ElasticacheDataTiering
 from .elasticache_endpoint import ElasticacheEndpoint
-from .elasticache_node_group_member import ElasticacheNodeGroupMember
+from .elasticache_ip_discovery import ElasticacheIpDiscovery
 from .elasticache_log_delivery_configuration import ElasticacheLogDeliveryConfiguration
-
-ElasticacheAutomaticFailover = Literal[
-    "enabled",
-    "disabled",
-    "enabling",
-    "disabling",
-]
-
-ElasticacheMultiAZ = Literal[
-    "enabled",
-    "disabled",
-]
-
-ElasticacheDataTiering = Literal[
-    "enabled",
-    "disabled"
-]
-
-ElasticacheNetworkType = Literal[
-    "ipv4",
-    "ipv6",
-    "dual_stack",
-]
-
-ElasticacheIpDiscovery = Literal[
-    "ipv4",
-    "ipv6"
-]
-
-ElasticacheTransitEncryptionMode = Literal[
-    "preferred",
-    "required",
-]
-
-ElasticacheClusterMode = Literal[
-    "enabled",
-    "disabled",
-    "compatible"
-]
+from .elasticache_multi_az import ElasticacheMultiAZ
+from .elasticache_network_type import ElasticacheNetworkType
+from .elasticache_node_group_member import ElasticacheNodeGroupMember
+from .elasticache_transit_encryption_mode import ElasticacheTransitEncryptionMode
 
 
 class ElasticacheNodeGroup(BaseModel):
@@ -76,4 +44,3 @@ class ElasticacheNodeGroup(BaseModel):
     IpDiscovery: ElasticacheIpDiscovery
     TransitEncryptionMode: ElasticacheTransitEncryptionMode
     ClusterMode: ElasticacheClusterMode
-

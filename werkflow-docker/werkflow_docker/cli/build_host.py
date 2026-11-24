@@ -1,14 +1,12 @@
-from pydantic import (
-    BaseModel,
-    StrictStr,
-    StrictInt
-)
+from typing import Optional
+
+from pydantic import BaseModel, StrictInt, StrictStr
 
 
 class BuildHost(BaseModel):
     name: StrictStr
     host_ip: StrictStr
-    host_port: StrictInt
+    host_port: Optional[StrictInt] = None
 
-    def to_string(self):
-        return f'{self.name}={self.host_ip}:{self.host_port}'
+    def to_string(self) -> str:
+        return f'{self.name}:{self.host_ip}'

@@ -5,4 +5,4 @@ from pydantic import (
 
 
 class AthenaGetCalculationExecutionCodeResponse(BaseModel):
-    CodeBlock: StrictStr
+    CodeBlock: StrictStr | None = None

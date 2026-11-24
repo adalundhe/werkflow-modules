@@ -3,5 +3,5 @@ from typing import Dict, Any
 
 
 class AWSs3UploadPartResponse(BaseModel):
-    ETag: StrictStr
-    ResponseMetadata: Dict[StrictStr, Any]
+    ETag: StrictStr | None = None
+    ResponseMetadata: Dict[StrictStr, Any] | None = None

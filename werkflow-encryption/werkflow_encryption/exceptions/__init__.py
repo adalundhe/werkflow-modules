@@ -1,1 +1,3 @@
-from .missing_encryption_key_error import MissingEncryptionKeyError
+from .missing_encryption_key_error import (
+    MissingEncryptionKeyError as MissingEncryptionKeyError,
+)

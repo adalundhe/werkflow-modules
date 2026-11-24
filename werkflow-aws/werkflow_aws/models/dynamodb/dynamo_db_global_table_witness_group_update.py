@@ -1,0 +1,9 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .dynamo_db_create_global_table_witness_group_member_action import DynamoDBCreateGlobalTableWitnessGroupMemberAction
+from .dynamo_db_delete_global_table_witness_group_member_action import DynamoDBDeleteGlobalTableWitnessGroupMemberAction
+
+
+class DynamoDBGlobalTableWitnessGroupUpdate(BaseModel):
+    Create: DynamoDBCreateGlobalTableWitnessGroupMemberAction | None = None
+    Delete: DynamoDBDeleteGlobalTableWitnessGroupMemberAction | None = None

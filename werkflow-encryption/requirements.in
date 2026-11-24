@@ -1,5 +1,5 @@
 cryptography
+pynacl
 werkflow-core
-werkflow-file
 werkflow-shell
 werkflow-system

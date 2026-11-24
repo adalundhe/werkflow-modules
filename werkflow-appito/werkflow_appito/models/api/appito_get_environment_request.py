@@ -1,7 +1,10 @@
 from pydantic import BaseModel, StrictStr
 
 
-class AppitoGetEnviornmentRequest(BaseModel):
+class AppitoGetEnvironmentRequest(BaseModel):
     auth_token: StrictStr
     domain: StrictStr
     environment_id: StrictStr | None = None
+
+
+AppitoGetEnviornmentRequest = AppitoGetEnvironmentRequest

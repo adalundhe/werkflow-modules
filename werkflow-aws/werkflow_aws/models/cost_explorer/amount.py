@@ -1,19 +1,12 @@
-import re
-from pydantic import StrictFloat, BeforeValidator
 from typing import Annotated
+from pydantic import BeforeValidator, StrictFloat
 
-numeric_pattern = re.compile(r'(\d+.\d+)|(\d+)')
 
-def prepare_amount(value: str | float) -> float:
-    value = value.lstrip('-')
-    if isinstance(value, str) and (
-        amount := re.match(
-            numeric_pattern,
-            value,
-        )
-    ):
-        return float(amount.group(0))
-
+def prepare_amount(value: str | int | float) -> float:
+    if isinstance(value, (int, float)) and not isinstance(value, bool):
+        return float(value)
+    if isinstance(value, str):
+        return float(value.strip())
     return value
 
 

@@ -3,8 +3,8 @@ from typing import Literal, Optional
 
 
 class AWSS3DeleteObjectResponse(BaseModel):
-    DeleteMarker: StrictBool
-    VersionId: StrictStr
+    DeleteMarker: StrictBool | None = None
+    VersionId: StrictStr | None = None
     RequestCharged: Optional[
         Literal['requester']
     ]=None

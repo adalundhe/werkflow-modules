@@ -1,6 +1,6 @@
 [project]
 name = "werkflow-http"
-version = "0.6.3"
+version = "0.7.0"
 description = "An HTTP module for Werkflow."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -25,10 +25,6 @@ keywords = [
 license-files = [ "LICENSE" ]
 dependencies = [
     'werkflow-core',
-    'werkflow-file',
-    'werkflow-secrets',
-    'werkflow-shell',
-    'werkflow-system',
     'aiodns',
     'orjson',
     'pydantic',

@@ -7,11 +7,11 @@ from pydantic import (
 
 
 class AWSs3PartResponse(BaseModel):
-    PartNumber: StrictInt
-    LastModified: datetime.datetime
-    ETag: StrictStr
-    Size: StrictInt
-    ChecksumCRC32: StrictStr
-    ChecksumCRC32C: StrictStr
-    ChecksumSHA1: StrictStr
-    ChecksumSHA256: StrictStr
+    PartNumber: StrictInt | None = None
+    LastModified: datetime.datetime | None = None
+    ETag: StrictStr | None = None
+    Size: StrictInt | None = None
+    ChecksumCRC32: StrictStr | None = None
+    ChecksumCRC32C: StrictStr | None = None
+    ChecksumSHA1: StrictStr | None = None
+    ChecksumSHA256: StrictStr | None = None

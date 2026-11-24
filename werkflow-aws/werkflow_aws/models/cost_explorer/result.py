@@ -1,3 +1,4 @@
+from __future__ import annotations
 from pydantic import BaseModel, StrictStr, StrictBool
 from .result_group import ResultGroup
 from .time_period import TimePeriod

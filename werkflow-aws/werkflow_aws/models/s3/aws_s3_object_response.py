@@ -1,26 +1,16 @@
 import datetime
-from pydantic import (
-    BaseModel,
-    StrictStr,
-    StrictInt,
-    StrictBool
-)
-from typing import Literal, Dict, List
+from typing import Dict, List, Literal
+from pydantic import BaseModel, Field, StrictBool, StrictInt, StrictStr
 
 
 class AWSs3ObjectResponse(BaseModel):
-    Key: StrictStr
-    LastModified: datetime.datetime
-    ETag: StrictStr
-    ChecksumAlgorithm: List[
-        Literal[
-            'CRC32',
-            'CRC32C',
-            'SHA1',
-            'SHA256'
-        ]
-    ]=[]
-    StrictInt: StrictInt
+    Key: StrictStr | None = None
+    LastModified: datetime.datetime | None = None
+    ETag: StrictStr | None = None
+    ChecksumAlgorithm: List[Literal['CRC32', 'CRC32C', 'SHA1', 'SHA256']] = Field(
+        default_factory=list
+    )
+    Size: StrictInt | None = None
     StorageClass: Literal[
         'STANDARD',
         'REDUCED_REDUNDANCY',
@@ -32,16 +22,10 @@ class AWSs3ObjectResponse(BaseModel):
         'OUTPOSTS',
         'GLACIER_IR',
         'SNOW',
-        'EXPRESS_ONEZONE'
-    ]
-    Owner: Dict[
-        Literal['DisplayName', 'ID'],
-        StrictStr
-    ]
+        'EXPRESS_ONEZONE',
+    ] | None = None
+    Owner: Dict[Literal['DisplayName', 'ID'], StrictStr] | None = None
     RestoreStatus: Dict[
-        Literal[       
-            'IsRestoreInProgress',
-            'RestoreExpiryDate'
-        ],
-        StrictBool, datetime.datetime
-    ]
+        Literal['IsRestoreInProgress', 'RestoreExpiryDate'],
+        StrictBool | datetime.datetime,
+    ] | None = None

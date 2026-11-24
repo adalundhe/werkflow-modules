@@ -3,6 +3,5 @@ from .elasticache_cache_cluster import ElasticacheCacheCluster
 
 
 class ElasticacheDescribeCacheClustersResponse(BaseModel):
-    Marker: StrictStr
-    CacheClusters: list[ElasticacheCacheCluster]
-
+    Marker: StrictStr | None = None
+    CacheClusters: list[ElasticacheCacheCluster] | None = None

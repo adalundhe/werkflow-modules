@@ -4,5 +4,5 @@ from .athena_calculation_statistics import AthenaCalculationStatistics
 
 
 class AthenaGetCalculationExecutionStatusResponse(BaseModel):
-    Status: AthenaCalculationStatus
-    Statistics: AthenaCalculationStatistics
+    Status: AthenaCalculationStatus | None = None
+    Statistics: AthenaCalculationStatistics | None = None

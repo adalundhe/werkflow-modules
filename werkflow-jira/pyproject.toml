@@ -1,36 +1,31 @@
 [project]
 name = "werkflow-jira"
-version = "0.3.0"
-description = "An Jira module for Werkflow."
+version = "0.4.0"
+description = "A Jira module for Werkflow."
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [
     {name = "Ada Lundhe", email = "adalundhe@lundhe.audio"}
 ]
 classifiers = [
-        "Programming Language :: Python :: 3.11",
-        "Programming Language :: Python :: 3.12",
-        "Programming Language :: Python :: 3.13",
-        "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
 ]
 keywords = [
-    'pypi', 
-    'cicd', 
+    'pypi',
+    'cicd',
     'python',
     'werkflow',
     'workflow',
     'jira',
 ]
-license-files = [ "LICENSE" ]
+license-files = ["LICENSE"]
 dependencies = [
+    'pydantic',
     'werkflow-core',
-    'werkflow-file',
-    'werkflow-secrets',
-    'werkflow-shell',
-    'werkflow-system',
     'werkflow-http',
-    'werkflow-encryption',
-    'pydantic[email]',
 ]
 
 [build-system]

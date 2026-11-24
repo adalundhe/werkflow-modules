@@ -1,9 +1,9 @@
-from pydantic import BaseModel, StrictStr, StrictInt, StrictBool
+from pydantic import BaseModel, StrictBool, StrictInt, StrictStr
 
 
 class ElasticacheDescribeCacheClustersRequest(BaseModel):
-        CacheClusterId: StrictStr = None
-        MaxRecords: StrictInt = 100
-        Marker: StrictStr | None = None
-        ShowCacheNodeInfo: StrictBool = True
-        ShowCacheClustersNotInReplicationGroups: StrictBool = True
+    CacheClusterId: StrictStr | None = None
+    MaxRecords: StrictInt | None = None
+    Marker: StrictStr | None = None
+    ShowCacheNodeInfo: StrictBool | None = None
+    ShowCacheClustersNotInReplicationGroups: StrictBool | None = None

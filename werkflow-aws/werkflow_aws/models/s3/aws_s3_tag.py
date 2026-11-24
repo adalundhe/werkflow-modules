@@ -1,9 +1,9 @@
 from pydantic import (
-    StrictStr
+    BaseModel,
+    StrictStr,
 )
-from werkflow_aws.models.base import AWSBoto3Base
 
 
-class AWSs3Tag(AWSBoto3Base):
-    key: StrictStr
-    value: StrictStr
+class AWSs3Tag(BaseModel):
+    Key: StrictStr
+    Value: StrictStr

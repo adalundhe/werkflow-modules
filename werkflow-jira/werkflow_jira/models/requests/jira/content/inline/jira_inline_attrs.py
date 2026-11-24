@@ -2,16 +2,16 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import (
-    BaseModel,
-    StrictStr,
-)
+from pydantic import BaseModel, StrictStr
 
 
-class EmojirAttrs(BaseModel):
+class EmojiAttrs(BaseModel):
     shortName: StrictStr
     text: StrictStr
     id: StrictStr
+
+
+EmojirAttrs = EmojiAttrs
 
 
 class InlineCardAttrs(BaseModel):

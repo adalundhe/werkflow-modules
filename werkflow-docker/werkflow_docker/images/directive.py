@@ -1,6 +1,7 @@
 import re
 from enum import Enum
-from typing import Literal, Dict, List
+from typing import Dict, Iterator, List, Literal, Optional, Sequence, Type, cast
+
 from .layers import (
     Add,
     Arg,
@@ -19,57 +20,98 @@ from .layers import (
     StopSignal,
     User,
     Volume,
-    Workdir
+    Workdir,
+)
+
+DirectiveName = Literal[
+    'ADD',
+    'ARG',
+    'CMD',
+    'COPY',
+    'ENTRYPOINT',
+    'ENV',
+    'EXPOSE',
+    'FROM',
+    'HEALTHCHECK',
+    'LABEL',
+    'MAINTAINER',
+    'ONBUILD',
+    'RUN',
+    'SHELL',
+    'STOPSIGNAL',
+    'USER',
+    'VOLUME',
+    'WORKDIR',
+]
+
+LayerType = (
+    Add
+    | Arg
+    | Cmd
+    | Copy
+    | Entrypoint
+    | Env
+    | Expose
+    | Healthcheck
+    | Label
+    | Maintainer
+    | OnBuild
+    | Run
+    | Shell
+    | Stage
+    | StopSignal
+    | User
+    | Volume
+    | Workdir
+)
+
+LayerClassType = (
+    Type[Add]
+    | Type[Arg]
+    | Type[Cmd]
+    | Type[Copy]
+    | Type[Entrypoint]
+    | Type[Env]
+    | Type[Expose]
+    | Type[Healthcheck]
+    | Type[Label]
+    | Type[Maintainer]
+    | Type[OnBuild]
+    | Type[Run]
+    | Type[Shell]
+    | Type[Stage]
+    | Type[StopSignal]
+    | Type[User]
+    | Type[Volume]
+    | Type[Workdir]
 )
 
 
 class Directive(Enum):
-    ADD='ADD'
-    ARG='ARG'
-    CMD='CMD'
-    COPY='COPY'
-    ENTRYPOINT='ENTRYPOINT'
-    ENV='ENV'
-    EXPOSE='EXPOSE'
-    FROM='FROM'
-    HEALTHCHECK='HEALTHCHECK'
-    LABEL='LABEL'
-    MAINTAINER='MAINTAINER'
-    ONBUILD='ONBUILD'
-    RUN='RUN'
-    SHELL='SHELL'
-    STOPSIGNAL='STOPSIGNAL'
-    USER='USER'
-    VOLUME='VOLUME'
-    WORKDIR='WORKDIR'
+    ADD = 'ADD'
+    ARG = 'ARG'
+    CMD = 'CMD'
+    COPY = 'COPY'
+    ENTRYPOINT = 'ENTRYPOINT'
+    ENV = 'ENV'
+    EXPOSE = 'EXPOSE'
+    FROM = 'FROM'
+    HEALTHCHECK = 'HEALTHCHECK'
+    LABEL = 'LABEL'
+    MAINTAINER = 'MAINTAINER'
+    ONBUILD = 'ONBUILD'
+    RUN = 'RUN'
+    SHELL = 'SHELL'
+    STOPSIGNAL = 'STOPSIGNAL'
+    USER = 'USER'
+    VOLUME = 'VOLUME'
+    WORKDIR = 'WORKDIR'
 
 
 class Directives:
 
     def __init__(self) -> None:
-        self._directives: Dict[
-            Literal[
-                'ADD',
-                'ARG',
-                'CMD',
-                'COPY',
-                'ENTRYPOINT',
-                'ENV',
-                'EXPOSE',
-                'FROM',
-                'HEALTHCHECK',
-                'LABEL',
-                'MAINTAINER',
-                'ONBUILD',
-                'RUN',
-                'SHELL',
-                'STOPSIGNAL',
-                'USER',
-                'VOLUME',
-                'WORKDIR'
-            ],
-            Directive
-        ] = {
+        self._directives: Dict[DirectiveName, Directive] = {
             'ADD': Directive.ADD,
             'ARG': Directive.ARG,
             'CMD': Directive.CMD,
@@ -87,30 +129,10 @@ class Directives:
             'STOPSIGNAL': Directive.STOPSIGNAL,
             'USER': Directive.USER,
             'VOLUME': Directive.VOLUME,
-            'WORKDIR': Directive.WORKDIR
+            'WORKDIR': Directive.WORKDIR,
         }
 
-        self._layers: Dict[
-            Directive,
-            Add |
-            Arg |
-            Cmd |
-            Copy |
-            Entrypoint |
-            Env |
-            Expose |
-            Healthcheck |
-            Label |
-            Maintainer |
-            OnBuild |
-            Run |
-            Shell |
-            Stage |
-            StopSignal |
-            User |
-            Volume | 
-            Workdir
-        ] = {
+        self._layers: Dict[Directive, LayerClassType] = {
             Directive.ADD: Add,
             Directive.ARG: Arg,
             Directive.CMD: Cmd,
@@ -128,164 +150,87 @@ class Directives:
             Directive.STOPSIGNAL: StopSignal,
             Directive.USER: User,
             Directive.VOLUME: Volume,
-            Directive.WORKDIR: Workdir
+            Directive.WORKDIR: Workdir,
         }
 
         self._directive_names = list(self._directives.keys())
         self._directives_pattern = re.compile(
-            '|'.join(self._directive_names)
+            r'^\s*(' + '|'.join(self._directive_names) + r')(?:\s|$)',
+            re.IGNORECASE,
         )
         self._file_data: List[str] = []
         self._docker_file_lines: List[str] = []
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[DirectiveName]:
         for directive_name in self._directives:
             yield directive_name
 
-    def __getitem__(
-        self,
-        directive_name: Literal[
-            'ADD',
-            'ARG',
-            'CMD',
-            'COPY',
-            'ENTRYPOINT',
-            'ENV',
-            'EXPOSE',
-            'FROM',
-            'HEALTHCHECK',
-            'LABEL',
-            'MAINTAINER',
-            'ONBUILD',
-            'RUN',
-            'SHELL',
-            'STOPSIGNAL',
-            'USER',
-            'VOLUME',
-            'WORKDIR'
-        ]
-    ):
+    def __getitem__(self, directive_name: DirectiveName) -> Directive:
         return self._directives[directive_name]
-    
-    def __eq__(
-        self,
-        directive_name: str
-    ) -> bool:
-        return directive_name in self._directives
-    
-    def __contains__(
-        self,
-        file_line: str
-    ):
-        return len([
-            directive_name for directive_name in self._directives if directive_name in file_line
-        ])
-    
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Directives):
+            return self._directives == other._directives
+        return NotImplemented
+
+    def __contains__(self, item: object) -> bool:
+        if not isinstance(item, str):
+            return False
+        if item.upper() in self._directives:
+            return True
+        return self.from_file_line(item) is not None
+
     def parse(
         self,
-        dockerfile: str | List[str] | bytes | List[bytes]
-    ) -> List[
-        Add |
-        Arg |
-        Cmd |
-        Copy |
-        Entrypoint |
-        Env |
-        Expose |
-        Healthcheck |
-        Label |
-        Maintainer |
-        OnBuild |
-        Run |
-        Shell |
-        Stage |
-        StopSignal |
-        User |
-        Volume | 
-        Workdir
-    ]:
-        
+        dockerfile: str | bytes | Sequence[str] | Sequence[bytes],
+    ) -> List[LayerType]:
+        self._file_data = []
+        self._docker_file_lines = []
+
         if isinstance(dockerfile, str):
-            self._file_data.extend(
-                dockerfile.split('\n')
-            )
-
+            self._file_data.extend(dockerfile.splitlines())
         elif isinstance(dockerfile, bytes):
-            self._file_data.extend(
-                dockerfile.decode().split('\n')
-            )
-
+            self._file_data.extend(dockerfile.decode().splitlines())
         else:
             for line in dockerfile:
-                if isinstance(line, bytes):
-                    line = line.decode()
-
-                self._file_data.append(line)
+                decoded = line.decode() if isinstance(line, bytes) else line
+                self._file_data.append(decoded.rstrip('\r\n'))
 
         self._file_data = [
-            line for line in self._file_data if not line.strip().startswith('#') and len(line) > 0
+            line
+            for line in self._file_data
+            if not line.strip().startswith('#') and len(line.strip()) > 0
         ]
-        
-        self._docker_file_lines: List[str] = []
 
-        current_line = ''
-        if len(self._file_data) > 0:
-            current_line = self._file_data[0]
+        if len(self._file_data) == 0:
+            return []
 
+        current_line = self._file_data[0]
         for line in self._file_data[1:]:
-            if self.from_file_line(line):
-                self._docker_file_lines.append(
-                    str(current_line)
-                )
+            if current_line.rstrip().endswith('\\'):
+                current_line = f'{current_line}\n{line}'
+            elif self.from_file_line(line):
+                self._docker_file_lines.append(str(current_line))
                 current_line = line
-
             else:
-                current_line += line
+                current_line += f' {line.strip()}'
 
         self._docker_file_lines.append(current_line)
 
-        docker_directives = []
+        docker_directives: List[LayerType] = []
         for docker_file_line in self._docker_file_lines:
             if directive := self.parse_directive(docker_file_line):
                 docker_directives.append(directive)
 
         return docker_directives
-    
-    def from_file_line(
-        self,
-        directive_line: str
-    ) -> Literal[
-        'ADD',
-        'ARG',
-        'CMD',
-        'COPY',
-        'ENTRYPOINT',
-        'ENV',
-        'EXPOSE',
-        'FROM',
-        'HEALTHCHECK',
-        'LABEL',
-        'MAINTAINER',
-        'ONBUILD',
-        'RUN',
-        'SHELL',
-        'STOPSIGNAL',
-        'USER',
-        'VOLUME',
-        'WORKDIR'
-    ]:
 
-        if matches := re.search(
-            self._directives_pattern,
-            directive_line
-        ):
-            return matches.group(0)
-        
-    def parse_directive(
-        self,
-        directive_line: str
-    ):
+    def from_file_line(self, directive_line: str) -> Optional[DirectiveName]:
+        if matches := self._directives_pattern.match(directive_line):
+            return cast(DirectiveName, matches.group(1).upper())
+        return None
+
+    def parse_directive(self, directive_line: str) -> Optional[LayerType]:
         if directive_name := self.from_file_line(directive_line):
             directive_type = self._directives[directive_name]
             return self._layers[directive_type].parse(directive_line)
-        
+        return None

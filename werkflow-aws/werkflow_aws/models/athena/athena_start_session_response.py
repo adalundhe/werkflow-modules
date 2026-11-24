@@ -6,5 +6,5 @@ from .athena_session_state import AthenaSessionState
 
 
 class AthenaStartSessionResponse(BaseModel):
-    SessionId: StrictStr
-    State: AthenaSessionState
+    SessionId: StrictStr | None = None
+    State: AthenaSessionState | None = None

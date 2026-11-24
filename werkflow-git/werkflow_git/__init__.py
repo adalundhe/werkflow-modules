@@ -1,1 +1,1 @@
-from .git import Git
+from .git import Git as Git

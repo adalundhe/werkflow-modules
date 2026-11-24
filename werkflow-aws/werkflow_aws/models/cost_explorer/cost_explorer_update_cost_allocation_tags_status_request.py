@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .cost_explorer_cost_allocation_tag_status_entry import CostExplorerCostAllocationTagStatusEntry
+
+
+class CostExplorerUpdateCostAllocationTagsStatusRequest(BaseModel):
+    CostAllocationTagsStatus: list[CostExplorerCostAllocationTagStatusEntry]

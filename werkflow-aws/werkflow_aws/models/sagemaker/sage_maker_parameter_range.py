@@ -1,0 +1,11 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .sage_maker_categorical_parameter_range_specification import SageMakerCategoricalParameterRangeSpecification
+from .sage_maker_continuous_parameter_range_specification import SageMakerContinuousParameterRangeSpecification
+from .sage_maker_integer_parameter_range_specification import SageMakerIntegerParameterRangeSpecification
+
+
+class SageMakerParameterRange(BaseModel):
+    IntegerParameterRangeSpecification: SageMakerIntegerParameterRangeSpecification | None = None
+    ContinuousParameterRangeSpecification: SageMakerContinuousParameterRangeSpecification | None = None
+    CategoricalParameterRangeSpecification: SageMakerCategoricalParameterRangeSpecification | None = None

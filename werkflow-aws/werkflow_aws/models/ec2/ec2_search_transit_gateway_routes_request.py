@@ -1,0 +1,11 @@
+from __future__ import annotations
+from pydantic import BaseModel, StrictBool, StrictInt, StrictStr
+from .ec2_filter_model import EC2FilterModel
+
+
+class EC2SearchTransitGatewayRoutesRequest(BaseModel):
+    TransitGatewayRouteTableId: StrictStr
+    Filters: list[EC2FilterModel]
+    MaxResults: StrictInt | None = None
+    DryRun: StrictBool | None = None
+    NextToken: StrictStr | None = None

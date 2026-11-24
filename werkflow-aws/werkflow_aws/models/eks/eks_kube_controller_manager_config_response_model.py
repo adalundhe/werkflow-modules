@@ -1,0 +1,9 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .eks_horizontal_pod_autoscaler_controller_config_response_model import EKSHorizontalPodAutoscalerControllerConfigResponseModel
+from .eks_pod_gc_controller_config_response_model import EKSPodGcControllerConfigResponseModel
+
+
+class EKSKubeControllerManagerConfigResponseModel(BaseModel):
+    podGcControllerConfig: EKSPodGcControllerConfigResponseModel | None = None
+    horizontalPodAutoscalerControllerConfig: EKSHorizontalPodAutoscalerControllerConfigResponseModel | None = None

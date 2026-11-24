@@ -1,8 +1,11 @@
+import asyncio
 from asyncio import (
+    AbstractEventLoop,
     Future,
     Protocol,
-    get_event_loop
+    get_event_loop,
 )
+from typing import Any, Optional
 
 
 class FlowControlMixin(Protocol):
@@ -16,25 +19,27 @@ class FlowControlMixin(Protocol):
         '_loop',
         '_paused',
         '_drain_waiter',
-        '_connection_lost'
+        '_connection_lost',
     )
 
-    def __init__(self, loop=None):
-
-        if loop:
-            self._loop = loop
+    def __init__(self, loop: Optional[AbstractEventLoop] = None) -> None:
+        if loop is not None:
+            self._loop: AbstractEventLoop = loop
         else:
-            self._loop = get_event_loop()
+            try:
+                self._loop = asyncio.get_running_loop()
+            except RuntimeError:
+                self._loop = get_event_loop()
 
-        self._paused = False
-        self._drain_waiter: Future = None
-        self._connection_lost = False
+        self._paused: bool = False
+        self._drain_waiter: Optional[Future[None]] = None
+        self._connection_lost: bool = False
 
-    def pause_writing(self):
+    def pause_writing(self) -> None:
         assert not self._paused
         self._paused = True
 
-    def resume_writing(self):
+    def resume_writing(self) -> None:
         assert self._paused
         self._paused = False
 
@@ -44,7 +49,7 @@ class FlowControlMixin(Protocol):
             if not waiter.done():
                 waiter.set_result(None)
 
-    def connection_lost(self, exc):
+    def connection_lost(self, exc: Optional[BaseException]) -> None:
         self._connection_lost = True
         # Wake up the writer if currently paused.
         if not self._paused:
@@ -60,7 +65,7 @@ class FlowControlMixin(Protocol):
         else:
             waiter.set_exception(exc)
 
-    async def _drain_helper(self):
+    async def _drain_helper(self) -> None:
         if self._connection_lost:
             raise ConnectionResetError('Connection lost')
         if not self._paused:
@@ -71,5 +76,5 @@ class FlowControlMixin(Protocol):
         self._drain_waiter = waiter
         await waiter
 
-    def _get_close_waiter(self, stream):
+    def _get_close_waiter(self, stream: Any) -> Future[None]:
         raise NotImplementedError

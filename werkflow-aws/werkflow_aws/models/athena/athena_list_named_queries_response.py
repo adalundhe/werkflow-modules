@@ -5,5 +5,5 @@ from pydantic import (
 
 
 class AthenaListNamedQueriesResponse(BaseModel):
-    NamedQueryIds: list[StrictStr]
+    NamedQueryIds: list[StrictStr] | None = None
     NextToken: StrictStr | None = None

@@ -3,6 +3,6 @@ from .cloudwatch_metric import CloudWatchMetric
 
 
 class CloudWatchListMetricsResponse(BaseModel):
-    Metrics: list[CloudWatchMetric]
+    Metrics: list[CloudWatchMetric] | None = None
     NextToken: StrictStr | None = None
     OwningAccounts: list[StrictStr] | None = None

@@ -1,7 +1,7 @@
 [project]
 name = "werkflow-git"
-version = "0.2.0"
-description = "An Git module for Werkflow."
+version = "0.3.0"
+description = "A Git module for Werkflow."
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [
@@ -14,18 +14,16 @@ classifiers = [
         "Operating System :: OS Independent",
 ]
 keywords = [
-    'pypi', 
-    'cicd', 
+    'pypi',
+    'cicd',
     'python',
     'werkflow',
     'workflow',
-    'git'
+    'git',
 ]
 license-files = [ "LICENSE" ]
 dependencies = [
     'werkflow-core',
-    'werkflow-file',
-    'werkflow-secrets',
     'werkflow-shell',
     'werkflow-system',
     'gitpython',

@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .eks_update import EKSUpdate
+
+
+class EKSUpdateNodegroupVersionResponse(BaseModel):
+    update: EKSUpdate | None = None

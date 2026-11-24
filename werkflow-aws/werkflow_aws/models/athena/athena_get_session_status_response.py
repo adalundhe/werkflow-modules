@@ -6,5 +6,5 @@ from .athena_session_status import AthenaSessionStatus
 
 
 class AthenaGetSessionStatusResponse(BaseModel):
-    SessionId: StrictStr
-    Status: AthenaSessionStatus
+    SessionId: StrictStr | None = None
+    Status: AthenaSessionStatus | None = None

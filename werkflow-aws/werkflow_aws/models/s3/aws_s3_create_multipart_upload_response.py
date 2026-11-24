@@ -3,7 +3,7 @@ from typing import Dict, Any
 
 
 class AWSs3CreateMultipartUploadResponse(BaseModel):
-    Bucket: StrictStr
-    Key: StrictStr
-    UploadId: StrictStr
-    ResponseMetadata: Dict[StrictStr, Any]
+    Bucket: StrictStr | None = None
+    Key: StrictStr | None = None
+    UploadId: StrictStr | None = None
+    ResponseMetadata: Dict[StrictStr, Any] | None = None

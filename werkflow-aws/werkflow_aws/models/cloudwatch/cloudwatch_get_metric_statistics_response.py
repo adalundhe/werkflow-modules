@@ -3,6 +3,6 @@ from .cloudwatch_datapoint import CloudWatchDatapoint
 
 
 class CloudWatchGetMetricStatisticsResponse(BaseModel):
-    Label: StrictStr
-    Datapoints: list[CloudWatchDatapoint]
+    Label: StrictStr | None = None
+    Datapoints: list[CloudWatchDatapoint] | None = None
     

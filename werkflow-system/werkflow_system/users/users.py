@@ -8,16 +8,48 @@ from pathlib import Path
 class Users:
 
     def __init__(self) -> None:
-                
-        self._system_users = psutil.users()
-        
-        self.current_user = getuser()
-        if self.current_user is None:
-            self.current_user = os.getlogin()
+        try:
+            self._system_users = psutil.users()
+        except OSError:
+            self._system_users = []
 
-        self.home= Path.home()
+        self.current_user: str = self._detect_current_user()
+        self.home: Path = self._detect_home()
+
+    @staticmethod
+    def _detect_current_user() -> str:
+        try:
+            user = getuser()
+            if user:
+                return user
+        except (KeyError, OSError):
+            pass
+
+        try:
+            user = os.getlogin()
+            if user:
+                return user
+        except OSError:
+            pass
+
+        env_user = os.environ.get('USER') or os.environ.get('USERNAME')
+        if env_user:
+            return env_user
+
+        if hasattr(os, 'getuid'):
+            return str(os.getuid())
+
+        return 'unknown'
+
+    @staticmethod
+    def _detect_home() -> Path:
+        try:
+            return Path.home()
+        except RuntimeError:
+            fallback = os.environ.get('HOME') or os.environ.get('USERPROFILE') or os.getcwd()
+            return Path(fallback)
 
     def list(self) -> Iterable[str]:
         for user in self._system_users:
-            if user.name.startswith('_') is False:
-                yield user
+            if not user.name.startswith('_'):
+                yield user.name

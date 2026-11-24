@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .cost_explorer_savings_plans_purchase_analysis_configuration import CostExplorerSavingsPlansPurchaseAnalysisConfiguration
+
+
+class CostExplorerCommitmentPurchaseAnalysisConfiguration(BaseModel):
+    SavingsPlansPurchaseAnalysisConfiguration: CostExplorerSavingsPlansPurchaseAnalysisConfiguration | None = None

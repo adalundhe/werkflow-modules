@@ -1,19 +1,14 @@
-import re
-from pydantic import (
-    BaseModel,
-    StrictStr,
-    StrictBool
-)
+from typing import Any, Dict, Literal, Optional
 
-from typing import Optional, Literal, Dict
+from pydantic import BaseModel, StrictBool, StrictStr
 
 
 class BindMount(BaseModel):
-    mount_type: Literal["bind"]="bind"
+    mount_type: Literal['bind'] = 'bind'
     target: StrictStr
-    source: Optional[StrictStr]=None
-    from_source: Optional[StrictStr]=None
-    readwrite: Optional[StrictBool]=None
+    source: Optional[StrictStr] = None
+    from_source: Optional[StrictStr] = None
+    readwrite: Optional[StrictBool] = None
 
     def to_string(self) -> str:
         mount_string = f'--mount=type={self.mount_type},target={self.target}'
@@ -24,73 +19,51 @@ class BindMount(BaseModel):
         if self.from_source:
             mount_string = f'{mount_string},from={self.from_source}'
 
-        if self.readwrite:
-            readwrite_string = 'readwrite'
-            mount_string = f'{mount_string},{readwrite_string}'
+        if self.readwrite is True:
+            mount_string = f'{mount_string},readwrite'
+        elif self.readwrite is False:
+            mount_string = f'{mount_string},readonly'
 
         return mount_string
-    
+
     @classmethod
-    def parse(
-        cls,
-        line: str
-    ):
-        lines = line.split(' ')
-        options: Dict[str, str | bool] = {
-            'mount_type': 'bind'
-        }
-
-        if 'readwrite' in lines:
-            options['readwrite'] = True
-            lines.remove('readwrite')
-
-        elif 'rw' in lines:
-            options['readwrite'] = True
-            lines.remove('rw')
-
-        tokens = line.split(',') 
+    def parse(cls, line: str) -> 'BindMount':
+        options: Dict[str, Any] = {'mount_type': 'bind'}
+        tokens = [
+            token.strip()
+            for part in line.split(',')
+            for token in part.split()
+            if token.strip()
+        ]
 
         for token in tokens:
+            if token in ('readwrite', 'rw'):
+                options['readwrite'] = True
+            elif token in ('readonly', 'ro'):
+                options['readwrite'] = False
+            elif token.startswith('target='):
+                options['target'] = token[len('target='):]
+            elif token.startswith('destination='):
+                options['target'] = token[len('destination='):]
+            elif token.startswith('dst='):
+                options['target'] = token[len('dst='):]
+            elif token.startswith('source='):
+                options['source'] = token[len('source='):]
+            elif token.startswith('src='):
+                options['source'] = token[len('src='):]
+            elif token.startswith('from='):
+                options['from_source'] = token[len('from='):]
+            elif token.startswith('readwrite='):
+                val = token[len('readwrite='):].lower()
+                options['readwrite'] = val in ('true', '1')
+            elif token.startswith('rw='):
+                val = token[len('rw='):].lower()
+                options['readwrite'] = val in ('true', '1')
+            elif token.startswith('readonly='):
+                val = token[len('readonly='):].lower()
+                options['readwrite'] = val not in ('true', '1')
+            elif token.startswith('ro='):
+                val = token[len('ro='):].lower()
+                options['readwrite'] = val not in ('true', '1')
 
-            if target := re.search(
-                r'target=(.*)',
-                token
-            ):
-                options['target'] = re.sub(
-                    r'target=',
-                    '',
-                    target.group(0)
-                )
-
-            elif source := re.search(
-                r'source=(.*)',
-                token
-            ):
-                options['source'] = re.sub(
-                    r'source=',
-                    '',
-                    source.group(0)
-                )
-
-            elif mount_from := re.search(
-                r'from=(.*)',
-                token
-            ):
-                options['from_source'] = re.sub(
-                    r'from=',
-                    '',
-                    mount_from.group(0)
-                )
-
-            elif readwrite := re.search(
-                r'readwrite=(.*)',
-                token
-            ):
-                readwrite_value = re.sub(
-                    r'readwrite=',
-                    '',
-                    readwrite.group(0)
-                )
-                options['readwrite'] = True if readwrite_value == 'true' else None
-
-        return BindMount(**options)
+        return cls(**options)

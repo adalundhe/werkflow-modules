@@ -1,7 +1,7 @@
 [project]
 name = "werkflow-secrets"
-version = "0.2.2"
-description = "An secrets module for Werkflow."
+version = "0.3.0"
+description = "A secrets module for Werkflow."
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [
@@ -14,8 +14,8 @@ classifiers = [
         "Operating System :: OS Independent",
 ]
 keywords = [
-    'pypi', 
-    'cicd', 
+    'pypi',
+    'cicd',
     'python',
     'werkflow',
     'workflow',
@@ -24,11 +24,8 @@ keywords = [
 license-files = [ "LICENSE" ]
 dependencies = [
     'werkflow-core',
-    'werkflow-file',
-    'werkflow-secrets',
-    'werkflow-shell',
-    'werkflow-system',
     'werkflow-encryption',
+    'werkflow-shell',
 ]
 
 [build-system]

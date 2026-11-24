@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .cost_explorer_commitment_purchase_analysis_configuration import CostExplorerCommitmentPurchaseAnalysisConfiguration
+
+
+class CostExplorerStartCommitmentPurchaseAnalysisRequest(BaseModel):
+    CommitmentPurchaseAnalysisConfiguration: CostExplorerCommitmentPurchaseAnalysisConfiguration

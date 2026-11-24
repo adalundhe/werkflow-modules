@@ -1,35 +1,37 @@
+import json
 import re
-from pydantic import (
-    BaseModel,
-    StrictStr,
-    conlist
-)
-from typing import Literal
+from typing import Annotated, List, Literal
+
+from pydantic import BaseModel, Field, StrictStr
 
 
 class Volume(BaseModel):
-    layer_type: Literal["volume"]="volume"
-    paths: conlist(StrictStr, min_length=1)
+    layer_type: Literal['volume'] = 'volume'
+    paths: Annotated[List[StrictStr], Field(min_length=1)]
 
-    def to_string(self):
-        paths = ', '.join(self.paths)
+    def to_string(self) -> str:
+        return f'VOLUME {json.dumps(list(self.paths))}'
 
-        return f'VOLUME [{paths}]'
-    
     @classmethod
-    def parse(
-        cls,
-        line: str
-    ):
-        line = re.sub('VOLUME ', '', line, count=1).strip()
-        paths = [
-            arg.strip() for arg in re.sub(
-                r'\[|\]', 
-                '', 
-                line
-            ).split(',')
-        ]
+    def parse(cls, line: str) -> 'Volume':
+        stripped = re.sub(r'^VOLUME\s+', '', line.strip(), count=1, flags=re.IGNORECASE).strip()
 
-        return Volume(
-            paths=paths
-        )
+        paths: List[str] = []
+        if stripped.startswith('['):
+            try:
+                parsed = json.loads(stripped)
+                if isinstance(parsed, list):
+                    paths = [str(item) for item in parsed]
+            except json.JSONDecodeError:
+                pass
+
+            if not paths:
+                paths = [
+                    arg.strip().strip('"').strip("'")
+                    for arg in re.sub(r'^\[|\]$', '', stripped).split(',')
+                    if arg.strip()
+                ]
+        else:
+            paths = stripped.split()
+
+        return cls(paths=paths)

@@ -1,13 +1,12 @@
 from pydantic import (
     BaseModel,
+    StrictBool,
     StrictStr,
-    StrictBool
 )
 
 
 class AWSs3DeletedObject(BaseModel):
-    Key: StrictStr
-    VersionId: StrictStr
-    DeleteMarker: StrictBool
-    DeleteMarkerVersionId: StrictStr
-    
+    Key: StrictStr | None = None
+    VersionId: StrictStr | None = None
+    DeleteMarker: StrictBool | None = None
+    DeleteMarkerVersionId: StrictStr | None = None

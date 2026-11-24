@@ -61,6 +61,7 @@ ServiceName = Literal[
     "elb",
     "emr",
     "elasticache",
+    "elemental-mediastore",
     "elemential-mediastore",
     "eum",
     "enterprise-support",
@@ -95,6 +96,7 @@ ServiceName = Literal[
     "mq",
     "mwa",
     "neptune",
+    "opensearch-serverless",
     "opensearch-severless",
     "opensearch",
     "personalize",
@@ -376,6 +378,7 @@ class AWSServices(Enum):
     MQ='Amazon MQ'
     MWA='Amazon Managed Workflows for Apache Airflow'
     NEPTUNE='Amazon Neptune'
+    OPENSEARCH_SERVERLESS='Amazon OpenSearch Serverless'
     OPENSEARCH_SEVERLESS='Amazon OpenSearch Serverless'
     OPENSEARCH='Amazon OpenSearch Service'
     PERSONALIZE='Amazon Personalize'
@@ -424,27 +427,26 @@ class AWSServices(Enum):
 
 
 class AWSServicesMap:
-    
-    def __init__(self):
+
+    def __init__(self) -> None:
         self._services_map: dict[
-            ServiceName,
-            MappedServiceNames,
+            str,
+            str,
         ] = {
-            service.name.lower().replace(
-                '_',
-                '-'
-            ): service.value for service in AWSServices
+            name.lower().replace('_', '-'): member.value
+            for name, member in AWSServices.__members__.items()
         }
+        self._services_map['elemential-mediastore'] = AWSServices.ELEMENTAL_MEDIASTORE.value
 
         self._service_to_name_map: dict[
-            AWSServices,
-            ServiceName
+            str,
+            str,
         ] = {
             value: key for key, value in self._services_map.items()
         }
 
-    def get(self, service_name: ServiceName):
+    def get(self, service_name: ServiceName) -> str:
         return self._services_map[service_name]
-    
-    def get_service_name(self, service: MappedServiceNames):
+
+    def get_service_name(self, service: MappedServiceNames) -> str:
         return self._service_to_name_map[service]

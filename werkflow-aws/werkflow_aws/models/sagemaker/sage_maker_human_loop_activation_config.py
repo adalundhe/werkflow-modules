@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .sage_maker_human_loop_activation_conditions_config import SageMakerHumanLoopActivationConditionsConfig
+
+
+class SageMakerHumanLoopActivationConfig(BaseModel):
+    HumanLoopActivationConditionsConfig: SageMakerHumanLoopActivationConditionsConfig | None = None

@@ -1,31 +1,21 @@
 from pydantic import BaseModel, StrictStr, StrictBool
 from typing import Optional, Literal
-from werkflow_aws.models.base import AWSBoto3Base
-from werkflow_aws.models.parsing import (
-    convert_key_to_boto3_arg, 
-    convert_key_to_boto3_arg_upper_matching,
-    key_contains_patterns
-)
 
 
 class AWSs3CompleteMultipartUploadResponse(BaseModel):
-    Location: StrictStr
-    Bucket: StrictStr
-    Key: StrictStr
-    Expiration: StrictStr
-    ETag: StrictStr
-    ChecksumCRC32: StrictStr
-    ChecksumCRC32C: StrictStr
-    ChecksumSHA1: StrictStr
-    ChecksumSHA256: StrictStr
-    ServerSideEncryption: Literal[
-        'AES256',
-        'aws:kms',
-        'aws:kms:dsse'
-    ]
-    VersionId: StrictStr
-    SSEKMSKeyId: Optional[StrictStr]
-    BucketKeyEnabled: StrictBool
+    Location: StrictStr | None = None
+    Bucket: StrictStr | None = None
+    Key: StrictStr | None = None
+    Expiration: StrictStr | None = None
+    ETag: StrictStr | None = None
+    ChecksumCRC32: StrictStr | None = None
+    ChecksumCRC32C: StrictStr | None = None
+    ChecksumSHA1: StrictStr | None = None
+    ChecksumSHA256: StrictStr | None = None
+    ServerSideEncryption: Literal['AES256', 'aws:kms', 'aws:kms:dsse'] | None = None
+    VersionId: StrictStr | None = None
+    SSEKMSKeyId: Optional[StrictStr] = None
+    BucketKeyEnabled: StrictBool | None = None
     RequestCharged: Optional[
         Literal['requester']
     ]=None

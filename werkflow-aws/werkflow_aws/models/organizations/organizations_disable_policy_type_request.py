@@ -1,0 +1,8 @@
+from __future__ import annotations
+from typing import Literal
+from pydantic import BaseModel, StrictStr
+
+
+class OrganizationsDisablePolicyTypeRequest(BaseModel):
+    RootId: StrictStr
+    PolicyType: Literal['SERVICE_CONTROL_POLICY', 'RESOURCE_CONTROL_POLICY', 'TAG_POLICY', 'BACKUP_POLICY', 'AISERVICES_OPT_OUT_POLICY', 'CHATBOT_POLICY', 'DECLARATIVE_POLICY_EC2', 'SECURITYHUB_POLICY', 'SECURITYHUB_CSPM_POLICY', 'INSPECTOR_POLICY', 'UPGRADE_ROLLOUT_POLICY', 'BEDROCK_POLICY', 'S3_POLICY', 'NETWORK_SECURITY_DIRECTOR_POLICY', 'GUARDDUTY_POLICY']

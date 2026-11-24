@@ -1,8 +1,8 @@
 import re
-from pydantic import (
-    BaseModel
-)
-from typing import Dict, Literal
+from typing import Dict, Literal, Optional, Type
+
+from pydantic import BaseModel, ConfigDict
+
 from .add import Add
 from .arg import Arg
 from .cmd import Cmd
@@ -19,78 +19,64 @@ from .user import User
 from .volume import Volume
 from .workdir import Workdir
 
+OnBuildInstruction = (
+    Add
+    | Arg
+    | Cmd
+    | Copy
+    | Entrypoint
+    | Env
+    | Expose
+    | Healthcheck
+    | Label
+    | Run
+    | Shell
+    | StopSignal
+    | User
+    | Volume
+    | Workdir
+)
+
+OnBuildInstructionClass = (
+    Type[Add]
+    | Type[Arg]
+    | Type[Cmd]
+    | Type[Copy]
+    | Type[Entrypoint]
+    | Type[Env]
+    | Type[Expose]
+    | Type[Healthcheck]
+    | Type[Label]
+    | Type[Run]
+    | Type[Shell]
+    | Type[StopSignal]
+    | Type[User]
+    | Type[Volume]
+    | Type[Workdir]
+)
+
 
 class OnBuild(BaseModel):
-    layer_type: Literal['onbuild']='onbuild'
-    instruction: (
-        Add | 
-        Arg | 
-        Cmd | 
-        Copy | 
-        Entrypoint | 
-        Env | 
-        Expose | 
-        Healthcheck | 
-        Label |
-        Run | 
-        Shell |
-        StopSignal |
-        User |
-        Volume |
-        Workdir
-    )
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
-    class Config:
-        arbitrary_types_allowed=True
+    layer_type: Literal['onbuild'] = 'onbuild'
+    instruction: OnBuildInstruction
 
-    def to_string(self):
+    def to_string(self) -> str:
         instruction_command = self.instruction.to_string()
         return f'ONBUILD {instruction_command}'
-    
-    def parse(
-        cls,
-        line: str
-    ):
-        line = re.sub('ONBUILD ', '', line, count=1).strip()
 
-        directives: Dict[
-            Literal[
-                'ADD',
-                'ARG',
-                'CMD',
-                'COPY',
-                'ENTRYPOINT',
-                'ENV',
-                'EXPOSE',
-                'FROM',
-                'HEALTHCHECK',
-                'LABEL',
-                'MAINTAINER',
-                'ONBUILD',
-                'RUN',
-                'SHELL',
-                'STOPSIGNAL',
-                'USER',
-                'VOLUME',
-                'WORKDIR'
-            ],
-            Add |
-            Arg |
-            Cmd |
-            Copy |
-            Entrypoint |
-            Env |
-            Expose |
-            Healthcheck |
-            Label |
-            OnBuild |
-            Run |
-            Shell |
-            StopSignal |
-            User |
-            Volume | 
-            Workdir
-        ] = {
+    @classmethod
+    def parse(cls, line: str) -> Optional['OnBuild']:
+        stripped = re.sub(
+            r'^ONBUILD\s+',
+            '',
+            line.strip(),
+            count=1,
+            flags=re.IGNORECASE,
+        ).strip()
+
+        directives: Dict[str, OnBuildInstructionClass] = {
             'ADD': Add,
             'ARG': Arg,
             'CMD': Cmd,
@@ -100,45 +86,22 @@ class OnBuild(BaseModel):
             'EXPOSE': Expose,
             'HEALTHCHECK': Healthcheck,
             'LABEL': Label,
-            'ONBUILD': OnBuild,
             'RUN': Run,
             'SHELL': Shell,
             'STOPSIGNAL': StopSignal,
             'USER': User,
             'VOLUME': Volume,
-            'WORKDIR': Workdir
+            'WORKDIR': Workdir,
         }
-        
-        if directive_type := re.search(
-            r'ADD|ARG|CMD|COPY|ENTRYPOINT|ENV|EXPOSE|HEALTHCHECK|LABEL|RUN|SHELL|STOPSIGNAL|USER|VOLUME|WORKDIR',
-            line
+
+        if directive_match := re.match(
+            r'^(ADD|ARG|CMD|COPY|ENTRYPOINT|ENV|EXPOSE|HEALTHCHECK|LABEL|RUN|SHELL|STOPSIGNAL|USER|VOLUME|WORKDIR)\b',
+            stripped,
+            flags=re.IGNORECASE,
         ):
-            directive_name: Literal[
-                'ADD',
-                'ARG',
-                'CMD',
-                'COPY',
-                'ENTRYPOINT',
-                'ENV',
-                'EXPOSE',
-                'FROM',
-                'HEALTHCHECK',
-                'LABEL',
-                'MAINTAINER',
-                'ONBUILD',
-                'RUN',
-                'SHELL',
-                'STOPSIGNAL',
-                'USER',
-                'VOLUME',
-                'WORKDIR'
-            ] = directive_type.group(0) 
-            directive = directives[directive_name]
+            directive_name = directive_match.group(1).upper()
+            directive_cls = directives[directive_name]
+            parsed_instruction = directive_cls.parse(stripped)
+            return cls(instruction=parsed_instruction)
 
-            token = re.sub(f'${directive_name} ', '', line, count=1)
-
-            return directive.parse(token)
-
-
-
-        
+        return None

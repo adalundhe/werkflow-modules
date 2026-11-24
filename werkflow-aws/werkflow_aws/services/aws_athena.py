@@ -1,14 +1,3 @@
-import asyncio
-import boto3
-import functools
-from botocore.config import Config
-from concurrent.futures import ThreadPoolExecutor
-from werkflow_aws.exceptions import UnsetAWSConnectionException
-from werkflow_aws.models import (
-    AWSCredentialsSet,
-    AWSRegionMap,
-    RegionName,
-)
 from werkflow_aws.models.athena import (
     AthenaCreateDataCatalogRequest,
     AthenaCreateDataCatalogResponse,
@@ -16,16 +5,22 @@ from werkflow_aws.models.athena import (
     AthenaCreateNamedQueryResponse,
     AthenaCreatePreparedStatementRequest,
     AthenaCreatePreparedStatementResponse,
-    AthenaGetCalculationExectutionCodeRequest,
+    AthenaDeleteDataCatalogRequest,
+    AthenaDeleteDataCatalogResponse,
+    AthenaDeleteNamedQueryRequest,
+    AthenaDeleteNamedQueryResponse,
+    AthenaDeletePreparedStatementRequest,
+    AthenaDeletePreparedStatementResponse,
+    AthenaGetCalculationExecutionCodeRequest,
     AthenaGetCalculationExecutionCodeResponse,
     AthenaGetCalculationExecutionRequest,
     AthenaGetCalculationExecutionResponse,
     AthenaGetCalculationExecutionStatusRequest,
     AthenaGetCalculationExecutionStatusResponse,
-    AthenaGetDataCatalogRequest,
-    AthenaGetDataCatalogResponse,
     AthenaGetDatabaseRequest,
     AthenaGetDatabaseResponse,
+    AthenaGetDataCatalogRequest,
+    AthenaGetDataCatalogResponse,
     AthenaGetNamedQueryRequest,
     AthenaGetNamedQueryResponse,
     AthenaGetPreparedStatementRequest,
@@ -38,16 +33,16 @@ from werkflow_aws.models.athena import (
     AthenaGetSessionResponse,
     AthenaGetSessionStatusRequest,
     AthenaGetSessionStatusResponse,
-    AthenaListNamedQueriesRequest,
-    AthenaListNamedQueriesResponse,
-    AthenaListQueryExecutionsRequest,
-    AthenaListQueryExecutionsResponse,
     AthenaListDatabasesRequest,
     AthenaListDatabasesResponse,
     AthenaListDataCatalogsRequest,
     AthenaListDataCatalogsResponse,
+    AthenaListNamedQueriesRequest,
+    AthenaListNamedQueriesResponse,
     AthenaListPreparedStatementsRequest,
     AthenaListPreparedStatementsResponse,
+    AthenaListQueryExecutionsRequest,
+    AthenaListQueryExecutionsResponse,
     AthenaListSessionsRequest,
     AthenaListSessionsResponse,
     AthenaStartCalculationExecutionRequest,
@@ -67,1055 +62,845 @@ from werkflow_aws.models.athena import (
     AthenaUpdateNamedQueryRequest,
     AthenaUpdateNamedQueryResponse,
 )
-
-from werkflow_aws.helpers import collect_paginator
 from werkflow_aws.types import AthenaClient
+from .base import AWSBaseService
+from werkflow_aws.models.athena import (
+    AthenaBatchGetNamedQueryRequest,
+    AthenaBatchGetNamedQueryResponse,
+    AthenaBatchGetPreparedStatementRequest,
+    AthenaBatchGetPreparedStatementResponse,
+    AthenaBatchGetQueryExecutionRequest,
+    AthenaBatchGetQueryExecutionResponse,
+    AthenaCancelCapacityReservationRequest,
+    AthenaCancelCapacityReservationResponse,
+    AthenaCreateCapacityReservationRequest,
+    AthenaCreateCapacityReservationResponse,
+    AthenaCreateNotebookRequest,
+    AthenaCreateNotebookResponse,
+    AthenaCreatePresignedNotebookUrlRequest,
+    AthenaCreatePresignedNotebookUrlResponse,
+    AthenaCreateSystemTableConfigurationRequest,
+    AthenaCreateSystemTableConfigurationResponse,
+    AthenaCreateWorkGroupRequest,
+    AthenaCreateWorkGroupResponse,
+    AthenaDeleteCapacityReservationRequest,
+    AthenaDeleteCapacityReservationResponse,
+    AthenaDeleteNotebookRequest,
+    AthenaDeleteNotebookResponse,
+    AthenaDeleteSystemTableConfigurationRequest,
+    AthenaDeleteSystemTableConfigurationResponse,
+    AthenaDeleteWorkGroupRequest,
+    AthenaDeleteWorkGroupResponse,
+    AthenaExportNotebookRequest,
+    AthenaExportNotebookResponse,
+    AthenaGetCapacityAssignmentConfigurationRequest,
+    AthenaGetCapacityAssignmentConfigurationResponse,
+    AthenaGetCapacityReservationRequest,
+    AthenaGetCapacityReservationResponse,
+    AthenaGetNotebookMetadataRequest,
+    AthenaGetNotebookMetadataResponse,
+    AthenaGetQueryRuntimeStatisticsRequest,
+    AthenaGetQueryRuntimeStatisticsResponse,
+    AthenaGetResourceDashboardRequest,
+    AthenaGetResourceDashboardResponse,
+    AthenaGetSessionEndpointRequest,
+    AthenaGetSessionEndpointResponse,
+    AthenaGetSystemTableConfigurationRequest,
+    AthenaGetSystemTableConfigurationResponse,
+    AthenaGetTableMetadataRequest,
+    AthenaGetTableMetadataResponse,
+    AthenaGetWorkGroupRequest,
+    AthenaGetWorkGroupResponse,
+    AthenaImportNotebookRequest,
+    AthenaImportNotebookResponse,
+    AthenaListApplicationDPUSizesRequest,
+    AthenaListApplicationDPUSizesResponse,
+    AthenaListCalculationExecutionsRequest,
+    AthenaListCalculationExecutionsResponse,
+    AthenaListCapacityReservationsRequest,
+    AthenaListCapacityReservationsResponse,
+    AthenaListEngineVersionsRequest,
+    AthenaListEngineVersionsResponse,
+    AthenaListExecutorsRequest,
+    AthenaListExecutorsResponse,
+    AthenaListNotebookMetadataRequest,
+    AthenaListNotebookMetadataResponse,
+    AthenaListNotebookSessionsRequest,
+    AthenaListNotebookSessionsResponse,
+    AthenaListSystemTableStatusesRequest,
+    AthenaListSystemTableStatusesResponse,
+    AthenaListTableMetadataRequest,
+    AthenaListTableMetadataResponse,
+    AthenaListTagsForResourceRequest,
+    AthenaListTagsForResourceResponse,
+    AthenaListWorkGroupsRequest,
+    AthenaListWorkGroupsResponse,
+    AthenaPutCapacityAssignmentConfigurationRequest,
+    AthenaPutCapacityAssignmentConfigurationResponse,
+    AthenaTagResourceRequest,
+    AthenaTagResourceResponse,
+    AthenaUntagResourceRequest,
+    AthenaUntagResourceResponse,
+    AthenaUpdateCapacityReservationRequest,
+    AthenaUpdateCapacityReservationResponse,
+    AthenaUpdateNotebookMetadataRequest,
+    AthenaUpdateNotebookMetadataResponse,
+    AthenaUpdateNotebookRequest,
+    AthenaUpdateNotebookResponse,
+    AthenaUpdatePreparedStatementRequest,
+    AthenaUpdatePreparedStatementResponse,
+    AthenaUpdateSystemTableConfigurationRequest,
+    AthenaUpdateSystemTableConfigurationResponse,
+    AthenaUpdateWorkGroupRequest,
+    AthenaUpdateWorkGroupResponse,
+)
 
-from werkflow_system import System
 
+class AWSAthena(AWSBaseService[AthenaClient]):
+    service_name = 'Athena'
+    boto3_service_name = 'athena'
 
-class AWSAthena:
-    
     def __init__(self) -> None:
-        self._system = System()
-
-        self._loop: asyncio.AbstractEventLoop | None = None
-        self._executor = ThreadPoolExecutor(
-            max_workers=self._system.configuration.cores.physical
-        )
-
-        self._client = None
-
-        self.service_name = 'Athena'
-        self._regions = AWSRegionMap()
-    
-    async def sso(
-        self,
-        profile_name: str,
-    ):
-
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        await self._loop.run_in_executor(
-            None,
-            functools.partial(
-                boto3.setup_default_session,
-                profile_name=profile_name
-            )
-        )
-
-        self._client: AthenaClient = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                boto3.client,
-                'athena',
-            )
-        )
-
-    async def connect(
-        self,
-        region: RegionName,
-        credentials: AWSCredentialsSet | None = None,
-    ):
-        
-        aws_region = self._regions.get(region)
-
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        credentials_data: dict[str, str] = {}
-        if credentials:
-            credentials_data = credentials.model_dump(
-                exclude='aws_profile'
-            )
-
-        self._client: AthenaClient = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                boto3.client,
-                'athena',
-                config=Config(
-                    region_name=aws_region.value
-                )
-                **credentials_data,
-            )
-        )
+        super().__init__(service_name='Athena', boto3_service_name='athena')
 
     async def create_data_catalog(
         self,
         request: AthenaCreateDataCatalogRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        response = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.create_data_catalog,
-                **dumped
-            )
+    ) -> AthenaCreateDataCatalogResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.create_data_catalog,
+            request,
+            AthenaCreateDataCatalogResponse,
         )
-
-        return AthenaCreateDataCatalogResponse(**response)
-    
 
     async def create_named_query(
         self,
         request: AthenaCreateNamedQueryRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        response = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.create_named_query,
-                **dumped
-            )
+    ) -> AthenaCreateNamedQueryResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.create_named_query,
+            request,
+            AthenaCreateNamedQueryResponse,
         )
 
-        return AthenaCreateNamedQueryResponse(**response)
-    
     async def create_prepared_statement(
         self,
         request: AthenaCreatePreparedStatementRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        response = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.create_prepared_statement,
-                **dumped
-            )
+    ) -> AthenaCreatePreparedStatementResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.create_prepared_statement,
+            request,
+            AthenaCreatePreparedStatementResponse,
         )
 
-        return AthenaCreatePreparedStatementResponse(**response)
-    
+    async def delete_data_catalog(
+        self,
+        request: AthenaDeleteDataCatalogRequest,
+    ) -> AthenaDeleteDataCatalogResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.delete_data_catalog,
+            request,
+            AthenaDeleteDataCatalogResponse,
+        )
+
+    async def delete_named_query(
+        self,
+        request: AthenaDeleteNamedQueryRequest,
+    ) -> AthenaDeleteNamedQueryResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.delete_named_query,
+            request,
+            AthenaDeleteNamedQueryResponse,
+        )
+
+    async def delete_prepared_statement(
+        self,
+        request: AthenaDeletePreparedStatementRequest,
+    ) -> AthenaDeletePreparedStatementResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.delete_prepared_statement,
+            request,
+            AthenaDeletePreparedStatementResponse,
+        )
+
     async def get_calculation_execution_code(
         self,
-        request: AthenaGetCalculationExectutionCodeRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        response = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.get_calculation_execution_code,
-                **dumped
-            )
+        request: AthenaGetCalculationExecutionCodeRequest,
+    ) -> AthenaGetCalculationExecutionCodeResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.get_calculation_execution_code,
+            request,
+            AthenaGetCalculationExecutionCodeResponse,
         )
-
-        return AthenaGetCalculationExecutionCodeResponse(**response)
 
     async def get_calculation_execution(
         self,
         request: AthenaGetCalculationExecutionRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        response = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.get_calculation_execution,
-                **dumped
-            )
+    ) -> AthenaGetCalculationExecutionResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.get_calculation_execution,
+            request,
+            AthenaGetCalculationExecutionResponse,
         )
-
-        return AthenaGetCalculationExecutionResponse(**response)
 
     async def get_calculation_execution_status(
         self,
         request: AthenaGetCalculationExecutionStatusRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        response = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.get_calculation_execution_status,
-                **dumped
-            )
+    ) -> AthenaGetCalculationExecutionStatusResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.get_calculation_execution_status,
+            request,
+            AthenaGetCalculationExecutionStatusResponse,
         )
-
-        return AthenaGetCalculationExecutionStatusResponse(**response)
 
     async def get_data_catalog(
         self,
         request: AthenaGetDataCatalogRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        response = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.get_data_catalog,
-                **dumped
-            )
+    ) -> AthenaGetDataCatalogResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.get_data_catalog,
+            request,
+            AthenaGetDataCatalogResponse,
         )
 
-        return AthenaGetDataCatalogResponse(**response)
-    
     async def get_database(
         self,
         request: AthenaGetDatabaseRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        response = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.get_database,
-                **dumped
-            )
+    ) -> AthenaGetDatabaseResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.get_database,
+            request,
+            AthenaGetDatabaseResponse,
         )
 
-        return AthenaGetDatabaseResponse(**response)
-    
     async def get_named_query(
         self,
         request: AthenaGetNamedQueryRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        response = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.get_named_query,
-                **dumped
-            )
+    ) -> AthenaGetNamedQueryResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.get_named_query,
+            request,
+            AthenaGetNamedQueryResponse,
         )
 
-        return AthenaGetNamedQueryResponse(**response)
-    
     async def get_prepared_statement(
         self,
         request: AthenaGetPreparedStatementRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        response = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.get_prepared_statement,
-                **dumped
-            )
+    ) -> AthenaGetPreparedStatementResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.get_prepared_statement,
+            request,
+            AthenaGetPreparedStatementResponse,
         )
-
-        return AthenaGetPreparedStatementResponse(**response)
 
     async def get_query_execution(
         self,
         request: AthenaGetQueryExecutionRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        response = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.get_query_execution,
-                **dumped
-            )
+    ) -> AthenaGetQueryExecutionResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.get_query_execution,
+            request,
+            AthenaGetQueryExecutionResponse,
         )
-
-        return AthenaGetQueryExecutionResponse(**response)
 
     async def get_query_results(
         self,
         request: AthenaGetQueryResultsRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        response = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.get_query_results,
-                **dumped
-            )
+    ) -> AthenaGetQueryResultsResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.get_query_results,
+            request,
+            AthenaGetQueryResultsResponse,
         )
 
-        return AthenaGetQueryResultsResponse(**response)
+    async def get_query_results_paginated(
+        self,
+        request: AthenaGetQueryResultsRequest,
+    ) -> list[AthenaGetQueryResultsResponse]:
+        return await self._paginate(
+            'get_query_results',
+            request,
+            AthenaGetQueryResultsResponse,
+        )
 
-    async def get_session_request(
+    async def get_session(
         self,
         request: AthenaGetSessionRequest,
-    ):    
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        response = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.get_session,
-                **dumped
-            )
+    ) -> AthenaGetSessionResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.get_session,
+            request,
+            AthenaGetSessionResponse,
         )
 
-        return AthenaGetSessionResponse(**response)
-    
-    async def get_session_status_request(
+    get_session_request = get_session
+
+    async def get_session_status(
         self,
         request: AthenaGetSessionStatusRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        response = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.get_session_status,
-                **dumped
-            )
+    ) -> AthenaGetSessionStatusResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.get_session_status,
+            request,
+            AthenaGetSessionStatusResponse,
         )
 
-        return AthenaGetSessionStatusResponse(**response)
+    get_session_status_request = get_session_status
 
     async def list_databases(
         self,
         request: AthenaListDatabasesRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        response = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.list_databases,
-                **dumped
-            )
+    ) -> AthenaListDatabasesResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.list_databases,
+            request,
+            AthenaListDatabasesResponse,
         )
-
-        return AthenaListDatabasesResponse(**response)
 
     async def list_databases_paginated(
         self,
         request: AthenaListDatabasesRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        paginator = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.get_paginator,
-                'list_databases',
-            )
+    ) -> list[AthenaListDatabasesResponse]:
+        return await self._paginate(
+            'list_databases',
+            request,
+            AthenaListDatabasesResponse,
         )
 
-        pagination_result = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                paginator.paginate,
-                **dumped
-            )
-        )
-
-        results = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                collect_paginator,
-                pagination_result,
-            )
-        )
-
-        return [
-            AthenaListDatabasesResponse(**res) for res in results
-        ]
-    
     async def list_data_catalogs(
         self,
-        request: AthenaListDataCatalogsRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        response = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.list_data_catalogs,
-                **dumped
-            )
+        request: AthenaListDataCatalogsRequest | None = None,
+    ) -> AthenaListDataCatalogsResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.list_data_catalogs,
+            request or AthenaListDataCatalogsRequest(),
+            AthenaListDataCatalogsResponse,
         )
-
-        return AthenaListDataCatalogsResponse(**response)
 
     async def list_data_catalogs_paginated(
         self,
-        request: AthenaListDataCatalogsRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        paginator = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.get_paginator,
-                'list_data_catalogs',
-            )
+        request: AthenaListDataCatalogsRequest | None = None,
+    ) -> list[AthenaListDataCatalogsResponse]:
+        return await self._paginate(
+            'list_data_catalogs',
+            request or AthenaListDataCatalogsRequest(),
+            AthenaListDataCatalogsResponse,
         )
-
-        pagination_result = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                paginator.paginate,
-                **dumped
-            )
-        )
-
-        results = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                collect_paginator,
-                pagination_result,
-            )
-        )
-
-        return [
-            AthenaListDataCatalogsResponse(**res) for res in results
-        ]
 
     async def list_named_queries(
         self,
-        request: AthenaListNamedQueriesRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        response = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.list_named_queries,
-                **dumped
-            )
+        request: AthenaListNamedQueriesRequest | None = None,
+    ) -> AthenaListNamedQueriesResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.list_named_queries,
+            request or AthenaListNamedQueriesRequest(),
+            AthenaListNamedQueriesResponse,
         )
 
-        return AthenaListNamedQueriesResponse(**response)
-    
     async def list_named_queries_paginated(
         self,
-        request: AthenaListNamedQueriesRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        paginator = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.get_paginator,
-                'list_named_queries',
-            )
+        request: AthenaListNamedQueriesRequest | None = None,
+    ) -> list[AthenaListNamedQueriesResponse]:
+        return await self._paginate(
+            'list_named_queries',
+            request or AthenaListNamedQueriesRequest(),
+            AthenaListNamedQueriesResponse,
         )
-
-        pagination_result = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                paginator.paginate,
-                **dumped
-            )
-        )
-
-        results = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                collect_paginator,
-                pagination_result,
-            )
-        )
-
-        return [
-            AthenaListNamedQueriesResponse(**res) for res in results
-        ]
 
     async def list_prepared_statements(
         self,
         request: AthenaListPreparedStatementsRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        response = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.list_prepared_statements,
-                **dumped
-            )
+    ) -> AthenaListPreparedStatementsResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.list_prepared_statements,
+            request,
+            AthenaListPreparedStatementsResponse,
         )
 
-        return AthenaListPreparedStatementsResponse(**response)
-    
     async def list_prepared_statements_paginated(
         self,
         request: AthenaListPreparedStatementsRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        paginator = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.get_paginator,
-                'list_prepared_statements',
-            )
+    ) -> list[AthenaListPreparedStatementsResponse]:
+        return await self._paginate(
+            'list_prepared_statements',
+            request,
+            AthenaListPreparedStatementsResponse,
         )
-
-        pagination_result = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                paginator.paginate,
-                **dumped
-            )
-        )
-
-        results = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                collect_paginator,
-                pagination_result,
-            )
-        )
-
-        return [
-            AthenaListPreparedStatementsResponse(**res) for res in results
-        ]
 
     async def list_query_executions(
         self,
-        request: AthenaListQueryExecutionsRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        response = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.list_query_executions,
-                **dumped
-            )
+        request: AthenaListQueryExecutionsRequest | None = None,
+    ) -> AthenaListQueryExecutionsResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.list_query_executions,
+            request or AthenaListQueryExecutionsRequest(),
+            AthenaListQueryExecutionsResponse,
         )
 
-        return AthenaListQueryExecutionsResponse(**response)
-    
     async def list_query_executions_paginated(
         self,
-        request: AthenaListQueryExecutionsRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        paginator = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.get_paginator,
-                'list_query_executions',
-            )
+        request: AthenaListQueryExecutionsRequest | None = None,
+    ) -> list[AthenaListQueryExecutionsResponse]:
+        return await self._paginate(
+            'list_query_executions',
+            request or AthenaListQueryExecutionsRequest(),
+            AthenaListQueryExecutionsResponse,
         )
 
-        pagination_result = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                paginator.paginate,
-                **dumped
-            )
-        )
-
-        results = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                collect_paginator,
-                pagination_result,
-            )
-        )
-
-        return [
-            AthenaListQueryExecutionsResponse(**res) for res in results
-        ]
-    
     async def list_sessions(
         self,
         request: AthenaListSessionsRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        response = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.list_sessions,
-                **dumped
-            )
+    ) -> AthenaListSessionsResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.list_sessions,
+            request,
+            AthenaListSessionsResponse,
         )
 
-        return AthenaListSessionsResponse(**response)
-        
     async def list_sessions_paginated(
         self,
         request: AthenaListSessionsRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        paginator = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.get_paginator,
-                'list_sessions',
-            )
+    ) -> list[AthenaListSessionsResponse]:
+        return await self._paginate(
+            'list_sessions',
+            request,
+            AthenaListSessionsResponse,
         )
-
-        pagination_result = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                paginator.paginate,
-                **dumped
-            )
-        )
-
-        results = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                collect_paginator,
-                pagination_result,
-            )
-        )
-
-        return [
-            AthenaListSessionsResponse(**res) for res in results
-        ]
 
     async def start_calculation_execution(
         self,
         request: AthenaStartCalculationExecutionRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        response = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.start_calculation_execution,
-                **dumped
-            )
+    ) -> AthenaStartCalculationExecutionResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.start_calculation_execution,
+            request,
+            AthenaStartCalculationExecutionResponse,
         )
-
-        return AthenaStartCalculationExecutionResponse(**response)  
 
     async def start_query_execution(
         self,
         request: AthenaStartQueryExecutionRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        response = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.start_query_execution,
-                **dumped
-            )
+    ) -> AthenaStartQueryExecutionResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.start_query_execution,
+            request,
+            AthenaStartQueryExecutionResponse,
         )
-
-        return AthenaStartQueryExecutionResponse(**response) 
 
     async def start_session(
         self,
         request: AthenaStartSessionRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        response = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.start_session,
-                **dumped
-            )
+    ) -> AthenaStartSessionResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.start_session,
+            request,
+            AthenaStartSessionResponse,
         )
 
-        return AthenaStartSessionResponse(**response)   
-    
     async def stop_calculation_execution(
         self,
         request: AthenaStopCalculationExecutionRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-        
-        response = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.stop_calculation_execution,
-                **dumped
-            )
+    ) -> AthenaStopCalculationExecutionResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.stop_calculation_execution,
+            request,
+            AthenaStopCalculationExecutionResponse,
         )
 
-        return AthenaStopCalculationExecutionResponse(**response)
-    
     async def stop_query_execution(
         self,
         request: AthenaStopQueryExecutionRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-        
-        response = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.stop_query_execution,
-                **dumped
-            )
+    ) -> AthenaStopQueryExecutionResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.stop_query_execution,
+            request,
+            AthenaStopQueryExecutionResponse,
         )
 
-        return AthenaStopQueryExecutionResponse(**response)
-    
     async def terminate_session(
         self,
         request: AthenaTerminateSessionRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        response = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.terminate_session,
-                **dumped
-            )
+    ) -> AthenaTerminateSessionResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.terminate_session,
+            request,
+            AthenaTerminateSessionResponse,
         )
 
-        return AthenaTerminateSessionResponse(**response)
-    
     async def update_data_catalog(
         self,
         request: AthenaUpdateDataCatalogRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        response = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.update_data_catalog,
-                **dumped
-            )
+    ) -> AthenaUpdateDataCatalogResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.update_data_catalog,
+            request,
+            AthenaUpdateDataCatalogResponse,
         )
 
-        return AthenaUpdateDataCatalogResponse(**response)
-    
     async def update_named_query(
         self,
         request: AthenaUpdateNamedQueryRequest,
-    ):
-        
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
-
-        if self._client is None:
-            raise UnsetAWSConnectionException(
-                self.service_name
-            )
-        
-        dumped = request.model_dump(exclude_none=True)
-
-        response = await self._loop.run_in_executor(
-            self._executor,
-            functools.partial(
-                self._client.update_named_query,
-                **dumped
-            )
+    ) -> AthenaUpdateNamedQueryResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.update_named_query,
+            request,
+            AthenaUpdateNamedQueryResponse,
         )
 
-        return AthenaUpdateNamedQueryResponse(**response)
-    
-    async def close(self):
+    async def batch_get_named_query(
+        self,
+        request: AthenaBatchGetNamedQueryRequest,
+    ) -> AthenaBatchGetNamedQueryResponse:
+        client = self._require_client()
+        return await self._execute(client.batch_get_named_query, request, AthenaBatchGetNamedQueryResponse)
 
-        if self._loop is None:
-            self._loop = asyncio.get_event_loop()
+    async def batch_get_prepared_statement(
+        self,
+        request: AthenaBatchGetPreparedStatementRequest,
+    ) -> AthenaBatchGetPreparedStatementResponse:
+        client = self._require_client()
+        return await self._execute(client.batch_get_prepared_statement, request, AthenaBatchGetPreparedStatementResponse)
 
-        if self._client:
-            await self._loop.run_in_executor(
-                None,
-                self._client.close
-            )
+    async def batch_get_query_execution(
+        self,
+        request: AthenaBatchGetQueryExecutionRequest,
+    ) -> AthenaBatchGetQueryExecutionResponse:
+        client = self._require_client()
+        return await self._execute(client.batch_get_query_execution, request, AthenaBatchGetQueryExecutionResponse)
 
-        await self._system.close()
-        self._executor.shutdown()
+    async def cancel_capacity_reservation(
+        self,
+        request: AthenaCancelCapacityReservationRequest,
+    ) -> AthenaCancelCapacityReservationResponse:
+        client = self._require_client()
+        return await self._execute(client.cancel_capacity_reservation, request, AthenaCancelCapacityReservationResponse)
 
-    def abort(self):
-        self._client.close()
-        self._system.abort()
-        self._executor.shutdown()
+    async def create_capacity_reservation(
+        self,
+        request: AthenaCreateCapacityReservationRequest,
+    ) -> AthenaCreateCapacityReservationResponse:
+        client = self._require_client()
+        return await self._execute(client.create_capacity_reservation, request, AthenaCreateCapacityReservationResponse)
+
+    async def create_notebook(
+        self,
+        request: AthenaCreateNotebookRequest,
+    ) -> AthenaCreateNotebookResponse:
+        client = self._require_client()
+        return await self._execute(client.create_notebook, request, AthenaCreateNotebookResponse)
+
+    async def create_presigned_notebook_url(
+        self,
+        request: AthenaCreatePresignedNotebookUrlRequest,
+    ) -> AthenaCreatePresignedNotebookUrlResponse:
+        client = self._require_client()
+        return await self._execute(client.create_presigned_notebook_url, request, AthenaCreatePresignedNotebookUrlResponse)
+
+    async def create_system_table_configuration(
+        self,
+        request: AthenaCreateSystemTableConfigurationRequest,
+    ) -> AthenaCreateSystemTableConfigurationResponse:
+        client = self._require_client()
+        return await self._execute(client.create_system_table_configuration, request, AthenaCreateSystemTableConfigurationResponse)
+
+    async def create_work_group(
+        self,
+        request: AthenaCreateWorkGroupRequest,
+    ) -> AthenaCreateWorkGroupResponse:
+        client = self._require_client()
+        return await self._execute(client.create_work_group, request, AthenaCreateWorkGroupResponse)
+
+    async def delete_capacity_reservation(
+        self,
+        request: AthenaDeleteCapacityReservationRequest,
+    ) -> AthenaDeleteCapacityReservationResponse:
+        client = self._require_client()
+        return await self._execute(client.delete_capacity_reservation, request, AthenaDeleteCapacityReservationResponse)
+
+    async def delete_notebook(
+        self,
+        request: AthenaDeleteNotebookRequest,
+    ) -> AthenaDeleteNotebookResponse:
+        client = self._require_client()
+        return await self._execute(client.delete_notebook, request, AthenaDeleteNotebookResponse)
+
+    async def delete_system_table_configuration(
+        self,
+        request: AthenaDeleteSystemTableConfigurationRequest,
+    ) -> AthenaDeleteSystemTableConfigurationResponse:
+        client = self._require_client()
+        return await self._execute(client.delete_system_table_configuration, request, AthenaDeleteSystemTableConfigurationResponse)
+
+    async def delete_work_group(
+        self,
+        request: AthenaDeleteWorkGroupRequest,
+    ) -> AthenaDeleteWorkGroupResponse:
+        client = self._require_client()
+        return await self._execute(client.delete_work_group, request, AthenaDeleteWorkGroupResponse)
+
+    async def export_notebook(
+        self,
+        request: AthenaExportNotebookRequest,
+    ) -> AthenaExportNotebookResponse:
+        client = self._require_client()
+        return await self._execute(client.export_notebook, request, AthenaExportNotebookResponse)
+
+    async def get_capacity_assignment_configuration(
+        self,
+        request: AthenaGetCapacityAssignmentConfigurationRequest,
+    ) -> AthenaGetCapacityAssignmentConfigurationResponse:
+        client = self._require_client()
+        return await self._execute(client.get_capacity_assignment_configuration, request, AthenaGetCapacityAssignmentConfigurationResponse)
+
+    async def get_capacity_reservation(
+        self,
+        request: AthenaGetCapacityReservationRequest,
+    ) -> AthenaGetCapacityReservationResponse:
+        client = self._require_client()
+        return await self._execute(client.get_capacity_reservation, request, AthenaGetCapacityReservationResponse)
+
+    async def get_notebook_metadata(
+        self,
+        request: AthenaGetNotebookMetadataRequest,
+    ) -> AthenaGetNotebookMetadataResponse:
+        client = self._require_client()
+        return await self._execute(client.get_notebook_metadata, request, AthenaGetNotebookMetadataResponse)
+
+    async def get_query_runtime_statistics(
+        self,
+        request: AthenaGetQueryRuntimeStatisticsRequest,
+    ) -> AthenaGetQueryRuntimeStatisticsResponse:
+        client = self._require_client()
+        return await self._execute(client.get_query_runtime_statistics, request, AthenaGetQueryRuntimeStatisticsResponse)
+
+    async def get_resource_dashboard(
+        self,
+        request: AthenaGetResourceDashboardRequest,
+    ) -> AthenaGetResourceDashboardResponse:
+        client = self._require_client()
+        return await self._execute(client.get_resource_dashboard, request, AthenaGetResourceDashboardResponse)
+
+    async def get_session_endpoint(
+        self,
+        request: AthenaGetSessionEndpointRequest,
+    ) -> AthenaGetSessionEndpointResponse:
+        client = self._require_client()
+        return await self._execute(client.get_session_endpoint, request, AthenaGetSessionEndpointResponse)
+
+    async def get_system_table_configuration(
+        self,
+        request: AthenaGetSystemTableConfigurationRequest,
+    ) -> AthenaGetSystemTableConfigurationResponse:
+        client = self._require_client()
+        return await self._execute(client.get_system_table_configuration, request, AthenaGetSystemTableConfigurationResponse)
+
+    async def get_table_metadata(
+        self,
+        request: AthenaGetTableMetadataRequest,
+    ) -> AthenaGetTableMetadataResponse:
+        client = self._require_client()
+        return await self._execute(client.get_table_metadata, request, AthenaGetTableMetadataResponse)
+
+    async def get_work_group(
+        self,
+        request: AthenaGetWorkGroupRequest,
+    ) -> AthenaGetWorkGroupResponse:
+        client = self._require_client()
+        return await self._execute(client.get_work_group, request, AthenaGetWorkGroupResponse)
+
+    async def import_notebook(
+        self,
+        request: AthenaImportNotebookRequest,
+    ) -> AthenaImportNotebookResponse:
+        client = self._require_client()
+        return await self._execute(client.import_notebook, request, AthenaImportNotebookResponse)
+
+    async def list_application_dpu_sizes(
+        self,
+        request: AthenaListApplicationDPUSizesRequest | None = None,
+    ) -> AthenaListApplicationDPUSizesResponse:
+        client = self._require_client()
+        return await self._execute(client.list_application_dpu_sizes, request, AthenaListApplicationDPUSizesResponse)
+
+    async def list_calculation_executions(
+        self,
+        request: AthenaListCalculationExecutionsRequest,
+    ) -> AthenaListCalculationExecutionsResponse:
+        client = self._require_client()
+        return await self._execute(client.list_calculation_executions, request, AthenaListCalculationExecutionsResponse)
+
+    async def list_capacity_reservations(
+        self,
+        request: AthenaListCapacityReservationsRequest | None = None,
+    ) -> AthenaListCapacityReservationsResponse:
+        client = self._require_client()
+        return await self._execute(client.list_capacity_reservations, request, AthenaListCapacityReservationsResponse)
+
+    async def list_engine_versions(
+        self,
+        request: AthenaListEngineVersionsRequest | None = None,
+    ) -> AthenaListEngineVersionsResponse:
+        client = self._require_client()
+        return await self._execute(client.list_engine_versions, request, AthenaListEngineVersionsResponse)
+
+    async def list_executors(
+        self,
+        request: AthenaListExecutorsRequest,
+    ) -> AthenaListExecutorsResponse:
+        client = self._require_client()
+        return await self._execute(client.list_executors, request, AthenaListExecutorsResponse)
+
+    async def list_notebook_metadata(
+        self,
+        request: AthenaListNotebookMetadataRequest,
+    ) -> AthenaListNotebookMetadataResponse:
+        client = self._require_client()
+        return await self._execute(client.list_notebook_metadata, request, AthenaListNotebookMetadataResponse)
+
+    async def list_notebook_sessions(
+        self,
+        request: AthenaListNotebookSessionsRequest,
+    ) -> AthenaListNotebookSessionsResponse:
+        client = self._require_client()
+        return await self._execute(client.list_notebook_sessions, request, AthenaListNotebookSessionsResponse)
+
+    async def list_system_table_statuses(
+        self,
+        request: AthenaListSystemTableStatusesRequest | None = None,
+    ) -> AthenaListSystemTableStatusesResponse:
+        client = self._require_client()
+        return await self._execute(client.list_system_table_statuses, request, AthenaListSystemTableStatusesResponse)
+
+    async def list_system_table_statuses_paginated(
+        self,
+        request: AthenaListSystemTableStatusesRequest | None = None,
+    ) -> list[AthenaListSystemTableStatusesResponse]:
+        return await self._paginate('list_system_table_statuses', request, AthenaListSystemTableStatusesResponse)
+
+    async def list_table_metadata(
+        self,
+        request: AthenaListTableMetadataRequest,
+    ) -> AthenaListTableMetadataResponse:
+        client = self._require_client()
+        return await self._execute(client.list_table_metadata, request, AthenaListTableMetadataResponse)
+
+    async def list_table_metadata_paginated(
+        self,
+        request: AthenaListTableMetadataRequest,
+    ) -> list[AthenaListTableMetadataResponse]:
+        return await self._paginate('list_table_metadata', request, AthenaListTableMetadataResponse)
+
+    async def list_tags_for_resource(
+        self,
+        request: AthenaListTagsForResourceRequest,
+    ) -> AthenaListTagsForResourceResponse:
+        client = self._require_client()
+        return await self._execute(client.list_tags_for_resource, request, AthenaListTagsForResourceResponse)
+
+    async def list_tags_for_resource_paginated(
+        self,
+        request: AthenaListTagsForResourceRequest,
+    ) -> list[AthenaListTagsForResourceResponse]:
+        return await self._paginate('list_tags_for_resource', request, AthenaListTagsForResourceResponse)
+
+    async def list_work_groups(
+        self,
+        request: AthenaListWorkGroupsRequest | None = None,
+    ) -> AthenaListWorkGroupsResponse:
+        client = self._require_client()
+        return await self._execute(client.list_work_groups, request, AthenaListWorkGroupsResponse)
+
+    async def put_capacity_assignment_configuration(
+        self,
+        request: AthenaPutCapacityAssignmentConfigurationRequest,
+    ) -> AthenaPutCapacityAssignmentConfigurationResponse:
+        client = self._require_client()
+        return await self._execute(client.put_capacity_assignment_configuration, request, AthenaPutCapacityAssignmentConfigurationResponse)
+
+    async def tag_resource(
+        self,
+        request: AthenaTagResourceRequest,
+    ) -> AthenaTagResourceResponse:
+        client = self._require_client()
+        return await self._execute(client.tag_resource, request, AthenaTagResourceResponse)
+
+    async def untag_resource(
+        self,
+        request: AthenaUntagResourceRequest,
+    ) -> AthenaUntagResourceResponse:
+        client = self._require_client()
+        return await self._execute(client.untag_resource, request, AthenaUntagResourceResponse)
+
+    async def update_capacity_reservation(
+        self,
+        request: AthenaUpdateCapacityReservationRequest,
+    ) -> AthenaUpdateCapacityReservationResponse:
+        client = self._require_client()
+        return await self._execute(client.update_capacity_reservation, request, AthenaUpdateCapacityReservationResponse)
+
+    async def update_notebook(
+        self,
+        request: AthenaUpdateNotebookRequest,
+    ) -> AthenaUpdateNotebookResponse:
+        client = self._require_client()
+        return await self._execute(client.update_notebook, request, AthenaUpdateNotebookResponse)
+
+    async def update_notebook_metadata(
+        self,
+        request: AthenaUpdateNotebookMetadataRequest,
+    ) -> AthenaUpdateNotebookMetadataResponse:
+        client = self._require_client()
+        return await self._execute(client.update_notebook_metadata, request, AthenaUpdateNotebookMetadataResponse)
+
+    async def update_prepared_statement(
+        self,
+        request: AthenaUpdatePreparedStatementRequest,
+    ) -> AthenaUpdatePreparedStatementResponse:
+        client = self._require_client()
+        return await self._execute(client.update_prepared_statement, request, AthenaUpdatePreparedStatementResponse)
+
+    async def update_system_table_configuration(
+        self,
+        request: AthenaUpdateSystemTableConfigurationRequest,
+    ) -> AthenaUpdateSystemTableConfigurationResponse:
+        client = self._require_client()
+        return await self._execute(client.update_system_table_configuration, request, AthenaUpdateSystemTableConfigurationResponse)
+
+    async def update_work_group(
+        self,
+        request: AthenaUpdateWorkGroupRequest,
+    ) -> AthenaUpdateWorkGroupResponse:
+        client = self._require_client()
+        return await self._execute(client.update_work_group, request, AthenaUpdateWorkGroupResponse)
+

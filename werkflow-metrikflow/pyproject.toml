@@ -6,22 +6,22 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "werkflow-metrikflow"
-version = "0.2.1"
-requires-python = ">=3.10"
-description="A library for processing and sending metrics."
+version = "0.3.0"
+requires-python = ">=3.11"
+description = "A library for processing and sending metrics."
 readme = "README.md"
 authors = [{ name = "Ada Lundhe", email = "adalundhe@lundhe.audio" }]
-license = { file = "LICENSE" }
+license-files = [ "LICENSE" ]
 classifiers = [
-        "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
 ]
 keywords = [
-    'pypi', 
-    'cicd', 
+    'pypi',
+    'cicd',
     'python',
     'werkflow',
     'workflow',
@@ -29,15 +29,12 @@ keywords = [
     'stats',
     'stats-integrations',
     'datadog',
-    'reporting'
+    'reporting',
 ]
 dependencies = [
     'metrikflow',
     'werkflow-core',
-    'werkflow-file',
-    'werkflow-secrets',
     'werkflow-shell',
-    'werkflow-system',
 ]
 
 [project.urls]

@@ -20,10 +20,10 @@ EC2Filters = Literal[
     "tag",
     "tag-key",
     "volume-id",
-    "volume-type"
+    "volume-type",
 ]
 
 
 class EC2Filter(BaseModel):
-    Name: EC2Filters
-    Value: list[StrictStr]
+    Name: StrictStr
+    Values: list[StrictStr]

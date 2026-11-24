@@ -1,50 +1,46 @@
 import datetime
+from typing import Dict, Literal
 from pydantic import (
     BaseModel,
-    StrictStr,
+    ConfigDict,
     StrictBool,
-    StrictInt
+    StrictInt,
+    StrictStr,
 )
-from typing import Literal, Optional, Dict
 from .aws_s3_streaming_body import AWSS3StreamingBody
 
 
 class AWSS3GetObjectResponse(BaseModel):
-    Body: AWSS3StreamingBody
-    DeleteMarker: StrictBool
-    AcceptRanges: StrictStr
-    Expiration: StrictStr
-    Restore: StrictStr
-    LastModified: datetime.datetime
-    ContentLength: StrictInt
-    ETag: StrictStr
-    ChecksumCRC32: StrictStr
-    ChecksumCRC32C: StrictStr
-    ChecksumSHA1: StrictStr
-    ChecksumSHA256: StrictStr
-    MissingMeta: StrictInt
-    VersionId: StrictStr
-    CacheControl: StrictStr
-    ContentDisposition: StrictStr
-    ContentEncoding: StrictStr
-    ContentLanguage: StrictStr
-    ContentRange: StrictStr
-    ContentType: StrictStr
-    Expires: datetime.datetime
-    WebsiteREdirectLocation: StrictStr
-    ServerSideEncryption: Literal[
-        'AES256',
-        'aws:kms',
-        'aws:kms:dsse'
-    ]
-    Metadata: Dict[
-        StrictStr,
-        StrictStr
-    ]
-    SSECustomerAlgorithm: StrictStr
-    SSECustomerKeyMD5: StrictStr
-    SSECustomerId: StrictStr
-    BucketKeyEnabled: StrictBool
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+    Body: AWSS3StreamingBody | None = None
+    DeleteMarker: StrictBool | None = None
+    AcceptRanges: StrictStr | None = None
+    Expiration: StrictStr | None = None
+    Restore: StrictStr | None = None
+    LastModified: datetime.datetime | None = None
+    ContentLength: StrictInt | None = None
+    ETag: StrictStr | None = None
+    ChecksumCRC32: StrictStr | None = None
+    ChecksumCRC32C: StrictStr | None = None
+    ChecksumSHA1: StrictStr | None = None
+    ChecksumSHA256: StrictStr | None = None
+    MissingMeta: StrictInt | None = None
+    VersionId: StrictStr | None = None
+    CacheControl: StrictStr | None = None
+    ContentDisposition: StrictStr | None = None
+    ContentEncoding: StrictStr | None = None
+    ContentLanguage: StrictStr | None = None
+    ContentRange: StrictStr | None = None
+    ContentType: StrictStr | None = None
+    Expires: datetime.datetime | None = None
+    WebsiteRedirectLocation: StrictStr | None = None
+    ServerSideEncryption: Literal['AES256', 'aws:kms', 'aws:kms:dsse'] | None = None
+    Metadata: Dict[StrictStr, StrictStr] | None = None
+    SSECustomerAlgorithm: StrictStr | None = None
+    SSECustomerKeyMD5: StrictStr | None = None
+    SSEKMSKeyId: StrictStr | None = None
+    BucketKeyEnabled: StrictBool | None = None
     StorageClass: Literal[
         'STANDARD',
         'REDUCED_REDUNDANCY',
@@ -56,29 +52,18 @@ class AWSS3GetObjectResponse(BaseModel):
         'OUTPOSTS',
         'GLACIER_IR',
         'SNOW',
-        'EXPRESS_ONEZONE'
-    ]
-    ReqeustCharged: Optional[
-        Literal['requester']
-    ]=None
+        'EXPRESS_ONEZONE',
+    ] | None = None
+    RequestCharged: Literal['requester'] | None = None
     ReplicationStatus: Literal[
         'COMPLETE',
         'PENDING',
         'FAILED',
         'REPLICA',
-        'COMPLETED'
-    ]=None
-    PartsCount: StrictInt
-    TagCount: StrictInt
-    ObjectLockMode: Literal[
-        'GOVERNANCE',
-        'COMPLIANCE'
-    ]
-    ObjectLockRetainUntilDate: datetime.datetime
-    ObjectLockLegalHoldStatus: Literal[
-        'ON',
-        'OFF'
-    ]
-
-    class Config:
-        arbitrary_types_allowed=True
+        'COMPLETED',
+    ] | None = None
+    PartsCount: StrictInt | None = None
+    TagCount: StrictInt | None = None
+    ObjectLockMode: Literal['GOVERNANCE', 'COMPLIANCE'] | None = None
+    ObjectLockRetainUntilDate: datetime.datetime | None = None
+    ObjectLockLegalHoldStatus: Literal['ON', 'OFF'] | None = None

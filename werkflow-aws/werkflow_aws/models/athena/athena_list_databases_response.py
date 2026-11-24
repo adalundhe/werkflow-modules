@@ -6,5 +6,5 @@ from .athena_database import AthenaDatabase
 
 
 class AthenaListDatabasesResponse(BaseModel):
-    DatabaseList: list[AthenaDatabase]
+    DatabaseList: list[AthenaDatabase] | None = None
     NextToken: StrictStr | None = None

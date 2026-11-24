@@ -1,0 +1,9 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .sage_maker_capacity_reservation_endpoints_association import SageMakerCapacityReservationEndpointsAssociation
+from .sage_maker_capacity_reservation_hyper_pod_clusters_association import SageMakerCapacityReservationHyperPodClustersAssociation
+
+
+class SageMakerCapacityReservationResourceAssociation(BaseModel):
+    HyperPodClusters: SageMakerCapacityReservationHyperPodClustersAssociation | None = None
+    Endpoints: SageMakerCapacityReservationEndpointsAssociation | None = None

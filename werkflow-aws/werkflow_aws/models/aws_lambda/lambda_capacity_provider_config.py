@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .lambda_managed_instances_capacity_provider_config import LambdaManagedInstancesCapacityProviderConfig
+
+
+class LambdaCapacityProviderConfig(BaseModel):
+    LambdaManagedInstancesCapacityProviderConfig: LambdaManagedInstancesCapacityProviderConfig

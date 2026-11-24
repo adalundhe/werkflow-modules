@@ -1,102 +1,64 @@
 import re
-from pydantic import (
-    BaseModel,
-    StrictStr
-)
-from typing import Optional, Literal, Dict
+from typing import Literal, Optional
+
+from pydantic import BaseModel, StrictStr
 
 
 class Stage(BaseModel):
-    layer_type: Literal["stage"]="stage"
+    layer_type: Literal['stage'] = 'stage'
     base: StrictStr
     tag: StrictStr
-    platform: Optional[StrictStr]=None
-    alias: Optional[StrictStr]=None
+    platform: Optional[StrictStr] = None
+    alias: Optional[StrictStr] = None
 
     def to_string(self) -> str:
-
         from_args = ['FROM']
 
         if self.platform:
-            from_args.append(self.platform)
+            from_args.append(f'--platform={self.platform}')
 
-        from_args.append(
-            f'{self.base}:{self.tag}'
-        )
-        
+        if self.tag.startswith('sha256:'):
+            from_args.append(f'{self.base}@{self.tag}')
+        else:
+            from_args.append(f'{self.base}:{self.tag}')
+
         if self.alias:
             from_args.append(f'AS {self.alias}')
-        
+
         return ' '.join(from_args)
-    
+
     @classmethod
-    def parse(
-        cls,
-        line: str
-    ):
-        line = re.sub('FROM ', '', line, count=1).strip()
-        templated_alias_pattern = re.compile(r' as (.*)| AS (.*)')
+    def parse(cls, line: str) -> 'Stage':
+        stripped = re.sub(r'^FROM\s+', '', line.strip(), count=1, flags=re.IGNORECASE).strip()
         templated_platform_pattern = re.compile(r'--platform=([^\s]+)')
+        templated_alias_pattern = re.compile(r'\s+AS\s+([^\s]+)\s*$', re.IGNORECASE)
 
-        options: Dict[str, str] = {}
-        
-        if platform_match := re.search(
-            templated_platform_pattern,
-            line
-        ):
-            options['platform'] = re.sub(
-                '--platform=',
-                '',
-                platform_match.group(0)
-            )
+        platform: Optional[str] = None
+        alias: Optional[str] = None
 
-            line = re.sub(
-                templated_platform_pattern,
-                '',
-                line
-            )
+        if platform_match := templated_platform_pattern.search(stripped):
+            platform = platform_match.group(1)
+            stripped = templated_platform_pattern.sub('', stripped, count=1).strip()
 
-        if ':' in line:
-            base, tag = line.split(':')
+        if alias_match := templated_alias_pattern.search(stripped):
+            alias = alias_match.group(1).strip()
+            stripped = templated_alias_pattern.sub('', stripped, count=1).strip()
 
+        if '@' in stripped:
+            base, tag = stripped.split('@', 1)
         else:
-            base = line
-            tag = 'latest'
+            last_slash = stripped.rfind('/')
+            last_colon = stripped.rfind(':')
+            if last_colon > last_slash:
+                base = stripped[:last_colon]
+                tag = stripped[last_colon + 1:]
+            else:
+                base = stripped
+                tag = 'latest'
 
-        if alias := re.search(
-            templated_alias_pattern,
-            line
-        ):
-            options['alias'] = re.sub(
-                r' as | AS ',
-                '',
-                alias.group(0)
-            )
-            base = re.sub(
-                templated_alias_pattern,
-                '',
-                base
-            )
-
-
-        if alias := re.search(
-            templated_alias_pattern,
-            tag
-        ):
-            options['alias'] = re.sub(
-                r' as | AS ',
-                '',
-                alias.group(0)
-            )
-
-            tag = re.sub(
-                templated_alias_pattern,
-                '',
-                tag
-            )
-
-        return Stage(
-            base=base,
-            tag=tag,
-            **options
+        return cls(
+            base=base.strip(),
+            tag=tag.strip(),
+            platform=platform,
+            alias=alias,
         )

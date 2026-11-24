@@ -1,0 +1,9 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .sage_maker_routing_target_async_inference_client_config import SageMakerRoutingTargetAsyncInferenceClientConfig
+from .sage_maker_routing_target_async_inference_output_config import SageMakerRoutingTargetAsyncInferenceOutputConfig
+
+
+class SageMakerRoutingTargetAsyncInferenceConfig(BaseModel):
+    OutputConfig: SageMakerRoutingTargetAsyncInferenceOutputConfig | None = None
+    ClientConfig: SageMakerRoutingTargetAsyncInferenceClientConfig | None = None

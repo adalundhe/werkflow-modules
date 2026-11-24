@@ -1,17 +1,16 @@
 import datetime
-from pydantic import (
-    BaseModel,
-    StrictStr,
-    StrictInt,
-    AnyHttpUrl
-)
-from typing import List
+from typing import List, Optional
+
+from pydantic import AnyHttpUrl, BaseModel, ConfigDict, Field, StrictInt, StrictStr
+
 from werkflow_github.actions.common.models.conclusion import Conclusion
 from werkflow_github.actions.common.models.status import Status
 from werkflow_github.actions.steps.models.step import Step
 
 
 class JobValidator(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
     id: StrictInt
     run_id: StrictInt
     run_url: AnyHttpUrl
@@ -21,18 +20,15 @@ class JobValidator(BaseModel):
     url: AnyHttpUrl
     html_url: AnyHttpUrl
     status: Status
-    conclusion: Conclusion
-    started_at: datetime.datetime
-    completed_at: datetime.datetime
-    steps: List[Step]
+    conclusion: Optional[Conclusion] = None
+    started_at: Optional[datetime.datetime] = None
+    completed_at: Optional[datetime.datetime] = None
+    steps: List[Step] = Field(default_factory=list)
     check_run_url: AnyHttpUrl
-    labels: List[StrictStr]
-    runner_id: StrictInt
-    runner_name: StrictStr
-    runner_group_id: StrictInt
-    runner_group_name: StrictStr
-    workflow_name: StrictStr
-    head_branch: StrictStr
-
-    class Config:
-        allow_arbitrary_types=True
+    labels: List[StrictStr] = Field(default_factory=list)
+    runner_id: Optional[StrictInt] = None
+    runner_name: Optional[StrictStr] = None
+    runner_group_id: Optional[StrictInt] = None
+    runner_group_name: Optional[StrictStr] = None
+    workflow_name: Optional[StrictStr] = None
+    head_branch: Optional[StrictStr] = None

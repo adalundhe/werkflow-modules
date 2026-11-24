@@ -1,8 +1,8 @@
-from pydantic import (
-    BaseModel,
-    StrictStr,
-)
+from pydantic import BaseModel, StrictStr
 
 
-class AthenaGetCalculationExectutionCodeRequest(BaseModel):
+class AthenaGetCalculationExecutionCodeRequest(BaseModel):
     CalculationExecutionId: StrictStr
+
+
+AthenaGetCalculationExectutionCodeRequest = AthenaGetCalculationExecutionCodeRequest

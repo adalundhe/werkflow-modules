@@ -3,6 +3,6 @@ from pydantic import BaseModel, StrictStr
 
 
 class AWSs3BucketResponse(BaseModel):
-    Name: StrictStr
-    CreationDate: datetime.datetime
+    Name: StrictStr | None = None
+    CreationDate: datetime.datetime | None = None
     

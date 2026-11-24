@@ -1,22 +1,18 @@
+from typing import Any
 from pydantic import BaseModel
 from werkflow_aws.models.parsing import convert_key_to_boto3_arg
 
 
-
 class AWSBoto3Base(BaseModel):
 
-    def _filtered_options_to_dict(self):
-
+    def _filtered_options_to_dict(self) -> dict[str, Any]:
         options = self.model_dump()
-
         return {
             key: value for key, value in options.items() if value is not None
         }
 
-    def to_data(self):
+    def to_data(self) -> dict[str, Any]:
         return {
-            convert_key_to_boto3_arg(
-                key
-            ): value for key, value in self._filtered_options_to_dict()
+            convert_key_to_boto3_arg(key): value
+            for key, value in self._filtered_options_to_dict().items()
         }
-

@@ -7,36 +7,10 @@ from typing import Dict, Literal
 
 
 class AWSs3MultipartUploadResponse(BaseModel):
-    UploadId: StrictStr
-    Key: StrictStr
-    Initiated: datetime.datetime
-    StorageClass: Literal[
-        'STANDARD',
-        'REDUCED_REDUNDANCY',
-        'STANDARD_IA',
-        'ONEZONE_IA',
-        'INTELLIGENT_TIERING',
-        'GLACIER',
-        'DEEP_ARCHIVE',
-        'OUTPOSTS',
-        'GLACIER_IR',
-        'SNOW',
-        'EXPRESS_ONEZONE'
-    ]
-    Owner: Dict[
-        Literal['DisplayName', 'ID'],
-        StrictStr
-    ]
-    Initiator: Dict[
-        Literal[
-            'ID',
-            'DisplayName'
-        ],
-        StrictStr
-    ]
-    ChecksumAlgorithm: Literal[
-        'CRC32',
-        'CRC32C',
-        'SHA1',
-        'SHA256'
-    ]
+    UploadId: StrictStr | None = None
+    Key: StrictStr | None = None
+    Initiated: datetime.datetime | None = None
+    StorageClass: Literal['STANDARD', 'REDUCED_REDUNDANCY', 'STANDARD_IA', 'ONEZONE_IA', 'INTELLIGENT_TIERING', 'GLACIER', 'DEEP_ARCHIVE', 'OUTPOSTS', 'GLACIER_IR', 'SNOW', 'EXPRESS_ONEZONE'] | None = None
+    Owner: Dict[Literal['DisplayName', 'ID'], StrictStr] | None = None
+    Initiator: Dict[Literal['ID', 'DisplayName'], StrictStr] | None = None
+    ChecksumAlgorithm: Literal['CRC32', 'CRC32C', 'SHA1', 'SHA256'] | None = None

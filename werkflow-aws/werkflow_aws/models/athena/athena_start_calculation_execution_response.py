@@ -6,5 +6,5 @@ from .athena_calculation_state import AthenaCalculationState
 
 
 class AthenaStartCalculationExecutionResponse(BaseModel):
-    CalculationExecutionId: StrictStr
-    State: AthenaCalculationState
+    CalculationExecutionId: StrictStr | None = None
+    State: AthenaCalculationState | None = None

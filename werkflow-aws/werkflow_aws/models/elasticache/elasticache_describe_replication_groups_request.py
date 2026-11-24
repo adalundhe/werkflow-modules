@@ -1,7 +1,7 @@
-from pydantic import BaseModel, StrictStr, StrictInt
+from pydantic import BaseModel, StrictInt, StrictStr
 
 
 class ElasticacheDescribeReplicationGroupsRequest(BaseModel):
-        ReplicationGroupId: StrictStr = None
-        MaxRecords: StrictInt = 100
-        Marker: StrictStr | None = None
+    ReplicationGroupId: StrictStr | None = None
+    MaxRecords: StrictInt | None = None
+    Marker: StrictStr | None = None

@@ -1,11 +1,12 @@
-import aiodns
+import asyncio
 import socket
-from ipaddress import ip_address, IPv4Address
-from urllib.parse import urlparse
-from asyncio.events import get_event_loop
-from typing import List, Union, Tuple
-from .types import SocketProtocols, SocketTypes
-from .ip_address_info import IpAddressInfo
+from ipaddress import IPv4Address, ip_address
+from typing import Iterator, List, Optional, Tuple
+from urllib.parse import ParseResult, urlparse
+
+import aiodns
+
+from .types import SocketAddress, SocketConfig, SocketProtocols, SocketTypes
 
 
 class URL:
@@ -23,200 +24,209 @@ class URL:
         'protocol',
         'loop',
         'ip_addresses',
-        'address'
+        'address',
     )
 
     def __init__(
         self,
-        url: str, 
-        port: int=80,
-        family: SocketTypes=SocketTypes.DEFAULT, 
-        protocol: SocketProtocols=SocketProtocols.DEFAULT
+        url: str,
+        port: int = 80,
+        family: int = SocketTypes.DEFAULT,
+        protocol: int = SocketProtocols.DEFAULT,
     ) -> None:
-        
-        self.resolver = aiodns.DNSResolver()
+        self.resolver: Optional[aiodns.DNSResolver] = None
+        self.ip_addr: Optional[str] = None
+        self.parsed: ParseResult = urlparse(url)
+        self.is_ssl: bool = self.parsed.scheme.lower() in ('https', 'wss')
+
+        default_port = 443 if self.is_ssl else port
+        self.port: int = self.parsed.port if self.parsed.port else default_port
+        self.full: str = url
+        self.has_ip_addr: bool = False
+        self.family: int = family
+        self.protocol: int = protocol
+        self.loop: Optional[asyncio.AbstractEventLoop] = None
+        self.ip_addresses: List[Tuple[str, SocketConfig]] = []
+        self.address: Optional[str] = None
+        self.socket_config: Optional[SocketConfig] = None
+
+    async def replace(self, url: str) -> None:
+        self.full = url
         self.parsed = urlparse(url)
-        self.is_ssl = 'https' in url or 'wss' in url   
+        self.is_ssl = self.parsed.scheme.lower() in ('https', 'wss')
+        default_port = 443 if self.is_ssl else 80
+        self.port = self.parsed.port if self.parsed.port else default_port
 
-        if self.is_ssl:
-            port = 443
-
-        self.port = self.parsed.port if self.parsed.port else port
-        self.full = url
-        self.has_ip_addr = False 
-        self.family = family
-        self.protocol = protocol
-        self.loop = None
-        self.ip_addresses: List[Tuple[str, IpAddressInfo]] = []
-        self.address: Union[str, None] = None
-        self.socket_config: Union[
-            Tuple[str, int],
-            Tuple[str, int, int, int],
-            None
-        ] = None
-
-    async def replace(self, url: str):
-        self.full = url
-        self.params = urlparse(url)
-
-    def __iter__(self):
+    def __iter__(self) -> Iterator[Tuple[str, SocketConfig]]:
         for ip_info in self.ip_addresses:
             yield ip_info
-    
+
     def update(
         self,
         url: str,
         port: int = 80,
-        family: SocketTypes=SocketTypes.DEFAULT, 
-        protocol: SocketProtocols=SocketProtocols.DEFAULT
-    ):
+        family: int = SocketTypes.DEFAULT,
+        protocol: int = SocketProtocols.DEFAULT,
+    ) -> None:
         self.parsed = urlparse(url)
-        self.is_ssl = 'https' in url or 'wss' in url   
+        self.is_ssl = self.parsed.scheme.lower() in ('https', 'wss')
 
-        if self.is_ssl:
-            port = 443
-
-        self.port = self.parsed.port if self.parsed.port else port
+        default_port = 443 if self.is_ssl else port
+        self.port = self.parsed.port if self.parsed.port else default_port
         self.full = url
-        self.has_ip_addr = False 
-        self.socket_config: Union[
-            Tuple[str, int],
-            Tuple[str, int, int, int],
-            None
-        ] = None
+        self.has_ip_addr = False
+        self.socket_config = None
         self.family = family
         self.protocol = protocol
         self.loop = None
-        self.ip_addresses: List[IpAddressInfo] = []
-        self.address: Union[str, None] = None
+        self.ip_addresses = []
+        self.address = None
 
-    async def lookup(self):
+    def _build_socket_entry(self, host: str) -> Tuple[str, SocketConfig]:
+        parsed_ip = ip_address(host)
+        if isinstance(parsed_ip, IPv4Address):
+            socket_family = socket.AF_INET
+            address_info: SocketAddress = (host, self.port)
+        else:
+            socket_family = socket.AF_INET6
+            address_info = (host, self.port, 0, 0)
 
+        return (
+            host,
+            (
+                socket_family,
+                self.protocol,
+                0,
+                '',
+                address_info,
+            ),
+        )
+
+    async def lookup(self) -> None:
         if self.loop is None:
-            self.loop = get_event_loop()
+            self.loop = asyncio.get_running_loop()
+
+        self.ip_addresses = []
 
         if self.parsed.hostname is None:
-            
-            try:
+            raw = self.full
+            if raw.startswith('[') and ']:' in raw:
+                host, port_str = raw[1:].rsplit(']:', 1)
+            else:
+                host, port_str = raw.rsplit(':', 1)
 
-                address = self.full.split(':')
-                assert len(address) == 2
+            self.port = int(port_str)
+            self.ip_addresses = [self._build_socket_entry(host)]
+            self.has_ip_addr = True
+            return
 
-                host, port = address
-                self.port = int(port)
-
-                if isinstance(ip_address(host), IPv4Address):
-                    socket_family = socket.AF_INET
-
-                else:
-                    socket_family = socket.AF_INET6
-                
-                self.ip_addresses = [
-                    IpAddressInfo(
-                        socket_family,
-                        self.protocol,
-                        None,
-                        None,
-                        (
-                            host,
-                            self.port
-                        )
-                    )
-                ]
-            
-            except Exception as parse_error:
-                raise parse_error
-
+        hostname = self.parsed.hostname
+        try:
+            ip_address(hostname)
+        except ValueError:
+            pass
         else:
+            self.ip_addresses = [self._build_socket_entry(hostname)]
+            self.has_ip_addr = True
+            return
 
-            resolved = await self.resolver.gethostbyname(self.parsed.hostname, self.family)
-    
-            for address in resolved.addresses:
+        if self.resolver is None:
+            self.resolver = aiodns.DNSResolver(loop=self.loop)
 
-                if isinstance(ip_address(address), IPv4Address):
-                    socket_family = socket.AF_INET
-                    address_info = (
-                        address,
-                        self.port
-                    )
+        try:
+            resolved = await self.resolver.gethostbyname(
+                hostname,
+                socket.AddressFamily(self.family),
+            )
+            addresses = list(resolved.addresses)
+        except Exception:
+            addr_infos = await self.loop.getaddrinfo(
+                hostname,
+                self.port,
+                family=self.family,
+                type=self.protocol,
+            )
+            addresses = []
+            for info in addr_infos:
+                addr_host = str(info[4][0])
+                if addr_host not in addresses:
+                    addresses.append(addr_host)
 
-                else:
-                    socket_family = socket.AF_INET6
-                    address_info = (
-                        address,
-                        self.port,
-                        0,
-                        0
-                    )
+        for address in addresses:
+            self.ip_addresses.append(self._build_socket_entry(address))
 
-                self.ip_addresses.append((
-                    address,
-                    (
-                        socket_family,
-                        socket.SOCK_STREAM,
-                        0,
-                        '',
-                        address_info
-                    )
-                ))
+    def _replace_hostname(self, value: str) -> None:
+        host_part = f'[{value}]' if (':' in value and not value.startswith('[')) else value
+        if self.parsed.port is not None:
+            netloc = f'{host_part}:{self.parsed.port}'
+        else:
+            netloc = host_part
+
+        if self.parsed.username is not None:
+            userinfo = self.parsed.username
+            if self.parsed.password is not None:
+                userinfo = f'{userinfo}:{self.parsed.password}'
+            netloc = f'{userinfo}@{netloc}'
+
+        self.parsed = self.parsed._replace(netloc=netloc)
 
     @property
-    def params(self):
+    def params(self) -> str:
         return self.parsed.params
 
     @params.setter
-    def params(self, value: str):
+    def params(self, value: str) -> None:
         self.parsed = self.parsed._replace(params=value)
 
     @property
-    def scheme(self):
+    def scheme(self) -> str:
         return self.parsed.scheme
 
     @scheme.setter
-    def scheme(self, value):
+    def scheme(self, value: str) -> None:
         self.parsed = self.parsed._replace(scheme=value)
+        self.is_ssl = self.parsed.scheme.lower() in ('https', 'wss')
 
     @property
-    def hostname(self):
+    def hostname(self) -> Optional[str]:
         return self.parsed.hostname
 
     @hostname.setter
-    def hostname(self, value):
-        self.parsed = self.parsed._replace(hostname=value)
+    def hostname(self, value: str) -> None:
+        self._replace_hostname(value)
 
     @property
-    def path(self):
+    def path(self) -> str:
         url_path = self.parsed.path
         url_query = self.parsed.query
         url_params = self.parsed.params
 
-        if not url_path or len(url_path) == 0:
-            url_path = "/"
+        if not url_path:
+            url_path = '/'
 
-        if url_query and len(url_query) > 0:
-            url_path += f'?{self.parsed.query}'
-
-        elif url_params and len(url_params) > 0:
-            url_path += self.parsed.params
+        if url_query:
+            url_path += f'?{url_query}'
+        elif url_params:
+            url_path += f';{url_params}'
 
         return url_path
 
     @path.setter
-    def path(self, value):
+    def path(self, value: str) -> None:
         self.parsed = self.parsed._replace(path=value)
-        
+
     @property
-    def query(self):
+    def query(self) -> str:
         return self.parsed.query
 
     @query.setter
-    def query(self, value):
+    def query(self, value: str) -> None:
         self.parsed = self.parsed._replace(query=value)
 
     @property
-    def authority(self):
+    def authority(self) -> Optional[str]:
         return self.parsed.hostname
 
     @authority.setter
-    def authority(self, value):
-        self.parsed = self.parsed._replace(hostname=value)
+    def authority(self, value: str) -> None:
+        self._replace_hostname(value)

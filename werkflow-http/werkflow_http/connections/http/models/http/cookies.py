@@ -1,82 +1,85 @@
-from typing import List, Union, Dict
+from typing import Iterator, List, Optional, Tuple, Union
+
 from .types import (
-    HTTPCookie, 
     HTTPCookieMap,
-    HTTPEncodableValue
+    HTTPEncodableValue,
 )
 
-def map_cookie_value(cookie_value: str) -> HTTPEncodableValue:
-    match cookie_value.lower():
-                        
-        case int():
-            return int(cookie_value)
-        
-        case float():
-            return float(cookie_value)
-        
-        case 'true':
-            return True
-        
-        case 'false':
-            return False
-        
-        case 'none':
-            return None
-        
-        case _:
-            return cookie_value
+
+def map_cookie_value(cookie_value: Union[str, bytes]) -> HTTPEncodableValue:
+    if isinstance(cookie_value, bytes):
+        cookie_value = cookie_value.decode('utf-8', errors='replace')
+
+    stripped = cookie_value.strip()
+    lowered = stripped.lower()
+
+    if lowered == 'true':
+        return True
+    if lowered == 'false':
+        return False
+    if lowered == 'none':
+        return None
+
+    try:
+        return int(stripped)
+    except ValueError:
+        pass
+
+    try:
+        return float(stripped)
+    except ValueError:
+        return stripped
 
 
 class Cookies:
 
     def __init__(self) -> None:
-        self._data = b''
-        self._split: Union[
-            List[HTTPCookie],
-            None
-        ]=None
+        self._data: bytes = b''
+        self._split: Optional[List[List[bytes]]] = None
+        self._parsed: Optional[HTTPCookieMap] = None
 
-        self._parsed: HTTPCookieMap=None
-
-    def __getitem__(self, name: str):
+    def __getitem__(self, name: str) -> HTTPEncodableValue:
         return self.parsed.get(name)
-            
-    def __iter__(self):
+
+    def __iter__(self) -> Iterator[Tuple[str, HTTPEncodableValue]]:
         for cookie_name, cookie_value in self.parsed.items():
             yield cookie_name, cookie_value
 
-    def update(self, data: str):
-        self._data += data
-            
+    def update(self, data: Union[str, bytes]) -> None:
+        encoded = data.encode('utf-8') if isinstance(data, str) else data
+        if not encoded:
+            return
+        if self._data and not self._data.rstrip().endswith(b';') and not encoded.lstrip().startswith(b';'):
+            self._data += b'; ' + encoded
+        else:
+            self._data += encoded
+        self._split = None
+        self._parsed = None
+
     @property
     def parsed(self) -> HTTPCookieMap:
-        
         if self._split is None:
             self._split = [
-                cookie.split(
-                    b'='
-                ) for cookie in self._data.split(b';')
+                cookie.split(b'=')
+                for cookie in self._data.split(b';')
+                if cookie.strip()
             ]
 
         if self._parsed is None:
-            self._parsed: HTTPCookieMap = {}
-            
+            parsed: HTTPCookieMap = {}
+
             for cookie in self._split:
+                cookie_name = cookie[0].decode('utf-8', errors='replace').strip()
+                if not cookie_name:
+                    continue
+
                 if len(cookie) == 1:
-                    cookie_name = cookie[0]
-                    self._parsed[cookie_name] = cookie_name
-
+                    parsed[cookie_name] = cookie_name
                 elif len(cookie) == 2:
-                    cookie_name, cookie_value = cookie
-                    self._parsed[cookie_name] = map_cookie_value(
-                        cookie_value
-                    )
-
+                    parsed[cookie_name] = map_cookie_value(cookie[1])
                 else:
-                    cookie_name = cookie[0]
-                    self._parsed[cookie_name] = map_cookie_value(
-                        b'='.join(cookie[1:])
-                    )
+                    parsed[cookie_name] = map_cookie_value(b'='.join(cookie[1:]))
 
+            self._parsed = parsed
 
         return self._parsed

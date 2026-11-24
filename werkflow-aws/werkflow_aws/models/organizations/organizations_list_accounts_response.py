@@ -7,5 +7,5 @@ from .organizations_account import OrganizationsAccount
 
 
 class OrganizationsListAccountsResponse(BaseModel):
-    Accounts: list[OrganizationsAccount]
+    Accounts: list[OrganizationsAccount] | None = None
     NextToken: StrictStr | None = None

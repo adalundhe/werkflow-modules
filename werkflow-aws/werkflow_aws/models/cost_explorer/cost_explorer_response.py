@@ -7,5 +7,5 @@ from .result import Result
 class CostExplorerResponse(BaseModel):
     NextPageToken: StrictStr | None = None
     GroupDefinitions: list[GroupDefinition] | None = None
-    ResultsByTime: list[Result]
-    DimensionValueAttributes: list[DimensionValueAttribute]
+    ResultsByTime: list[Result] | None = None
+    DimensionValueAttributes: list[DimensionValueAttribute] | None = None

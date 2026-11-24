@@ -1,11 +1,8 @@
 from __future__ import annotations
 
-from typing import List, Literal
+from typing import Annotated, List, Literal
 
-from pydantic import (
-    BaseModel,
-    conlist,
-)
+from pydantic import BaseModel, Field
 
 from werkflow_jira.models.requests.jira.content.child import JiraChildBlock
 from werkflow_jira.models.requests.jira.content.inline import JiraInlineBlock
@@ -22,7 +19,10 @@ from .jira_top_level_attrs import (
 
 
 class JiraTopLevelBlock(BaseModel):
-    content: conlist(JiraChildBlock | JiraInlineBlock, min_length=1) | None = None
+    content: Annotated[
+        List[JiraChildBlock | JiraInlineBlock],
+        Field(min_length=1),
+    ] | None = None
     type: Literal[
         "blockquote",
         "bulletList",

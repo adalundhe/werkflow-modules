@@ -3,4 +3,4 @@ from .athena_query_execution import AthenaQueryExecution
 
 
 class AthenaGetQueryExecutionResponse(BaseModel):
-    QueryExecution: AthenaQueryExecution
+    QueryExecution: AthenaQueryExecution | None = None

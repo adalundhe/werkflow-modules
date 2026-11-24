@@ -1,38 +1,41 @@
+import json
 import re
-from pydantic import (
-    BaseModel,
-    StrictStr
-)
-
 from typing import List, Literal
+
+from pydantic import BaseModel, StrictStr
 
 
 class Entrypoint(BaseModel):
-    layer_type: Literal["entrypoint"]="entrypoint"
+    layer_type: Literal['entrypoint'] = 'entrypoint'
     command: List[StrictStr]
 
-    def to_string(self):
-        command = ', '.join([
-            f'"{arg}"' for arg in self.command
-        ])
-        
-        return f'ENTRYPOINT [{command}]'
-    
-    @classmethod
-    def parse(
-        cls,
-        line: str
-    ):
-        
-        line = re.sub('ENTRYPOINT ', '', line, count=1).strip()
-        command = [
-            arg.strip() for arg in re.sub(
-                r'\[|\]', 
-                '', 
-                line
-            ).split(',')
-        ]
+    def to_string(self) -> str:
+        serialized = json.dumps(list(self.command))
+        return f'ENTRYPOINT {serialized}'
 
-        return Entrypoint(
-            command=command
-        )
+    @classmethod
+    def parse(cls, line: str) -> 'Entrypoint':
+        stripped = re.sub(
+            r'^ENTRYPOINT\s+',
+            '',
+            line.strip(),
+            count=1,
+            flags=re.IGNORECASE,
+        ).strip()
+
+        if stripped.startswith('['):
+            try:
+                parsed = json.loads(stripped)
+                if isinstance(parsed, list):
+                    return cls(command=[str(item) for item in parsed])
+            except json.JSONDecodeError:
+                pass
+
+            command = [
+                arg.strip().strip('"').strip("'")
+                for arg in re.sub(r'^\[|\]$', '', stripped).split(',')
+                if arg.strip()
+            ]
+            return cls(command=command)
+
+        return cls(command=[stripped] if stripped else [])

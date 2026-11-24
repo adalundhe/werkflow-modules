@@ -1,46 +1,35 @@
+import json
 import re
-from pydantic import (
-    BaseModel,
-    StrictStr,
-    StrictInt,
-    StrictBool,
-    StrictFloat
-)
+from typing import List, Literal, Union
 
-from typing import List, Union, Literal, Dict
+from pydantic import BaseModel, StrictBool, StrictFloat, StrictInt, StrictStr
 
 
 class Cmd(BaseModel):
-    layer_type: Literal["cmd"]="cmd"
+    layer_type: Literal['cmd'] = 'cmd'
     command: List[Union[StrictStr, StrictInt, StrictFloat, StrictBool]]
 
-    def to_string(self):
+    def to_string(self) -> str:
+        serialized = json.dumps([str(arg) for arg in self.command])
+        return f'CMD {serialized}'
 
-        parsed_args = [
-            arg.replace('"', '') if isinstance(arg, str) else arg for arg in self.command
-        ]
-
-        command = ', '.join([
-            f'"{arg}"' for arg in parsed_args
-        ])
-
-        return f'CMD [{command}]'
-    
     @classmethod
-    def parse(
-        cls,
-        line: str
-    ):
-        
-        line = re.sub('CMD ', '', line, count=1).strip()
-        command = [
-            arg.strip() for arg in re.sub(
-                r'\[|\]', 
-                '', 
-                line
-            ).split(',')
-        ]
+    def parse(cls, line: str) -> 'Cmd':
+        stripped = re.sub(r'^CMD\s+', '', line.strip(), count=1, flags=re.IGNORECASE).strip()
 
-        return Cmd(
-            command=command
-        )
+        if stripped.startswith('['):
+            try:
+                parsed = json.loads(stripped)
+                if isinstance(parsed, list):
+                    return cls(command=parsed)
+            except json.JSONDecodeError:
+                pass
+
+            command: List[Union[str, int, float, bool]] = [
+                arg.strip().strip('"').strip("'")
+                for arg in re.sub(r'^\[|\]$', '', stripped).split(',')
+                if arg.strip()
+            ]
+            return cls(command=command)
+
+        return cls(command=[stripped] if stripped else [])

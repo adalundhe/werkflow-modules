@@ -1,0 +1,15 @@
+from __future__ import annotations
+from pydantic import BaseModel, StrictStr
+from .elasti_cache_user_group_pending_changes import ElastiCacheUserGroupPendingChanges
+
+
+class ElastiCacheUserGroup(BaseModel):
+    UserGroupId: StrictStr | None = None
+    Status: StrictStr | None = None
+    Engine: StrictStr | None = None
+    UserIds: list[StrictStr] | None = None
+    MinimumEngineVersion: StrictStr | None = None
+    PendingChanges: ElastiCacheUserGroupPendingChanges | None = None
+    ReplicationGroups: list[StrictStr] | None = None
+    ServerlessCaches: list[StrictStr] | None = None
+    ARN: StrictStr | None = None

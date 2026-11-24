@@ -1,61 +1,53 @@
+import json
 import re
-from pydantic import (
-    BaseModel,
-    StrictStr,
-    StrictInt,
-    StrictBool,
-    StrictFloat
-)
-from typing import List, Optional, Literal
+from typing import List, Literal, Optional
+
+from pydantic import BaseModel, StrictBool, StrictFloat, StrictInt, StrictStr
 
 
 class Shell(BaseModel):
-    layer_type: Literal['shell']='shell'
+    layer_type: Literal['shell'] = 'shell'
     executable: StrictStr
     parameters: Optional[
-        List[
-            StrictBool |
-            StrictFloat |
-            StrictInt |
-            StrictStr
-        ]
-    ]=None
+        List[StrictBool | StrictFloat | StrictInt | StrictStr]
+    ] = None
 
-    def to_string(self):
-        shell_command_args = [self.executable]
+    def to_string(self) -> str:
+        shell_command_args: List[str] = [self.executable]
 
-        if self.parameters and len(self.parameters) > 0:
-            shell_command_args.extend([
-                parameter if isinstance(
-                    parameter,
-                    str
-                ) else str(parameter) for parameter in self.parameters
-            ])
+        if self.parameters:
+            shell_command_args.extend(
+                parameter if isinstance(parameter, str) else str(parameter)
+                for parameter in self.parameters
+            )
 
-        shell_command = f', '.join(shell_command_args)
+        return f'SHELL {json.dumps(shell_command_args)}'
 
-        return f'SHELL [ {shell_command} ]'
-    
     @classmethod
-    def parse(
-        cls,
-        line: str
-    ):
-        
-        line = re.sub('SHELL ', '', line, count=1)
-        command = [
-            arg.strip() for arg in re.sub(
-                r'\[|\]', 
-                '', 
-                line
-            ).split(',')
-        ]
+    def parse(cls, line: str) -> 'Shell':
+        stripped = re.sub(r'^SHELL\s+', '', line.strip(), count=1, flags=re.IGNORECASE).strip()
 
-        parameters: List[str|int|bool|float] | None = None
+        command: List[str] = []
+        if stripped.startswith('['):
+            try:
+                parsed = json.loads(stripped)
+                if isinstance(parsed, list):
+                    command = [str(item) for item in parsed]
+            except json.JSONDecodeError:
+                pass
+
+        if not command:
+            command = [
+                arg.strip().strip('"').strip("'")
+                for arg in re.sub(r'^\[|\]$', '', stripped).split(',')
+                if arg.strip()
+            ]
+
+        parameters: Optional[List[StrictBool | StrictFloat | StrictInt | StrictStr]] = None
         if len(command) > 1:
-            parameters = command[1:]
+            parameters = list(command[1:])
 
-        return Shell(
+        return cls(
             executable=command[0],
-            parameters=parameters
+            parameters=parameters,
         )

@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel, StrictInt, StrictStr
+
+
+class SageMakerRealTimeInferenceConfig(BaseModel):
+    InstanceType: StrictStr | None = None
+    InstanceCount: StrictInt | None = None

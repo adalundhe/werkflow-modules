@@ -1,60 +1,13 @@
-from pydantic import (
-    BaseModel,
-    StrictStr,
-    StrictInt,
-    AnyHttpUrl
-)
-from typing import List, Any, Dict
+from pydantic import AnyHttpUrl, BaseModel, ConfigDict, StrictInt
 
-
-class PullRequestRepoValidator(BaseModel):
-    id: StrictInt
-    url: AnyHttpUrl
-    name: StrictStr
-
-
-class PullRequestRepo:
-
-    def __init__(
-        self,
-        data: Dict[str, Any]
-    ) -> None:
-        self.data = PullRequestRepoValidator(
-            **data
-        )
-
-
-class PullRequestRefValidator(BaseModel):
-    ref: StrictStr
-    sha: StrictStr
-    repo: PullRequestRepo
-
-
-class PullRequestRef:
-    
-    def __init__(
-        self,
-        data: Dict[str, Any]
-    ) -> None:
-        self.data = PullRequestRefValidator(
-            **data
-        )
+from .pull_request_ref import PullRequestRef
 
 
 class PullRequestValidator(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
     id: StrictInt
     number: StrictInt
     url: AnyHttpUrl
     head: PullRequestRef
     base: PullRequestRef
-
-
-class PullRequest:
-
-    def __init__(
-        self,
-        data: Dict[str, Any]
-    ) -> None:
-        self.data = PullRequestValidator(
-            **data
-        )

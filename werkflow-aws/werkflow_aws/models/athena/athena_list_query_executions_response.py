@@ -5,5 +5,5 @@ from pydantic import (
 
 
 class AthenaListQueryExecutionsResponse(BaseModel):
-    QueryExectionIds: list[StrictStr]
+    QueryExecutionIds: list[StrictStr] | None = None
     NextToken: StrictStr | None = None

@@ -3,4 +3,4 @@ from .athena_database import AthenaDatabase
 
 
 class AthenaGetDatabaseResponse(BaseModel):
-    Database: AthenaDatabase
+    Database: AthenaDatabase | None = None

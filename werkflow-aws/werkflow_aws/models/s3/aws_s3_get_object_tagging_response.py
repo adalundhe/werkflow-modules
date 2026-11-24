@@ -7,5 +7,5 @@ from .aws_s3_tag import AWSs3Tag
 
 
 class AWSs3GetObjectTaggingResponse(BaseModel):
-    VersionId: StrictStr
+    VersionId: StrictStr | None = None
     TagSet: List[AWSs3Tag]=[]

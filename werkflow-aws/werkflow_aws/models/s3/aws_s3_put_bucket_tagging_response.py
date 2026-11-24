@@ -6,4 +6,4 @@ from typing import Dict, Any
 
 
 class AWSs3PutBucketTaggingResponse(BaseModel):
-    ResponseMetadata: Dict[StrictStr, Any]
+    ResponseMetadata: Dict[StrictStr, Any] | None = None

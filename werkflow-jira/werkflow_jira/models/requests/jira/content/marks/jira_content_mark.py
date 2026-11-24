@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Dict, Literal
+from typing import Dict, Literal, Union
 
 from pydantic import BaseModel, model_validator
 
@@ -33,17 +33,17 @@ class JiraContentMark(BaseModel):
     ) = None
 
     @model_validator(mode="after")
-    def validate_mark(self):
+    def validate_mark(self) -> JiraContentMark:
         attrs_types: Dict[
-            Literal[
-                "backgroundColor",
-                "link",
-                "subsup",
-                "textColor",
+            str,
+            type[
+                Union[
+                    BackgroundColorMarkAttrs,
+                    LinkMarkAttrs,
+                    SubSupMarkAttrs,
+                    TextColorAttrs,
+                ]
             ],
-            BackgroundColorMarkAttrs,
-            LinkMarkAttrs,
-            SubSupMarkAttrs,
         ] = {
             "backgroundColor": BackgroundColorMarkAttrs,
             "link": LinkMarkAttrs,
@@ -54,6 +54,6 @@ class JiraContentMark(BaseModel):
         if mark_attrs_type := attrs_types.get(self.type):
             assert isinstance(
                 self.attrs, mark_attrs_type
-            ), f"Mark of type {self.type} requires attrs of type {mark_attrs_type.__class__.__name__}"
+            ), f"Mark of type {self.type} requires attrs of type {mark_attrs_type.__name__}"
 
         return self

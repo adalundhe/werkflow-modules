@@ -1,9 +1,8 @@
 import datetime
-from pydantic import (
-    BaseModel,
-    StrictStr,
-    StrictInt
-)
+from typing import Optional
+
+from pydantic import BaseModel, StrictInt, StrictStr
+
 from werkflow_github.actions.common.models.conclusion import Conclusion
 from werkflow_github.actions.common.models.status import Status
 
@@ -11,7 +10,7 @@ from werkflow_github.actions.common.models.status import Status
 class StepValidator(BaseModel):
     name: StrictStr
     status: Status
-    conclusion: Conclusion
+    conclusion: Optional[Conclusion] = None
     number: StrictInt
-    started_at: datetime.datetime
-    completed_at: datetime.datetime
+    started_at: Optional[datetime.datetime] = None
+    completed_at: Optional[datetime.datetime] = None

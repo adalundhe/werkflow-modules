@@ -1,0 +1,7 @@
+from __future__ import annotations
+from pydantic import BaseModel
+from .sage_maker_cluster_shared_environment_config_details import SageMakerClusterSharedEnvironmentConfigDetails
+
+
+class SageMakerClusterRestrictedInstanceGroupsConfigOutput(BaseModel):
+    SharedEnvironmentConfig: SageMakerClusterSharedEnvironmentConfigDetails | None = None

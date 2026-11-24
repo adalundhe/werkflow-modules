@@ -1,6 +1,6 @@
 [project]
 name = "werkflow-appito"
-version = "0.1.0"
+version = "0.2.0"
 description = "An IBM Appito module for Werkflow."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -14,24 +14,21 @@ classifiers = [
         "Operating System :: OS Independent",
 ]
 keywords = [
-    'pypi', 
-    'cicd', 
+    'pypi',
+    'cicd',
     'python',
     'werkflow',
     'workflow',
     'werkflow-core',
     'appito',
-    'boto3',
-    'ibm'
+    'apptio',
+    'ibm',
 ]
 license-files = [ "LICENSE" ]
 dependencies = [
     'werkflow-core',
-    'werkflow-file',
-    'werkflow-secrets',
+    'werkflow-http',
     'werkflow-shell',
-    'werkflow-system',
-    "werkflow-http",
     'pydantic',
 ]
 

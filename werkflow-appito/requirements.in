@@ -1,7 +1,4 @@
-werkflow-core
-werkflow-file
-werkflow-secrets
-werkflow-shell
-werkflow-system
-werkflow-http
 pydantic
+werkflow-core
+werkflow-http
+werkflow-shell

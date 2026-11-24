@@ -1,1 +1,4 @@
-from .secrets import Secrets
+from .secrets import (
+    EncryptionMethod as EncryptionMethod,
+    Secrets as Secrets,
+)

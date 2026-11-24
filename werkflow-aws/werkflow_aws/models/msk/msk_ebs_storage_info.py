@@ -1,7 +1,7 @@
 from pydantic import BaseModel, StrictInt
-from .msk_ebs_provisioned_throughtput import MSKEBSPRovisionedThroughtput
+from .msk_ebs_provisioned_throughtput import MSKEBSProvisionedThroughput
 
 
 class MSKEBSStorageInfo(BaseModel):
-    ProvisionedThroughput: MSKEBSPRovisionedThroughtput
-    VolumeSize: StrictInt
+    ProvisionedThroughput: MSKEBSProvisionedThroughput | None = None
+    VolumeSize: StrictInt | None = None

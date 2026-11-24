@@ -3,4 +3,4 @@ from .athena_session_state import AthenaSessionState
 
 
 class AthenaTerminateSessionResponse(BaseModel):
-    State: AthenaSessionState
+    State: AthenaSessionState | None = None

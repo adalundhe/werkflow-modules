@@ -1,13 +1,18 @@
 from __future__ import annotations
-from pydantic import BaseModel, StrictStr, StrictInt
-from typing import Optional
+
+from typing import Any, Optional
+
+from pydantic import BaseModel, StrictInt, StrictStr
+
 
 class Message(BaseModel):
-    host: Optional[StrictStr]
-    port: Optional[StrictInt]
-    error: Optional[StrictStr]
+    host: Optional[StrictStr] = None
+    port: Optional[StrictInt] = None
+    error: Optional[StrictStr] = None
 
-    def to_data(self):
+    def to_data(self) -> dict[str, Any]:
         return {
-            name: value for name, value in self.__dict__.items() if value is not None
+            name: value
+            for name, value in self.__dict__.items()
+            if value is not None
         }

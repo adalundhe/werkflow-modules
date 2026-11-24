@@ -3,4 +3,4 @@ from .athena_calculation_state import AthenaCalculationState
 
 
 class AthenaStopCalculationExecutionResponse(BaseModel):
-    State: AthenaCalculationState
+    State: AthenaCalculationState | None = None

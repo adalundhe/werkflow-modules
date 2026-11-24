@@ -1,0 +1,8 @@
+from __future__ import annotations
+from typing import Literal
+from pydantic import BaseModel
+
+
+class AWSS3VersioningConfiguration(BaseModel):
+    MFADelete: Literal['Enabled', 'Disabled'] | None = None
+    Status: Literal['Enabled', 'Suspended'] | None = None

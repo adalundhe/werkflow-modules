@@ -8,10 +8,10 @@ from .athena_calculation_result import AthenaCalculationResult
 
 
 class AthenaGetCalculationExecutionResponse(BaseModel):
-    CalculationExecutionId: StrictStr
-    SessionId: StrictStr
+    CalculationExecutionId: StrictStr | None = None
+    SessionId: StrictStr | None = None
     Description: StrictStr | None = None
-    WorkingDirection: StrictStr
-    Status: AthenaCalculationStatus
-    Statistics: AthenaCalculationStatistics
-    Result: AthenaCalculationResult
+    WorkingDirectory: StrictStr | None = None
+    Status: AthenaCalculationStatus | None = None
+    Statistics: AthenaCalculationStatistics | None = None
+    Result: AthenaCalculationResult | None = None

@@ -1,13 +1,20 @@
 from typing import Dict, Optional
 
 from werkflow_core import Module
-from werkflow_Shell import Shell
+from werkflow_shell import Shell
 
 from .api import DockerClient
 from .images import Image
 
 
 class Docker(Module):
+    module_enabled = True
+    dependencies = [
+        'docker',
+        'pydantic',
+        'werkflow-shell',
+        'werkflow-system',
+    ]
 
     def __init__(self) -> None:
         super().__init__()
@@ -20,45 +27,43 @@ class Docker(Module):
     async def load_image(
         self,
         path: str,
-        image_name: Optional[str]=None,
-        image_tag: Optional[str]='latest'
-    ):
+        image_name: Optional[str] = None,
+        image_tag: Optional[str] = 'latest',
+    ) -> Image:
         if image_tag is None:
             image_tag = 'latest'
-
 
         if image_name is None:
             image_data = await self._shell.read_file(
                 path,
-                silent=True
+                silent=True,
             )
 
             return Image.generate_from_string(
                 image_data,
-                output_path=path
+                output_path=path,
             )
 
-        else:
-            image = Image(
-                image_name,
-                tag=image_tag,
-                path=path
-            )
-            
-            image_data = await self._shell.read_file(
-                path,
-                silent=True
-            )
+        image = Image(
+            image_name,
+            tag=image_tag,
+            path=path,
+        )
 
-            image.from_string(image_data)
-            self.images[image_name] = image
+        image_data = await self._shell.read_file(
+            path,
+            silent=True,
+        )
 
-            return image
+        image.from_string(image_data)
+        self.images[image_name] = image
 
-    async def close(self):
+        return image
+
+    async def close(self) -> None:
         await self.client.close()
         await self._shell.close()
 
-    def abort(self):
+    def abort(self) -> None:
         self.client.abort()
         self._shell.abort()

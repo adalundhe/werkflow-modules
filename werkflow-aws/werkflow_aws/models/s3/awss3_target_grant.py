@@ -1,0 +1,9 @@
+from __future__ import annotations
+from typing import Literal
+from pydantic import BaseModel
+from .awss3_grantee import AWSS3Grantee
+
+
+class AWSS3TargetGrant(BaseModel):
+    Grantee: AWSS3Grantee | None = None
+    Permission: Literal['FULL_CONTROL', 'READ', 'WRITE'] | None = None

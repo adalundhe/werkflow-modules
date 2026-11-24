@@ -1,6 +1,6 @@
 [project]
 name = "werkflow-encryption"
-version = "0.2.1"
+version = "0.3.0"
 description = "An encryption module for Werkflow powered by the Cryptography library."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -14,21 +14,20 @@ classifiers = [
         "Operating System :: OS Independent",
 ]
 keywords = [
-    'pypi', 
-    'cicd', 
+    'pypi',
+    'cicd',
     'python',
     'werkflow',
     'workflow',
-    'encryption'
+    'encryption',
 ]
 license-files = [ "LICENSE" ]
 dependencies = [
     'werkflow-core',
-    'werkflow-file',
-    'werkflow-secrets',
     'werkflow-shell',
     'werkflow-system',
     'cryptography',
+    'pynacl',
 ]
 
 [build-system]

@@ -8,23 +8,19 @@ from typing import Literal, Optional
 
 
 class AWSS3PutObjectResponse(BaseModel):
-    Expiration: StrictStr
-    ETag: StrictStr
-    ChecksumCRC32: StrictStr
-    ChecksumCRC32C: StrictStr
-    ChecksumSHA1: StrictStr
-    ChecksumSHA256: StrictStr
-    ServerSideEncryption: Literal[
-        'AES256',
-        'aws:kms',
-        'aws:kms:dsse'
-    ]
-    VersionId: StrictStr
-    SSECustomerAlgorithm: StrictStr
-    SSDCustomerMD5: StrictStr
+    Expiration: StrictStr | None = None
+    ETag: StrictStr | None = None
+    ChecksumCRC32: StrictStr | None = None
+    ChecksumCRC32C: StrictStr | None = None
+    ChecksumSHA1: StrictStr | None = None
+    ChecksumSHA256: StrictStr | None = None
+    ServerSideEncryption: Literal['AES256', 'aws:kms', 'aws:kms:dsse'] | None = None
+    VersionId: StrictStr | None = None
+    SSECustomerAlgorithm: StrictStr | None = None
+    SSECustomerKeyMD5: StrictStr | None = None
     SSEKMSKeyId: Optional[StrictStr]=None
     SSEKMSEncryptionContext: Optional[StrictStr]=None
-    BucketKeyEnabled: StrictBool
+    BucketKeyEnabled: StrictBool | None = None
     RequestCharged: Optional[
         Literal['requester']
     ]=None

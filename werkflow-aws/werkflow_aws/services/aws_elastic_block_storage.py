@@ -1,21 +1,135 @@
-import asyncio
-from concurrent.futures import ThreadPoolExecutor
-from werkflow_aws.models import AWSRegionMap
-from werkflow_system import System
+from werkflow_aws.models.ebs import (
+    EBSCompleteSnapshotRequest,
+    EBSCompleteSnapshotResponse,
+    EBSGetSnapshotBlockRequest,
+    EBSGetSnapshotBlockResponse,
+    EBSListChangedBlocksRequest,
+    EBSListChangedBlocksResponse,
+    EBSListSnapshotBlocksRequest,
+    EBSListSnapshotBlocksResponse,
+    EBSPutSnapshotBlockRequest,
+    EBSPutSnapshotBlockResponse,
+    EBSStartSnapshotRequest,
+    EBSStartSnapshotResponse,
+)
+from werkflow_aws.types.ebs_client import EBSClient
+from .base import AWSBaseService
 
 
-class AWSElasticBlockStorage:
-    
+class AWSElasticBlockStorage(AWSBaseService[EBSClient]):
+    service_name = 'ElasticBlockStorage'
+    boto3_service_name = 'ebs'
+
     def __init__(self) -> None:
-        
-        self._system = System()
-
-        self._loop: asyncio.AbstractEventLoop | None = None
-        self._executor = ThreadPoolExecutor(
-            max_workers=self._system.configuration.cores.physical
+        super().__init__(
+            service_name='ElasticBlockStorage',
+            boto3_service_name='ebs',
         )
 
-        self._client = None
+    async def list_snapshot_blocks(
+        self,
+        request: EBSListSnapshotBlocksRequest,
+    ) -> EBSListSnapshotBlocksResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.list_snapshot_blocks,
+            request,
+            EBSListSnapshotBlocksResponse,
+        )
 
-        self.service_name = 'ElasticBlockStorage'
-        self._regions = AWSRegionMap()
+    async def list_snapshot_blocks_paginated(
+        self,
+        request: EBSListSnapshotBlocksRequest,
+    ) -> list[EBSListSnapshotBlocksResponse]:
+        client = self._require_client()
+        pages: list[EBSListSnapshotBlocksResponse] = []
+        current_request = request
+        while True:
+            page = await self._execute(
+                client.list_snapshot_blocks,
+                current_request,
+                EBSListSnapshotBlocksResponse,
+            )
+            pages.append(page)
+            if not page.NextToken:
+                break
+            current_request = current_request.model_copy(
+                update={'NextToken': page.NextToken},
+            )
+        return pages
+
+    async def list_changed_blocks(
+        self,
+        request: EBSListChangedBlocksRequest,
+    ) -> EBSListChangedBlocksResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.list_changed_blocks,
+            request,
+            EBSListChangedBlocksResponse,
+        )
+
+    async def list_changed_blocks_paginated(
+        self,
+        request: EBSListChangedBlocksRequest,
+    ) -> list[EBSListChangedBlocksResponse]:
+        client = self._require_client()
+        pages: list[EBSListChangedBlocksResponse] = []
+        current_request = request
+        while True:
+            page = await self._execute(
+                client.list_changed_blocks,
+                current_request,
+                EBSListChangedBlocksResponse,
+            )
+            pages.append(page)
+            if not page.NextToken:
+                break
+            current_request = current_request.model_copy(
+                update={'NextToken': page.NextToken},
+            )
+        return pages
+
+    async def get_snapshot_block(
+        self,
+        request: EBSGetSnapshotBlockRequest,
+    ) -> EBSGetSnapshotBlockResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.get_snapshot_block,
+            request,
+            EBSGetSnapshotBlockResponse,
+        )
+
+    async def put_snapshot_block(
+        self,
+        request: EBSPutSnapshotBlockRequest,
+    ) -> EBSPutSnapshotBlockResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.put_snapshot_block,
+            request,
+            EBSPutSnapshotBlockResponse,
+        )
+
+    async def start_snapshot(
+        self,
+        request: EBSStartSnapshotRequest,
+    ) -> EBSStartSnapshotResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.start_snapshot,
+            request,
+            EBSStartSnapshotResponse,
+        )
+
+    async def complete_snapshot(
+        self,
+        request: EBSCompleteSnapshotRequest,
+    ) -> EBSCompleteSnapshotResponse:
+        client = self._require_client()
+        return await self._execute(
+            client.complete_snapshot,
+            request,
+            EBSCompleteSnapshotResponse,
+        )

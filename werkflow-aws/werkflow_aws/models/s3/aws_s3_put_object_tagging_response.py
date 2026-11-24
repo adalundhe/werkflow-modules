@@ -6,8 +6,5 @@ from typing import Dict, Any
 
 
 class AWSs3PutObjectTaggingResponse(BaseModel):
-    VersionId: StrictStr
-    ResponseMetadata: Dict[
-        StrictStr,
-        Any
-    ]
+    VersionId: StrictStr | None = None
+    ResponseMetadata: Dict[StrictStr, Any] | None = None
